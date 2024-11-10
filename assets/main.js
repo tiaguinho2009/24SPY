@@ -185,7 +185,7 @@ function createAirportUI(airport) {
                 <div class="title">${airport.real_name} ${position}</div>
                 <hr class="menu-divider">
                 <div class="controller-info-section">
-                    <p><strong>ATC:</strong> ${atcName}</p>
+                    <p><strong>Controller:</strong> ${atcName}</p>
                     <p><strong>Freq:</strong> ${frequency}</p>
                 </div>
             `;
@@ -196,8 +196,10 @@ function createAirportUI(airport) {
 	}
 
 	function hideInfoMenu() {
-		airportInfoMenu.style.display = 'none';
-	}
+		document.querySelectorAll('.airport-info-menu').forEach(menu => {
+		   menu.style.display = 'none';
+		});
+	 }
 
 	const controlBadge = airportUI.querySelector('.badge.C');
 	const approachBadge = airportUI.querySelector('.badge.A');

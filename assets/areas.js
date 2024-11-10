@@ -1078,7 +1078,7 @@ const settingsValues = {
 };
 
 const websiteInfo = {
-    version: "DEV 0.1.4.4",
+    version: "DEV 0.1.4.4.1",
 }
 
 const localInfo = {}
