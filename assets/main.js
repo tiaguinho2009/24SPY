@@ -415,6 +415,21 @@ function toggleSettingsMenu() {
 	settingsMenu.style.display = settingsMenu.style.display === 'none' || settingsMenu.style.display === '' ? 'block' : 'none';
 }
 
+function resetHighlights() {
+    controlAreas.forEach(area =>{
+		if (area.type === "polygon") {
+			if (area.name.endsWith("CTR")) {
+				area.fillColor = "rgba(0, 90, 50, 0.05)";
+			};
+			if (area.name.endsWith("APP")) {
+				area.fillColor = "rgba(255, 122, 0, 0)";
+			};
+		};
+	});
+    //hideAirportUI();
+    draw();
+}
+
 function refreshUI() {
 	// Limpa e redesenha o canvas
 	draw();
@@ -424,6 +439,7 @@ function refreshUI() {
 
 	// Redesenha os elementos da interface do usuário
 	displayAirports();
+	resetHighlights();
 }
 
 function updateATCCount() {

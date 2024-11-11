@@ -22,8 +22,6 @@ Though still in early stages, the site may eventually support live ATC data. Ach
 
 For new users or anyone with questions on how to display online ATCs from ATC24 on the website, refer to the [Wiki](https://github.com/tiaguinho2009/24SPY/wiki) for guidance, including the [How to see the ATCs Online](https://github.com/tiaguinho2009/24SPY/wiki/How-to-see-the-ATCs-Online) guide.
 
-## [DEV 0.1.4.4.1] - 10/11/2024
+## [DEV 0.1.4.4.2] - 11/11/2024
 ### Corrected
-- Bug when the map refreshes and you have an Airport UI menu active (when you place the mouse over a "C" button, a menu appears over the ATC, it's this menu) this menu after refreshing the map with it active it it does not disappear and becomes duplicated. The bug now is resolved! Credits: awdev1
-### Notes
-- We will make another update still about this bug as not everything is working as it should.
+- After a lot of work the bug is finally resolved!

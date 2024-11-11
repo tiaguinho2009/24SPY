@@ -1,5 +1,9 @@
 # Changelog
 
+## [DEV 0.1.4.4.2] - 11/11/2024
+### Corrected
+- After a lot of work the bug is finally resolved!
+
 ## [DEV 0.1.4.4.1] - 10/11/2024
 ### Corrected
 - Bug when the map refreshes and you have an Airport UI menu active (when you place the mouse over a "C" button, a menu appears over the ATC, it's this menu) this menu after refreshing the map with it active it it does not disappear and becomes duplicated. The bug now is resolved! Credits: awdev1
