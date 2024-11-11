@@ -1,5 +1,9 @@
 # Changelog
 
+## [DEV 0.1.4.4.3] - 11/11/2024
+### Corrected
+- Some Frequencies Corrected.
+
 ## [DEV 0.1.4.4.2] - 11/11/2024
 ### Corrected
 - After a lot of work the bug is finally resolved!

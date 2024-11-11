@@ -1010,7 +1010,7 @@ const controlAreas = [
         originalscale: 2,
         scale: 2,
         coordinates: [873.80, 714.13],
-        towerfreq: "126.060",
+        towerfreq: "124.200",
         ctr: "ISKP CTR",
         tower: false,
         towerATC: "",
@@ -1078,7 +1078,7 @@ const settingsValues = {
 };
 
 const websiteInfo = {
-    version: "DEV 0.1.4.4.2",
+    version: "DEV 0.1.4.4.3",
 }
 
 const localInfo = {}
