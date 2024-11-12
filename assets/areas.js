@@ -11,6 +11,18 @@ let PTFSAPIError = [
         "airport": "Saint Barthélemy",
         "position": "tower"
     },
+    {
+        "holder": "AvatarRoblox2018 | ERROR",
+        "claimable": false,
+        "airport": "Sauthemptona",
+        "position": "tower"
+    },
+    {
+        "holder": "BEANZBURGERBEANZ | ERROR",
+        "claimable": false,
+        "airport": "McConnell",
+        "position": "tower"
+    },
 ]
 
 let PTFSAPI = [
@@ -1113,5 +1125,9 @@ const specialUsers = {
     "AvatarRoblox2018": [{
         "Role": "24SPY Helper",
         "DiscordNick": "noah_the_plane_guy",
+    }],
+    "BEANZBURGERBEANZ": [{
+        "Role": "24SPY First User",
+        "DiscordNick": "echogecko89",
     }],
 };
