@@ -13,7 +13,7 @@ Though still in early stages, the site may eventually support live ATC data. Ach
 | ![status: done](https://img.shields.io/badge/status-done-brightgreen) | Integrate real-time ATC information |
 | ![status: done](https://img.shields.io/badge/status-done-brightgreen) | Implement zoom and drag functionality for the map |
 | ![status: done](https://img.shields.io/badge/status-done-brightgreen) | [Discord Server](https://discord.gg/8cQAguPjkh) |
-| ![status: in-progress](https://img.shields.io/badge/status-in--progress-orange) | Add User Settings |
+| ![status: done](https://img.shields.io/badge/status-done-brightgreen) | Add User Settings |
 | ![status: in-progress](https://img.shields.io/badge/status-in--progress-orange) | Show the Waypoints on the map and be able to put the FPL on the map.|
 | ![status: planned](https://img.shields.io/badge/status-planned-blue) | Refactor code for better organization and otimization |
 | ![status: idea](https://img.shields.io/badge/status-idea-lightgrey) | "Mobile friendly" version |
@@ -23,7 +23,6 @@ Though still in early stages, the site may eventually support live ATC data. Ach
 
 For new users or anyone with questions on how to display online ATCs from ATC24 on the website, refer to the [Wiki](https://github.com/tiaguinho2009/24SPY/wiki) for guidance, including the [How to see the ATCs Online](https://github.com/tiaguinho2009/24SPY/wiki/How-to-see-the-ATCs-Online) guide.
 
-## [DEV 0.1.4.5] - 11/11/2024
+## [DEV 0.1.4.5.1] - 12/11/2024
 ### Added
-- New Change Log Menu.
-- New roles for special Users like Developers of this website and some other guys!
+- The settings now are working!

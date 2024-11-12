@@ -69,7 +69,7 @@ const controlAreas = [
             [513,665]
         ],
         color: "rgba(45,45,45,1)",
-        active: false
+        active: true
     },
     {
         name: "ITKO TMA",
@@ -88,7 +88,7 @@ const controlAreas = [
             [407,240]
         ],
         color: "rgba(45,45,45,1)",
-        active: false
+        active: true
     },
     {
         name: "IMLR TMA",
@@ -108,7 +108,7 @@ const controlAreas = [
             [362,817],
         ],
         color: "rgba(45,45,45,1)",
-        active: false
+        active: true
     },
     {
         name: "IGAR TMA",
@@ -126,7 +126,7 @@ const controlAreas = [
             [479,927]
         ],
         color: "rgba(45,45,45,1)",
-        active: false
+        active: true
     },
     {
         name: "ILAR TMA",
@@ -145,7 +145,7 @@ const controlAreas = [
             [644,927]
         ],
         color: "rgba(45,45,45,1)",
-        active: false
+        active: true
     },
     {
         name: "IPAP TMA",
@@ -172,7 +172,7 @@ const controlAreas = [
             [925,773]
         ],
         color: "rgba(45,45,45,1)",
-        active: false
+        active: true
     },
     {
         name: "IIAB TMA",
@@ -193,7 +193,7 @@ const controlAreas = [
             [915,1100]
         ],
         color: "rgba(45,45,45,1)",
-        active: false
+        active: true
     },
     {
         name: "IPPH TMA",
@@ -211,7 +211,7 @@ const controlAreas = [
             [714,250]
         ],
         color: "rgba(45,45,45,1)",
-        active: false
+        active: true
     },
     {
         name: "IZOL TMA",
@@ -238,7 +238,7 @@ const controlAreas = [
             [910,575]
         ],
         color: "rgba(45,45,45,1)",
-        active: false
+        active: true
     },
     {
         name: "ISCM TMA",
@@ -254,7 +254,7 @@ const controlAreas = [
             [996.5,464.5]
         ],
         color: "rgba(45,45,45,1)",
-        active: false
+        active: true
     },
     {
         name: "IGRV TMA",
@@ -271,7 +271,7 @@ const controlAreas = [
             [90,650]
         ],
         color: "rgba(45,45,45,1)",
-        active: false
+        active: true
     },
     {
         name: "ISAU TMA",
@@ -287,7 +287,7 @@ const controlAreas = [
             [40,980]
         ],
         color: "rgba(45,45,45,1)",
-        active: false
+        active: true
     },
     {
         name: "IBTH TMA",
@@ -303,7 +303,7 @@ const controlAreas = [
             [570,614]
         ],
         color: "rgba(45,45,45,1)",
-        active: false
+        active: true
     },
     // FIRs
     {
@@ -1086,26 +1086,19 @@ const settings = [
     'showAirportUI',
     'showFIRlines',
     'showAPPlines',
-    'showCTRareas',
-    'showAPPareas',
     'showOnlineATC',
-    'showATCmenu',
-    'showICAOcodes'
 ];
 
 const settingsValues = {
+    //default
     showAirportUI: true,
     showFIRlines: true,
-    showAPPlines: true,
-    showCTRareas: true,
-    showAPPareas: true,
+    showAPPlines: false,
     showOnlineATC: true,
-    showATCmenu: true,
-    showICAOcodes: true,
 };
 
 const websiteInfo = {
-    version: "DEV 0.1.4.5",
+    version: "DEV 0.1.4.5.1",
 };
 
 const localInfo = {};

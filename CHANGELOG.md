@@ -1,5 +1,9 @@
 # Changelog
 
+## [DEV 0.1.4.5.1] - 12/11/2024
+### Added
+- The settings now are working!
+
 ## [DEV 0.1.4.5] - 11/11/2024
 ### Added
 - New Change Log Menu.
