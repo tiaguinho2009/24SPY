@@ -1,5 +1,10 @@
 # Changelog
 
+## [DEV 0.1.4.5] - 11/11/2024
+### Added
+- New Change Log Menu.
+- New roles for special Users like Developers of this website and some other guys!
+
 ## [DEV 0.1.4.4.3] - 11/11/2024
 ### Corrected
 - Some Frequencies Corrected.

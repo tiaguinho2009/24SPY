@@ -45,7 +45,7 @@ header h1 {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: rgba(32, 32, 36, 1);
+    background-color: #202024;
     height: 35px;
     width: 75px;
     border: none;
@@ -80,6 +80,87 @@ header h1 {
 .SPY-logo {
     width: 150px;
     height: auto;
+}
+
+.Changelog-menu {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #131316; /* Cor de fundo escura */
+    color: #ffffff; /* Cor do texto */
+    width: 60%; /* Largura do menu */
+    max-width: 800px; /* Limite de largura máxima */
+    height: 400px; /* Altura do menu */
+    position: fixed;
+    overflow-y: auto;
+    border-radius: 10px; /* Borda arredondada */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); /* Sombra */
+    z-index: 101;
+    flex-direction: column;
+    display: none;
+}
+
+.Changelog-menu .title {
+    background-color: #202024; /* Fundo do título */
+    padding: 15px;
+    font-size: 1.5em;
+    font-weight: bold;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom: 1px solid #444; /* Linha separadora */
+    position: relative; /* Necessário para posicionar o botão de fechamento */
+}
+
+.cl-close-button {
+    position: absolute;
+    top: 50%;
+    right: 15px; /* Ajuste de espaçamento da borda direita */
+    transform: translateY(-50%); /* Centraliza verticalmente */
+    background-color: #131316;
+    border: none;
+    border-radius: 5px;
+    padding: 5px; /* Espaçamento interno para centralizar */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    height: 35px;
+    width: 35px;
+}
+
+.Changelog-menu .content {
+    padding: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+}
+
+.Changelog-menu .content h2 {
+    font-size: 1.5em;
+    color: #3b6cec; /* Cor chamativa */
+    margin-bottom: 10px;
+    border-bottom: 2px solid #444; /* Linha separadora */
+    padding-bottom: 5px;
+}
+
+.Changelog-menu .content h3 {
+    font-size: 1.4em;
+    color: #4276fa; /* Cor do subtítulo */
+    margin-bottom: 8px;
+}
+
+.Changelog-menu .content ul {
+    list-style-type: disc;
+    margin-left: 20px;
+    padding-left: 10px;
+}
+
+.Changelog-menu .content li {
+    margin-bottom: 8px;
+    color: #ffffff; /* Cor do texto */
+}
+
+.Changelog-menu .content li::marker {
+    color: #ff6b6b; /* Cor do marcador */
 }
 
 /* Estilo do botão de configurações */
@@ -263,17 +344,55 @@ pointer-events: auto;   /* Permite interações de hover */
     font-size: 1.1em;
     font-weight: bold;
     margin-bottom: 5px;
+    display: inline-flex;
+    align-items: center;
+}
+
+.airport-info-menu .title .role1 {
+    color: white;
+    background-color: #3b6cec;
+    font-size: 1em;
+    font-weight: normal;
+    width: 150px;
+    height: 25px;
+    line-height: 25px;
+    border-radius: 5px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 10px;
+    vertical-align: middle;
+    display: flex;
+}
+
+.airport-info-menu .title .role2 {
+    color: white;
+    background-color: #3b6cec;
+    font-size: 1em;
+    font-weight: normal;
+    width: 150px;
+    height: 25px;
+    line-height: 25px;
+    border-radius: 5px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 10px;
+    vertical-align: middle;
+    display: none;
 }
 
 /* Estilo das informações do controlador */
 .airport-info-menu .controller-info {
     font-size: 1em; /* Tamanho normal */
     color: #bdbdbd; /* Cor cinza clara */
+    font-weight: normal;
 }
 
 .airport-info-menu .menu-divider {
     border: none;
     height: 1px;
+    font-weight: normal;
     background-color: #3b6cec; /* Cor azul para combinar com o texto */
     width: 100%;
     margin: 4px 0; /* Ajuste o espaçamento conforme necessário */

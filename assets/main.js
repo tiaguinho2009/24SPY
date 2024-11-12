@@ -180,13 +180,28 @@ function createAirportUI(airport) {
 
 		const frequency = position === 'Ground' ? airport.groundfreq : airport.towerfreq;
 
+		let atcName2 = atcName
+		if (atcName.includes("|")) {
+			atcName2 = atcName.split("|")[0].trim();
+		}
+		console.log(atcName2)
+		let roleText = "";
+		let roleIndex = "role2";
+		if (specialUsers[atcName2]) {
+			roleText = specialUsers[atcName2][0].Role;
+			roleIndex = "role1";
+		}
+
 		airportInfoMenu.style.display = 'block';
 		airportInfoMenu.innerHTML = `
-                <div class="title">${airport.real_name} ${position}</div>
+                <div class="title">
+				${airport.real_name} ${position}
+				<div class="${roleIndex}">${roleText}</div>
+				</div>
                 <hr class="menu-divider">
                 <div class="controller-info-section">
                     <p><strong>Controller:</strong> ${atcName}</p>
-                    <p><strong>Freq:</strong> ${frequency}</p>
+                    <p><strong>Frequency:</strong> ${frequency}</p>
                 </div>
             `;
 
@@ -415,6 +430,11 @@ function toggleSettingsMenu() {
 	settingsMenu.style.display = settingsMenu.style.display === 'none' || settingsMenu.style.display === '' ? 'block' : 'none';
 }
 
+function toggleChangeLogMenu() {
+	const Changelogmenu = document.getElementById('ChangelogMenu');
+	Changelogmenu.style.display = Changelogmenu.style.display === 'none' || Changelogmenu.style.display === '' ? 'flex' : 'none';
+}
+
 function resetHighlights() {
     controlAreas.forEach(area =>{
 		if (area.type === "polygon") {
@@ -539,6 +559,8 @@ function fetchATCDataAndUpdate() {
         })
         .catch(error => {
             console.error('Erro ao buscar os dados ATC:', error);
+			PTFSAPI = PTFSAPIError
+			ATCOnlinefuncion(PTFSAPI);
         });
 
 		const time = getTime()
@@ -642,6 +664,11 @@ function loadFromLocalStorage() {
     } else {
         console.log('Nenhum websiteInfo encontrado no localStorage. Usando valores padrão.');
     }
+
+	if (websiteInfo.version !== localInfo.version) {
+		toggleChangeLogMenu()
+		saveToLocalStorage()
+	}
 }
 loadFromLocalStorage();
 
