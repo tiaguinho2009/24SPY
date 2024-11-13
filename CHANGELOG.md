@@ -1,5 +1,12 @@
 # Changelog
 
+## [DEV 0.1.4.5.2] - 12/11/2024
+### Added
+- Added IDCS APP.
+
+### Modified
+- Modifications on the IRFD APP, IMLR RDR, IZOL APP and ITKO APP.
+
 ## [DEV 0.1.4.5.1] - 12/11/2024
 ### Added
 - The settings now are working!
