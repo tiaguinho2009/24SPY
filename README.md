@@ -15,13 +15,14 @@ Though still in early stages, the site may eventually support live ATC data. Ach
 | ![status: done](https://img.shields.io/badge/status-done-brightgreen) | [Discord Server](https://discord.gg/8cQAguPjkh) |
 | ![status: done](https://img.shields.io/badge/status-done-brightgreen) | Add User Settings |
 | ![status: planned](https://img.shields.io/badge/status-planned-blue) | Show the Waypoints on the map and be able to put the FPL on the map.|
+| ![status: planned](https://img.shields.io/badge/status-planned-blue) | Have a menu with the ground charts of each Airport.|
 | ![status: planned](https://img.shields.io/badge/status-planned-blue) | Refactor code for better organization and otimization |
 | ![status: idea](https://img.shields.io/badge/status-idea-lightgrey) | "Mobile friendly" version |
 | ![status: idea](https://img.shields.io/badge/status-idea-lightgrey) | Show the ATIS |
 
 ## [Wiki & Documentation](https://github.com/tiaguinho2009/24SPY/wiki)
 
-For new users or anyone with questions on how to display online ATCs from ATC24 on the website, refer to the [Wiki](https://github.com/tiaguinho2009/24SPY/wiki) for guidance, including the [How to see the ATCs Online](https://github.com/tiaguinho2009/24SPY/wiki/How-to-see-the-ATCs-Online) guide.
+For new users or anyone with questions on how to display online ATCs from ATC24 on the website, refer to the [Wiki](https://github.com/tiaguinho2009/24SPY/wiki) for guidance.
 
 ## [DEV 0.1.4.5.2] - 12/11/2024
 ### Added
