@@ -283,8 +283,16 @@ canvas {
     font-size: 0.85em;
     text-align: center;
     width: 50px;
-    pointer-events: none; /* Para evitar interferências */
     z-index: 10;
+}
+
+.airport-ui .icao-code {
+    background-color: transparent;
+    border: none;
+    color: #7d7d85;
+    font-size: 1em;
+    text-align: center;
+    padding: 5px;
 }
 
 .airport-ui p {
@@ -325,7 +333,75 @@ pointer-events: auto;   /* Permite interações de hover */
     z-index: 10;
 }
 
-/* Estilo atualizado para o menu de informações do aeroporto */
+.icao-menu {
+    position: absolute;
+    background-color: #131316;
+    color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 1em;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+    display: none;
+    z-index: 20; 
+}
+
+.icao-menu .title {
+    color: #3b6cec;
+    font-size: 1.1em;
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: inline-flex;
+    align-items: center;
+}
+
+.icao-menu .menu-divider {
+    border: none;
+    height: 1px;
+    font-weight: normal;
+    background-color: #3b6cec;
+    width: 100%;
+    margin: 4px 0;
+    opacity: 0.3;
+}
+
+.icao-code .charts-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.no-charts {
+    font-size: 15px;
+    color: rgb(190, 190, 190);
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.chart-button {
+    font-size: 15px;
+    color: rgb(190, 190, 190);
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(32, 32, 36, 1);
+    height: 35px;
+    width: 210px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer; /* Aponta que o elemento é clicável */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Efeitos suaves */
+    margin-top: 5px;
+}
+
+.chart-button:hover {
+    background-color: rgba(50, 50, 55, 1); /* Cor mais clara ao passar o mouse */
+    color: white; /* Texto fica branco ao passar o mouse */
+}
+
 .airport-info-menu {
     position: absolute;
     background-color: #131316;
@@ -334,7 +410,7 @@ pointer-events: auto;   /* Permite interações de hover */
     border-radius: 5px;
     font-size: 1em;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
-    display: none; /* Inicialmente escondido */
+    display: none;
     z-index: 20;
 }
 

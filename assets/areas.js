@@ -756,6 +756,9 @@ const controlAreas = [
             "Rockford Tower",
             "Rockford Ground"
         ],
+        charts: [
+            ["Official", "https://ptfs.xyz/charts/dark/IRFD%20Ground%20Chart.png"],
+        ],
     },
     {
         name: "IPPH",
@@ -775,7 +778,10 @@ const controlAreas = [
         atcs: [
             "Perth Tower",
             "Perth Ground"
-        ]
+        ],
+        charts: [
+            ["Official", "https://ptfs.xyz/charts/dark/IPPH%20Ground%20Chart.png"],
+        ],
     },
     {
         name: "IZOL",
@@ -795,7 +801,10 @@ const controlAreas = [
         atcs: [
             "Izolirani Tower",
             "Izolirani Ground"
-        ]
+        ],
+        charts: [
+            ["Official", "https://ptfs.xyz/charts/dark/IZOL%20Ground%20Chart.png"],
+        ],
     },
     {
         name: "ITKO",
@@ -815,7 +824,10 @@ const controlAreas = [
         atcs: [
             "Tokyo Tower",
             "Tokyo Ground"
-        ]
+        ],
+        charts: [
+            ["Official", "https://ptfs.xyz/charts/dark/ITKO%20Ground%20Chart.png"],
+        ],
     },
     {
         name: "ILAR",
@@ -835,7 +847,11 @@ const controlAreas = [
         atcs: [
             "Larnaca Tower",
             "Larnaca Ground"
-        ]
+        ],
+        charts: [
+            ["Official", "https://ptfs.xyz/charts/dark/ILAR%20Ground%20Chart.png"],
+            ["TUGACHARTS", "https://drive.google.com/file/d/1ofmuravfpMXW1d4B9M43MyOGbc1RORCs/view"]
+        ],
     },
     {
         name: "IGRV",
@@ -852,7 +868,10 @@ const controlAreas = [
         groundATC: "",
         atcs: [
             "Grindavik Tower",
-        ]
+        ],
+        charts: [
+            ["Official", "https://ptfs.xyz/charts/dark/IGRV%20Ground%20Chart.png"],
+        ],
     },
     {
         name: "IBTH",
@@ -871,6 +890,9 @@ const controlAreas = [
             "Saint Barthélemy Tower",
         ],
         oceanic: true,
+        charts: [
+            ["Official", "https://ptfs.xyz/charts/dark/IBTH%20Ground%20Chart.png"],
+        ],
     },
     {
         name: "ISAU",
@@ -887,7 +909,10 @@ const controlAreas = [
         groundATC: "",
         atcs: [
             "Sauthemptona Tower",
-        ]
+        ],
+        charts: [
+            ["Official", "https://ptfs.xyz/charts/dark/ISAU%20Ground%20Chart.png"],
+        ],
     },
     //1
     {
@@ -903,7 +928,10 @@ const controlAreas = [
         towerATC: "",
         atcs: [
             "Paphos Tower",
-        ]
+        ],
+        charts: [
+            ["Official", "https://ptfs.xyz/charts/dark/IPAP%20Ground%20Chart.png"],
+        ],
     },
     {
         name: "IMLR",
@@ -919,7 +947,10 @@ const controlAreas = [
         groundATC: "",
         atcs: [
             "Mellor Tower",
-        ]
+        ],
+        charts: [
+            ["Official", "https://ptfs.xyz/charts/dark/IMLR%20Ground%20Chart.png"],
+        ],
     },
     {
         name: "IDCS",
@@ -934,7 +965,10 @@ const controlAreas = [
         towerATC: "",
         atcs: [
             "Saba Tower",
-        ]
+        ],
+        charts: [
+            ["Official", "https://ptfs.xyz/charts/dark/IDCS%20Ground%20Chart.png"],
+        ],
     },
     {
         name: "IGAR",
@@ -949,7 +983,10 @@ const controlAreas = [
         towerATC: "",
         atcs: [
             "Garry Tower",
-        ]
+        ],
+        charts: [
+            ["Official", "https://ptfs.xyz/charts/dark/IGAR%20Ground%20Chart.png"],
+        ],
     },
     {
         name: "IIAB",
@@ -964,7 +1001,10 @@ const controlAreas = [
         towerATC: "",
         atcs: [
             "McConnell Tower",
-        ]
+        ],
+        charts: [
+            ["Official", "https://ptfs.xyz/charts/dark/IIAB%20Ground%20Chart.png"],
+        ],
     },
     {
         name: "ISCM",
@@ -979,7 +1019,10 @@ const controlAreas = [
         towerATC: "",
         atcs: [
             "Scampton Tower",
-        ]
+        ],
+        charts: [
+            ["Official", "https://ptfs.xyz/charts/dark/ISCM%20Ground%20Chart.png"],
+        ],
     },
     //2
     {
@@ -994,7 +1037,10 @@ const controlAreas = [
         towerATC: "",
         atcs: [
             "Boltic Tower",
-        ]
+        ],
+        charts: [
+            ["Official", "https://ptfs.xyz/charts/dark/IBLT%20Ground%20Chart.png"],
+        ],
     },
     {
         name: "ILKL",
@@ -1008,7 +1054,10 @@ const controlAreas = [
         towerATC: "",
         atcs: [
             "Lukla Tower",
-        ]
+        ],
+        charts: [
+            ["Official", "https://ptfs.xyz/charts/dark/ILKL%20Ground%20Chart.png"],
+        ],
     },
     {
         name: "ITRN",
@@ -1022,7 +1071,10 @@ const controlAreas = [
         towerATC: "",
         atcs: [
             "Training Centre Tower",
-        ]
+        ],
+        charts: [
+            ["Official", "https://ptfs.xyz/charts/dark/ITRN%20Ground%20Chart.png"],
+        ],
     },
     {
         name: "IJAF",
@@ -1036,7 +1088,10 @@ const controlAreas = [
         towerATC: "",
         atcs: [
             "Al Najaf Tower",
-        ]
+        ],
+        charts: [
+            ["Official", "https://ptfs.xyz/charts/dark/IJAF%20Ground%20Chart.png"],
+        ],
     },
     {
         name: "IHEN",
@@ -1050,7 +1105,10 @@ const controlAreas = [
         towerATC: "",
         atcs: [
             "Henstridge Tower",
-        ]
+        ],
+        charts: [
+            ["Official", "https://ptfs.xyz/charts/dark/IHEN%20Ground%20Chart.png"],
+        ],
     },
     {
         name: "IBAR",
@@ -1064,7 +1122,10 @@ const controlAreas = [
         towerATC: "",
         atcs: [
             "Barra Tower",
-        ]
+        ],
+        charts: [
+            ["Official", "https://ptfs.xyz/charts/dark/IBAR%20Ground%20Chart.png"],
+        ],
     },
     {
         name: "ISKP",
@@ -1081,6 +1142,10 @@ const controlAreas = [
             "Skopelos Tower",
         ],
         oceanic: true,
+        charts: [
+            ["Official", "https://ptfs.xyz/charts/dark/ISKP%20Ground%20Chart.png"],
+            //["TUGACHARTS", "https://drive.google.com/file/d/1BEaoKLa9hvXCPPKdkc4IGa9Wc22OXr0s/view"]//NOT PUBLISHIED YET
+        ],
     },
 ];
 
@@ -1134,7 +1199,7 @@ const settingsValues = {
 };
 
 const websiteInfo = {
-    version: "DEV 0.1.4.5.2",
+    version: "DEV 0.1.4.6",
 };
 
 const localInfo = {};

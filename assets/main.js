@@ -40,6 +40,7 @@ function draw() {
 	const mapHeight = 1200 * scale;
 	ctx.drawImage(mapImage, offsetX, offsetY, mapWidth, mapHeight);
 	drawControlAreas();
+	resetChartsMenu()
 }
 
 // Função para desenhar áreas de controle
@@ -152,18 +153,20 @@ function updatePosition(airportUI, airport) {
 	airportUI.style.top = `${y + uiHeight / 2}px`;
 }
 
+const icaoMenuCount = 0;
+
 function createAirportUI(airport) {
 	if (settingsValues.showAirportUI === false) {return};
 	const airportUI = document.createElement('div');
 	airportUI.className = 'airport-ui';
 	airportUI.style.zIndex = 10 + (3 - airport.originalscale);
 	airportUI.innerHTML = `
-            <p>${airport.name}</p>
-            ${airport.ctr && airport.tower ? '<div class="badge C">C</div>' : ''}
-            ${airport.app && airport.tower && !airport.ctr ? '<div class="badge A">A</div>' : ''}
-            ${!airport.ctr && !airport.app && airport.tower ? '<div class="badge T">T</div>' : ''}
-            ${airport.ground ? '<div class="badge G">G</div>' : ''}
-        `;
+		<button class="icao-code">${airport.name}</button>
+		${airport.ctr && airport.tower ? '<div class="badge C">C</div>' : ''}
+		${airport.app && airport.tower && !airport.ctr ? '<div class="badge A">A</div>' : ''}
+		${!airport.ctr && !airport.app && airport.tower ? '<div class="badge T">T</div>' : ''}
+		${airport.ground ? '<div class="badge G">G</div>' : ''}
+	`;
 	document.body.appendChild(airportUI);
 
 	const airportInfoMenu = document.createElement('div');
@@ -174,6 +177,49 @@ function createAirportUI(airport) {
 		airportUI.style.backgroundColor = "rgba(32, 47, 54, 0.5)";
 		airportUI.style.color = "#ffffff";
 	}
+
+	if (icaoMenuCount < 1) {
+		const icaoMenu = document.createElement('div');
+		icaoMenu.className = 'icao-menu';
+		icaoMenu.innerHTML = `
+			<div class="title">Charts for ${airport.name}</div>
+			<hr class="menu-divider">
+			<div class="charts-buttons"></div>
+		`;
+		document.body.appendChild(icaoMenu);
+	
+		const chartsButtonsContainer = icaoMenu.querySelector('.charts-buttons');
+		if (airport.charts) {
+			airport.charts.forEach(chart => {
+				const [chartName, chartLink] = chart;
+				const chartButton = document.createElement('button');
+				chartButton.className = 'chart-button';
+				chartButton.textContent = chartName;
+				chartButton.onclick = () => {
+					window.open(chartLink, '_blank');
+				};
+				chartsButtonsContainer.appendChild(chartButton);
+			});
+		} else {
+			chartsButtonsContainer.innerHTML = `<div class="no-charts">No charts available</div>`;
+		}
+	
+		function toggleIcaoMenu() {
+			if (icaoMenu.style.display === 'none' || !icaoMenu.style.display) {
+				icaoMenu.style.display = 'block';
+		
+				const [x, y] = transformCoordinates(airport.coordinates);
+				const menuHeight = icaoMenu.offsetHeight;
+		
+				icaoMenu.style.left = `${x - (icaoMenu.offsetWidth / 2)}px`;
+				icaoMenu.style.top = `${y - menuHeight + 15}px`;
+			} else {
+				icaoMenu.style.display = 'none';
+			}
+		}		
+	
+		airportUI.querySelector('.icao-code').addEventListener('click', toggleIcaoMenu);
+	}	
 
 	function showInfoMenu(badge) {
 		const position =
@@ -309,6 +355,11 @@ function createAirportUI(airport) {
 		groundBadge.addEventListener('mouseenter', () => showInfoMenu(groundBadge));
 		groundBadge.addEventListener('mouseleave', hideInfoMenu);
 	}
+
+	if (controlBadge || approachBadge || towerBadge || groundBadge) {
+		const icaoCodeButton = airportUI.querySelector('.icao-code');
+		icaoCodeButton.style.color = "#ffffff";
+	}	
 
 	updatePosition(airportUI, airport);
 
@@ -460,6 +511,13 @@ function resetHighlights() {
 	});
     //hideAirportUI();
     draw();
+}
+
+function resetChartsMenu() {
+	const menus = document.querySelectorAll(`.icao-menu`);
+	menus.forEach(menu => {
+		menu.style.display = "none";
+	});
 }
 
 function refreshUI() {
