@@ -22,6 +22,6 @@
 
 For new users or anyone with questions on how to display online ATCs from ATC24 on the website, refer to the [Wiki](https://github.com/tiaguinho2009/24SPY/wiki) for guidance.
 
-## [DEV 0.1.4.6] - 15/11/2024
+## [DEV 0.1.4.6.1] - 16/11/2024
 ### Added
-- New "Charts Menu", now when you click on the ICAO code of any Airport it will show a Menu with the charts! (For now it only show the Official charts because i need to have autorization from the chart makers to put there charts.)
+- Some small animations.

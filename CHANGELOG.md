@@ -1,5 +1,9 @@
 # Changelog
 
+## [DEV 0.1.4.6.1] - 16/11/2024
+### Added
+- Some small animations.
+
 ## [DEV 0.1.4.6] - 15/11/2024
 ### Added
 - New "Charts Menu", now when you click on the ICAO code of any Airport it will show a Menu with the charts! (For now it only show the Official charts because i need to have autorization from the chart makers to put there charts.)
