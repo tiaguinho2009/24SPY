@@ -313,6 +313,7 @@ canvas {
     font-size: 1em;
     text-align: center;
     padding: 5px;
+    cursor: pointer;
 }
 
 .airport-ui p {
