@@ -314,6 +314,15 @@ canvas {
     text-align: center;
     padding: 5px;
     cursor: pointer;
+    transition: color 0.1s ease-in-out;
+}
+
+.airport-ui .icao-code:hover {
+    color: #ffffff;
+}
+
+.icao-code.active {
+    color: #dcdcdc;
 }
 
 .airport-ui p {

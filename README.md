@@ -22,6 +22,8 @@
 
 For new users or anyone with questions on how to display online ATCs from ATC24 on the website, refer to the [Wiki](https://github.com/tiaguinho2009/24SPY/wiki) for guidance.
 
-## [DEV 0.1.4.6.1] - 16/11/2024
+## [DEV 0.1.4.6.2] - 19/11/2024
 ### Added
-- Some small animations.
+- New small animations on Airports ICAO code.
+### Removed
+- All unnecessary logs have been removed (DEV Stuff).

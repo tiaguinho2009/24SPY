@@ -216,7 +216,7 @@ function createAirportUI(airport) {
 			} else {
 				icaoMenu.style.display = 'none';
 			}
-		}		
+		}
 	
 		airportUI.querySelector('.icao-code').addEventListener('click', toggleIcaoMenu);
 	}	
@@ -242,7 +242,6 @@ function createAirportUI(airport) {
 		if (atcName.includes("|")) {
 			atcName2 = atcName.split("|")[0].trim();
 		}
-		console.log(atcName2)
 		let roleText = "";
 		let roleIndex = "role2";
 		if (specialUsers[atcName2]) {
@@ -358,8 +357,8 @@ function createAirportUI(airport) {
 
 	if (controlBadge || approachBadge || towerBadge || groundBadge) {
 		const icaoCodeButton = airportUI.querySelector('.icao-code');
-		icaoCodeButton.style.color = "#ffffff";
-	}	
+		icaoCodeButton.classList.add('active');
+	}		
 
 	updatePosition(airportUI, airport);
 
@@ -540,7 +539,6 @@ function updateATCCount() {
 }
 
 function ATCOnlinefuncion(atcList) {
-	console.log('Iniciando função de teste ATCOnlineFunction');
 	onlineATC = 0;
 
 	// Desativa todas as áreas e aeroportos ao iniciar
@@ -551,7 +549,6 @@ function ATCOnlinefuncion(atcList) {
 			area.towerAtc = '';
 			area.groundAtc = '';
 			area.scale = area.originalscale;
-			console.log(`Desativado ${area.name} - Tower: ${area.tower}, Ground: ${area.ground}`);
 		} else if (area.type === 'polygon') {
 			area.active = false; // Desativa TMAs/CTRs inicialmente
 		}
@@ -569,7 +566,6 @@ function ATCOnlinefuncion(atcList) {
 		controlAreas.forEach(area => {
 			
 			if (area.type === 'Airport' && area.real_name === airport) {
-				console.log('oooo');
 				area.scale = 0; // Reduz o scale ao ativar uma posição no aeroporto
 				if (position === "tower") {
 					area.tower = true;
@@ -580,7 +576,6 @@ function ATCOnlinefuncion(atcList) {
 					controlAreas.forEach(tmaArea => {
 						if (tmaArea.type === 'polygon' && tmaArea.name === area.tma) {
 							tmaArea.active = true;
-							console.log(`TMA ${tmaArea.name} ativada para ${area.name}`);
 						}
 					});
 				}
@@ -596,12 +591,9 @@ function ATCOnlinefuncion(atcList) {
 					controlAreas.forEach(ctrArea => {
 						if (ctrArea.type === 'polygon' && ctrArea.name === area.ctr) {
 							ctrArea.active = true;
-							console.log(`CTR ${ctrArea.name} ativada para ${area.name}`);
 						}
 					});
 				}
-
-				console.log(`Atualizado ${airport} - Tower Ativo: ${area.tower}, Ground Ativo: ${area.ground}, ATC: ${holder}`);
 			}
 		});
 	});
@@ -622,11 +614,8 @@ function fetchATCDataAndUpdate() {
             return response.json();
         })
         .then(data => {
-            // Atualiza a variável PTFSAPI com os dados recebidos
-			console.log(data)
             PTFSAPI = data;
 
-            // Executa a função de atualização com os dados recebidos
             ATCOnlinefuncion(PTFSAPI);
         })
         .catch(error => {
@@ -661,7 +650,6 @@ function resetAllATCfuntion() {
 			area.towerAtc = ''; // Limpa o ATC da torre
 			area.groundAtc = ''; // Limpa o ATC do ground
 			area.scale = area.originalscale; // Opcional: redefinir a escala para não mostrar
-			console.log(`Desativado ${area.name} - Tower: ${area.tower}, Ground: ${area.ground}`);
 		}
 	});
 	ATCOnlinefuncion();
@@ -745,11 +733,9 @@ function loadFromLocalStorage() {
 loadFromLocalStorage();
 
 function onCheckBoxChange(checkbox) {
-	console.log(checkbox.id);
 	settings.forEach(setting => {
 		if (setting === checkbox.id) {
-			settingsValues[setting] = checkbox.checked; // Atualiza o valor correspondente na configuração
-			console.log(settingsValues[setting], checkbox.checked);
+			settingsValues[setting] = checkbox.checked;
 			saveToLocalStorage()
 			draw()
 			refreshUI()

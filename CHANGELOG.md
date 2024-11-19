@@ -1,5 +1,11 @@
 # Changelog
 
+## [DEV 0.1.4.6.2] - 19/11/2024
+### Added
+- New small animations on Airports ICAO code.
+### Removed
+- All unnecessary logs have been removed (DEV Stuff).
+
 ## [DEV 0.1.4.6.1] - 16/11/2024
 ### Added
 - Some small animations.
