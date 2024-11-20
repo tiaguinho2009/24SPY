@@ -1,5 +1,9 @@
 # Changelog
 
+## [DEV 0.1.4.6.3] - 20/11/2024
+### Added
+- All AeroNav charts were added!
+
 ## [DEV 0.1.4.6.2] - 19/11/2024
 ### Added
 - New small animations on Airports ICAO code.

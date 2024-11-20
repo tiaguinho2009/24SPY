@@ -206,6 +206,7 @@ function createAirportUI(airport) {
 	
 		function toggleIcaoMenu() {
 			if (icaoMenu.style.display === 'none' || !icaoMenu.style.display) {
+				resetChartsMenu()
 				icaoMenu.style.display = 'block';
 		
 				const [x, y] = transformCoordinates(airport.coordinates);
