@@ -6,17 +6,19 @@
 
 | Status                                         | Task                                         |
 |------------------------------------------------|----------------------------------------------|
-| ![status: done](https://img.shields.io/badge/status-done-brightgreen) | Display major airport icons and ACC areas on the map |
-| ![status: done](https://img.shields.io/badge/status-done-brightgreen) | Display all airport icons with zoom functionality, TMA/APP areas on the map |
-| ![status: done](https://img.shields.io/badge/status-done-brightgreen) | Integrate real-time ATC information |
-| ![status: done](https://img.shields.io/badge/status-done-brightgreen) | Implement zoom and drag functionality for the map |
-| ![status: done](https://img.shields.io/badge/status-done-brightgreen) | [Discord Server](https://discord.gg/8cQAguPjkh) |
-| ![status: done](https://img.shields.io/badge/status-done-brightgreen) | Add User Settings |
-| ![status: done](https://img.shields.io/badge/status-done-brightgreen) | Have a menu with the ground charts of each Airport.|
-| ![status: planned](https://img.shields.io/badge/status-planned-blue) | Show the Waypoints on the map and be able to put the FPL on the map.|
-| ![status: planned](https://img.shields.io/badge/status-planned-blue) | Refactor code for better organization and otimization |
-| ![status: idea](https://img.shields.io/badge/status-idea-lightgrey) | "Mobile friendly" version |
-| ![status: idea](https://img.shields.io/badge/status-idea-lightgrey) | Show the ATIS |
+| ![status: Done](https://img.shields.io/badge/status-Done-brightgreen) | Display major airport icons and ACC areas on the map |
+| ![status: Done](https://img.shields.io/badge/status-Done-brightgreen) | Display all airport icons with zoom functionality, TMA/APP areas on the map |
+| ![status: Done](https://img.shields.io/badge/status-Done-brightgreen) | Integrate real-time ATC information |
+| ![status: Done](https://img.shields.io/badge/status-Done-brightgreen) | Implement zoom and drag functionality for the map |
+| ![status: Done](https://img.shields.io/badge/status-Done-brightgreen) | [Discord Server](https://discord.gg/8cQAguPjkh) |
+| ![status: Done](https://img.shields.io/badge/status-Done-brightgreen) | Add User Settings |
+| ![status: Done](https://img.shields.io/badge/status-Done-brightgreen) | Have a menu with the ground charts of each Airport.|
+| ![status: In-Progress](https://img.shields.io/badge/status-In_Progress-orange) | Buy a mini pc to be a backhand server for the website |
+| ![status: Planned](https://img.shields.io/badge/status-Planned-blue) | Show the Waypoints on the map and be able to put the FPL on the map.|
+| ![status: Planned](https://img.shields.io/badge/status-Planned-blue) | Refactor code for better organization and otimization |
+| ![status: Idea](https://img.shields.io/badge/status-Idea-lightgrey) | "Mobile friendly" version |
+| ![status: Idea](https://img.shields.io/badge/status-Idea-lightgrey) | Show the ATIS |
+| ![status: Idea](https://img.shields.io/badge/status-Idea-lightgrey) | Show the Planes |
 
 ## [Wiki & Documentation](https://github.com/tiaguinho2009/24SPY/wiki)
 
