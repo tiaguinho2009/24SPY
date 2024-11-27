@@ -24,6 +24,6 @@
 
 For new users or anyone with questions on how to display online ATCs from ATC24 on the website, refer to the [Wiki](https://github.com/tiaguinho2009/24SPY/wiki) for guidance.
 
-## [DEV 0.1.4.6.3] - 20/11/2024
+## [DEV 0.1.4.6.4] - 27/11/2024
 ### Added
-- All AeroNav charts were added!
+- Small Animation to the "Map Last Update" box/button.

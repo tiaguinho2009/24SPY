@@ -607,6 +607,17 @@ ATCOnlinefuncion(PTFSAPI);
 
 // Função para buscar dados do endpoint e atualizar o estado de ATC
 function fetchATCDataAndUpdate() {
+	function toggleUpdateClass() {
+		const mapUpdateTime = document.getElementById('mapUpdateTime');
+		const originalColor = 'rgba(32, 32, 36, 1)'
+	
+		mapUpdateTime.style.backgroundColor = '#ff7a00';
+	
+		setTimeout(() => {
+			mapUpdateTime.style.backgroundColor = originalColor;
+		}, 150);
+	}
+	
     fetch('https://ptfs.xyz/api/controllers')
         .then(response => {
             if (!response.ok) {
@@ -618,11 +629,13 @@ function fetchATCDataAndUpdate() {
             PTFSAPI = data;
 
             ATCOnlinefuncion(PTFSAPI);
+			toggleUpdateClass();
         })
         .catch(error => {
             console.error('Erro ao buscar os dados ATC:', error);
 			PTFSAPI = PTFSAPIError
 			ATCOnlinefuncion(PTFSAPI);
+			toggleUpdateClass();
         });
 
 		const time = getTime()

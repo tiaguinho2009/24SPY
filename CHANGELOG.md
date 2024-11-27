@@ -1,5 +1,9 @@
 # Changelog
 
+## [DEV 0.1.4.6.4] - 27/11/2024
+### Added
+- Small Animation to the "Map Last Update" box/button.
+
 ## [DEV 0.1.4.6.3] - 20/11/2024
 ### Added
 - All AeroNav charts were added!
