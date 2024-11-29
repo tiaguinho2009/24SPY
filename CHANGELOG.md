@@ -1,5 +1,10 @@
 # Changelog
 
+## [DEV 0.1.4.6.5] - 29/11/2024
+### Added
+- Added missing "airfields" Sea Haven and Waterloo.
+- Started working with Flight Plan and ATC Menus Buttons (They don't work for now).
+
 ## [DEV 0.1.4.6.4] - 27/11/2024
 ### Added
 - Small Animation to the "Map Last Update" box/button.

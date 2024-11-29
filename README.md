@@ -24,6 +24,7 @@
 
 For new users or anyone with questions on how to display online ATCs from ATC24 on the website, refer to the [Wiki](https://github.com/tiaguinho2009/24SPY/wiki) for guidance.
 
-## [DEV 0.1.4.6.4] - 27/11/2024
+## [DEV 0.1.4.6.5] - 29/11/2024
 ### Added
-- Small Animation to the "Map Last Update" box/button.
+- Added missing "airfields" Sea Haven and Waterloo.
+- Started working with Flight Plan and ATC Menus Buttons (They don't work for now).

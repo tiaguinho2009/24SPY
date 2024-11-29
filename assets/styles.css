@@ -38,6 +38,70 @@ header h1 {
     gap: 20px; /* Ajuste o espaço entre os botões conforme necessário */
 }
 
+.header-left-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Alinha os botões à esquerda */
+    gap: 20px; /* Ajuste o espaço entre os botões conforme necessário */
+    width: 100%; /* Ocupa a largura total disponível */
+}
+
+.fpl-button {
+    font-size: 16px;
+    color: #919191; /*#ffffff*/
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #19191d; /*#202024*/
+    height: 45px;
+    width: 150px;
+    margin-left: 20px;
+    border: none;
+    border-radius: 5px;
+    /*cursor: pointer;*/
+    transition: background-color 0.3s ease-in-out;
+}
+
+.fpl-button .fpl-icon {
+    height: 30px;
+    width: 30px;
+    margin-right: 7px;
+    filter: brightness(0.3);
+}
+
+/*.fpl-button:hover {
+    background-color: #323237; 
+}*/
+
+.atc-left-button {
+    font-size: 16px;
+    color: #919191; /*#ffffff*/
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #19191d; /*#202024*/
+    height: 45px;
+    width: 100px;
+    margin-left: 5px;
+    border: none;
+    border-radius: 5px;
+    /*cursor: pointer;*/
+    transition: background-color 0.3s ease-in-out;
+}
+
+.atc-left-button .atc-left-icon {
+    height: 30px;
+    width: 30px;
+    margin-right: 7px;
+    filter: brightness(0.3);
+}
+
+/*.atc-left-button:hover {
+    background-color: #323237; 
+}*/
+
 .atc-online {
     font-size: 15px;
     color: rgb(255, 255, 255);
