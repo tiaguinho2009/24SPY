@@ -230,15 +230,15 @@ function createAirportUI(airport) {
 			badge.classList.contains('G') ? 'Ground' :
 			badge.classList.contains('D') ? 'Delivery' :
 			'Unknown';
-
+	
 		const atcName = (position === 'Control' || position === 'Oceanic' || position === 'Approach' || position === 'Tower') ?
 			airport.towerAtc :
 			(position === 'Ground' || position === 'Delivery') ?
 			airport.groundAtc :
 			null;
-
+	
 		const frequency = position === 'Ground' ? airport.groundfreq : airport.towerfreq;
-
+	
 		let atcName2 = atcName
 		if (atcName.includes("|")) {
 			atcName2 = atcName.split("|")[0].trim();
@@ -249,30 +249,43 @@ function createAirportUI(airport) {
 			roleText = specialUsers[atcName2][0].Role;
 			roleIndex = "role1";
 		}
-
+	
 		airportInfoMenu.style.display = 'block';
 		airportInfoMenu.innerHTML = `
-                <div class="title">
+			<div class="title">
 				${airport.real_name} ${position}
 				<div class="${roleIndex}">${roleText}</div>
-				</div>
-                <hr class="menu-divider">
-                <div class="controller-info-section">
-                    <p><strong>Controller:</strong> ${atcName}</p>
-                    <p><strong>Frequency:</strong> ${frequency}</p>
-                </div>
-            `;
+			</div>
+			<hr class="menu-divider">
+			<div class="controller-info-section">
+				<p><strong>Controller:</strong> ${atcName}</p>
+				<p><strong>Frequency:</strong> ${frequency}	‎ ‎ ‎ <strong>Time Online:</strong> ${getTimeOnline()}</p>
 
+			</div>
+		`;
+	
 		const [x, y] = transformCoordinates(airport.coordinates);
 		airportInfoMenu.style.left = `${x - (airportUI.offsetWidth / 2)}px`;
 		airportInfoMenu.style.top = `${y + airportUI.offsetHeight / 2 + 60}px`;
 	}
-
+	
 	function hideInfoMenu() {
 		document.querySelectorAll('.airport-info-menu').forEach(menu => {
 		   menu.style.display = 'none';
 		});
-	 }
+	}
+	
+	let startTime = new Date();
+	
+	function getTimeOnline() {
+		let currentTime = new Date();
+		let timeDiff = Math.abs(currentTime - startTime);
+		let hours = Math.floor(timeDiff / 3600000);
+		let minutes = Math.floor((timeDiff % 3600000) / 60000);
+		return `${hours}:${minutes.toString().padStart(2, '0')}`;
+	}
+	
+	
 
 	const controlBadge = airportUI.querySelector('.badge.C');
 	const approachBadge = airportUI.querySelector('.badge.A');
