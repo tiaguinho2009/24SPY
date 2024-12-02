@@ -13,8 +13,10 @@
 | ![status: Done](https://img.shields.io/badge/status-Done-brightgreen) | [Discord Server](https://discord.gg/8cQAguPjkh) |
 | ![status: Done](https://img.shields.io/badge/status-Done-brightgreen) | Add User Settings |
 | ![status: Done](https://img.shields.io/badge/status-Done-brightgreen) | Have a menu with the ground charts of each Airport.|
+| ![status: Done](https://img.shields.io/badge/status-Done-brightgreen) | Show the Waypoints on the map and be able to put the FPL on the map.|
 | ![status: In-Progress](https://img.shields.io/badge/status-In_Progress-orange) | Buy a mini pc to be a backhand server for the website |
-| ![status: Planned](https://img.shields.io/badge/status-Planned-blue) | Show the Waypoints on the map and be able to put the FPL on the map.|
+| ![status: Planned](https://img.shields.io/badge/status-Planned-blue) | Make the Labels of the Waypoints interactive.|
+| ![status: Planned](https://img.shields.io/badge/status-Planned-blue) | Add Airways to the FLP System.|
 | ![status: Planned](https://img.shields.io/badge/status-Planned-blue) | Refactor code for better organization and otimization |
 | ![status: Idea](https://img.shields.io/badge/status-Idea-lightgrey) | "Mobile friendly" version |
 | ![status: Idea](https://img.shields.io/badge/status-Idea-lightgrey) | Show the ATIS |
@@ -24,7 +26,11 @@
 
 For new users or anyone with questions on how to display online ATCs from ATC24 on the website, refer to the [Wiki](https://github.com/tiaguinho2009/24SPY/wiki) for guidance.
 
-## [DEV 0.1.4.6.5] - 29/11/2024
+## [DEV 0.1.5] - 03/12/2024
 ### Added
-- Added missing "airfields" Sea Haven and Waterloo.
-- Started working with Flight Plan and ATC Menus Buttons (They don't work for now).
+- Added missing "airfield" Tavaro Seabase.
+- Added all the navaids(Waypoints and VORs) of the ATC24 Airspace.
+- New Fligh Plan feuture!
+- Added 2 new Map settings "Show Navaids" and "Show Navaids Labels".
+### Corrected
+- ICAO Code of the Waterloo corrected to "OWO".

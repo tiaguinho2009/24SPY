@@ -1,5 +1,14 @@
 # Changelog
 
+## [DEV 0.1.5] - 03/12/2024
+### Added
+- Added missing "airfield" Tavaro Seabase.
+- Added all the navaids(Waypoints and VORs) of the ATC24 Airspace.
+- New Fligh Plan feuture!
+- Added 2 new Map settings "Show Navaids" and "Show Navaids Labels".
+### Corrected
+- ICAO Code of the Waterloo corrected to "OWO".
+
 ## [DEV 0.1.4.6.5] - 29/11/2024
 ### Added
 - Added missing "airfields" Sea Haven and Waterloo.

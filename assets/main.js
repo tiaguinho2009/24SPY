@@ -11,6 +11,7 @@ let scale = 1;
 let isDragging = false;
 let startX, startY;
 let onlineATC = 0;
+let flightRoute = [];
 
 // Configuração do tamanho do canvas
 function resizeCanvas() {
@@ -40,7 +41,9 @@ function draw() {
 	const mapHeight = 1200 * scale;
 	ctx.drawImage(mapImage, offsetX, offsetY, mapWidth, mapHeight);
 	drawControlAreas();
-	resetChartsMenu()
+	drawFlightPlan(flightRoute);
+	resetChartsMenu();
+	drawNavaids();
 }
 
 // Função para desenhar áreas de controle
@@ -136,6 +139,100 @@ function drawControlAreas() {
 	});
 }
 
+function drawFlightPlan(points) {
+    if (points.length < 2) {
+        return;
+    }
+
+    ctx.strokeStyle = "#cc4265";
+    ctx.lineWidth = 2;
+
+    const transformedPoints = points.map(point => ({
+        ...point,
+        transformedCoordinates: transformCoordinates(point.coordinates),
+    }));
+
+    ctx.beginPath();
+    ctx.moveTo(
+        transformedPoints[0].transformedCoordinates[0],
+        transformedPoints[0].transformedCoordinates[1]
+    );
+
+    for (let i = 1; i < transformedPoints.length; i++) {
+        ctx.lineTo(
+            transformedPoints[i].transformedCoordinates[0],
+            transformedPoints[i].transformedCoordinates[1]
+        );
+    }
+    ctx.stroke();
+
+    transformedPoints.forEach((point, index) => {
+        const [x, y] = point.transformedCoordinates;
+
+        let pointColor;
+        if (index === 0) {
+            pointColor = "#00FF00"; // Verde para o primeiro ponto
+        } else if (index === transformedPoints.length - 1) {
+            pointColor = "#FF0000"; // Vermelho para o último ponto
+        } else {
+            pointColor = point.type === "VOR" ? "#66B2FF" : "#FFFF66";
+        }
+
+        ctx.beginPath();
+        ctx.arc(x, y, 4, 0, 2 * Math.PI);
+        ctx.fillStyle = pointColor;
+        ctx.fill();
+
+        if ((index === 0 || index === transformedPoints.length - 1) && point.type === "Airport") {
+            return;
+        }
+
+        ctx.fillStyle = "#FFFFFF";
+        ctx.font = "14px Arial";
+        ctx.fillText(point.name, x + 5, y - 5);
+    });
+}
+
+function drawNavaids() {
+    if (!settingsValues.showNavaids) {
+        return;
+    }
+    const navaids = Waypoints;
+
+    navaids.forEach(navaid => {
+        // Filtra apenas os tipos VOR e Waypoint
+        if (navaid.type !== "VOR" && navaid.type !== "Waypoint") {
+            return;
+        }
+
+        // Verifica se o navaid está na flightRoute
+        const isInFlightRoute = flightRoute.some(routePoint => routePoint.name === navaid.name);
+        if (isInFlightRoute) {
+            return; // Não desenha se estiver na rota
+        }
+
+        // Transforma as coordenadas
+        const [x, y] = transformCoordinates(navaid.coordinates);
+
+        // Define a cor baseada no tipo
+        const color = navaid.type === "VOR" ? "#477bb3" : "#BDBD4C"; // VOR azul claro, Waypoint amarelo claro
+
+        // Desenha a bolinha
+        ctx.beginPath();
+        ctx.arc(x, y, 4, 0, 2 * Math.PI);
+        ctx.fillStyle = color;
+        ctx.fill();
+
+		if (!settingsValues.showNavaidsLabels) {
+			return;
+		}
+        // Adiciona a label
+        ctx.fillStyle = "#bbbbbb";
+        ctx.font = "14px Arial";
+        ctx.fillText(navaid.name, x + 5, y - 5);
+    });
+}
+
 // Função para atualizar a posição do aeroporto
 function updatePosition(airportUI, airport) {
 	if (scale < airport.scale) {
@@ -223,56 +320,105 @@ function createAirportUI(airport) {
 	}	
 
 	function showInfoMenu(badge) {
-		const position =
-			badge.classList.contains('C') ? (airport.ctr && airport.oceanic ? 'Oceanic' : 'Control') :
-			badge.classList.contains('A') ? 'Approach' :
-			badge.classList.contains('T') ? 'Tower' :
-			badge.classList.contains('G') ? 'Ground' :
-			badge.classList.contains('D') ? 'Delivery' :
-			'Unknown';
+    const position =
+        badge.classList.contains('C') ? (airport.ctr && airport.oceanic ? 'Oceanic' : 'Control') :
+        badge.classList.contains('A') ? 'Approach' :
+        badge.classList.contains('T') ? 'Tower' :
+        badge.classList.contains('G') ? 'Ground' :
+        badge.classList.contains('D') ? 'Delivery' :
+        'Unknown';
 
-		const atcName = (position === 'Control' || position === 'Oceanic' || position === 'Approach' || position === 'Tower') ?
-			airport.towerAtc :
-			(position === 'Ground' || position === 'Delivery') ?
-			airport.groundAtc :
-			null;
+    const atcName = (position === 'Control' || position === 'Oceanic' || position === 'Approach' || position === 'Tower') ?
+        airport.towerAtc :
+        (position === 'Ground' || position === 'Delivery') ?
+        airport.groundAtc :
+        null;
 
-		const frequency = position === 'Ground' ? airport.groundfreq : airport.towerfreq;
+    const frequency = position === 'Ground' ? airport.groundfreq : airport.towerfreq;
 
-		let atcName2 = atcName
-		if (atcName.includes("|")) {
-			atcName2 = atcName.split("|")[0].trim();
-		}
-		let roleText = "";
-		let roleIndex = "role2";
-		if (specialUsers[atcName2]) {
-			roleText = specialUsers[atcName2][0].Role;
-			roleIndex = "role1";
-		}
+    let atcName2 = atcName;
+    if (atcName.includes("|")) {
+        atcName2 = atcName.split("|")[0].trim();
+    }
+    let roleText = "";
+    let roleIndex = "role2";
+    if (specialUsers[atcName2]) {
+        roleText = specialUsers[atcName2][0].Role;
+        roleIndex = "role1";
+    }
 
-		airportInfoMenu.style.display = 'block';
-		airportInfoMenu.innerHTML = `
-                <div class="title">
-				${airport.real_name} ${position}
-				<div class="${roleIndex}">${roleText}</div>
-				</div>
-                <hr class="menu-divider">
-                <div class="controller-info-section">
-                    <p><strong>Controller:</strong> ${atcName}</p>
-                    <p><strong>Frequency:</strong> ${frequency}</p>
-                </div>
-            `;
+    airportInfoMenu.style.display = 'block';
+    airportInfoMenu.innerHTML = `
+        <div class="title">
+            ${airport.real_name} ${position}
+            <div class="${roleIndex}">${roleText}</div>
+        </div>
+        <hr class="menu-divider">
+        <div class="controller-info-section">
+            <p><strong>Controller:</strong> ${atcName}</p>
+            <p><strong>Frequency:</strong> ${frequency} <strong>Time Online:</strong> ${getTimeOnline()}</p>
+        </div>
+    `;
 
-		const [x, y] = transformCoordinates(airport.coordinates);
-		airportInfoMenu.style.left = `${x - (airportUI.offsetWidth / 2)}px`;
-		airportInfoMenu.style.top = `${y + airportUI.offsetHeight / 2 + 60}px`;
-	}
+    const [x, y] = transformCoordinates(airport.coordinates);
+    airportInfoMenu.style.left = `${x - (airportUI.offsetWidth / 2)}px`;
+    airportInfoMenu.style.top = `${y + airportUI.offsetHeight / 2 + 60}px`;
+}
 
-	function hideInfoMenu() {
-		document.querySelectorAll('.airport-info-menu').forEach(menu => {
-		   menu.style.display = 'none';
-		});
-	 }
+function hideInfoMenu() {
+    document.querySelectorAll('.airport-info-menu').forEach(menu => {
+        menu.style.display = 'none';
+    });
+}
+
+function loadStartTime() {
+    const savedTime = localStorage.getItem('startTime');
+    if (savedTime) {
+        startTime = new Date(savedTime);
+    } else {
+        resetTimer();  // Set start time to the current time if not available
+    }
+}
+
+function getTimeOnline() {
+    let currentTime = new Date();
+    let timeDiff = Math.abs(currentTime - startTime);
+    let hours = Math.floor(timeDiff / 3600000);
+    let minutes = Math.floor((timeDiff % 3600000) / 60000);
+    return `${hours}:${minutes.toString().padStart(2, '0')}`;
+}
+
+function resetTimer() {
+    startTime = new Date();
+    localStorage.setItem('startTime', startTime.toISOString());
+}
+
+function onATCConnectionEvent() {
+    resetTimer();
+}
+
+// Assume these functions detect ATC log on/log off events
+function detectATCLogon() {
+    // Example function body
+    onATCConnectionEvent();
+}
+
+function detectATCLogoff() {
+    // Example function body
+    onATCConnectionEvent();
+}
+
+// Example event listeners for ATC logon/logoff
+document.addEventListener('ATCLogon', detectATCLogon);
+document.addEventListener('ATCLogoff', detectATCLogoff);
+
+let startTime;
+loadStartTime();
+
+	
+	
+	
+	
 
 	const controlBadge = airportUI.querySelector('.badge.C');
 	const approachBadge = airportUI.querySelector('.badge.A');
@@ -496,6 +642,91 @@ function toggleSettingsMenu() {
 function toggleChangeLogMenu() {
 	const Changelogmenu = document.getElementById('ChangelogMenu');
 	Changelogmenu.style.display = Changelogmenu.style.display === 'none' || Changelogmenu.style.display === '' ? 'flex' : 'none';
+}
+
+function toggleFlpMenu() {
+    const FlpMenu = document.getElementById('FlpMenu');
+    const FlpButton = document.getElementById('FlpButton');
+	const FlpIcon = document.getElementById('FlpIcon');
+
+    // Alterna o menu entre visível e escondido
+    if (FlpMenu.style.display === 'none' || FlpMenu.style.display === '') {
+        FlpMenu.style.display = 'flex'; // Mostra o menu
+        FlpButton.classList.add('on'); // Adiciona a classe "on" ao botão
+		FlpIcon.style.filter = 'brightness(1)';
+    } else {
+        FlpMenu.style.display = 'none'; // Esconde o menu
+        FlpButton.classList.remove('on'); // Remove a classe "on" do botão
+		FlpIcon.style.filter = 'brightness(0.8)';
+    }
+}
+
+function repositionFlpMenu() {
+    const FlpMenu = document.getElementById('FlpMenu');
+    const FlpButton = document.getElementById('FlpButton');
+
+    // Obtém as coordenadas e dimensões do botão
+    const buttonRect = FlpButton.getBoundingClientRect();
+
+    // Calcula a posição do menu
+    const menuTop = buttonRect.bottom + window.scrollY + 180 + FlpMenu.offsetHeight;
+    const menuLeft = buttonRect.right + window.scrollX + 10 - FlpMenu.offsetWidth;
+
+    // Define a posição do menu
+    FlpMenu.style.position = 'absolute';
+    FlpMenu.style.top = `${menuTop}px`;
+    FlpMenu.style.left = `${menuLeft}px`;
+}
+repositionFlpMenu()
+
+function saveFlp() {
+    // Obtém os valores das text areas
+    const departure = document.querySelector('.small-input[placeholder="IRFD"]').value.trim().toUpperCase();
+    const arrival = document.querySelector('.small-input[placeholder="ILAR"]').value.trim().toUpperCase();
+    const waypoints = document.querySelector('.large-input[placeholder="MOGTA TRN CAN"]').value.trim().toUpperCase();
+
+    // Divide os waypoints em uma lista
+    const inputPoints = [departure, ...waypoints.split(' ').map(wp => wp.trim()), arrival];
+
+    // Junta os dados de aeroportos e waypoints
+    const allPoints = [
+        ...controlAreas.filter(area => area.type === "Airport"),
+        ...Waypoints
+    ];
+
+    const flightPlanPoints = [];
+
+    // Procura cada ponto na lista de dados
+    inputPoints.forEach(input => {
+        const matchedPoint = allPoints.find(point => point.name === input);
+
+        if (matchedPoint) {
+            flightPlanPoints.push(matchedPoint);
+        } else {
+            console.error(`Ponto "${input}" não encontrado em controlAreas ou Waypoints!`);
+        }
+    });
+
+    // Verifica se há pelo menos dois pontos válidos
+    if (flightPlanPoints.length < 2) {
+        console.error("É necessário pelo menos dois pontos válidos para desenhar o plano de voo!");
+        return;
+    }
+
+	flightRoute = flightPlanPoints;
+    draw();
+}
+
+function resetFlp() {
+    // Limpa os valores das text areas
+    document.querySelector('.small-input[placeholder="IRFD"]').value = '';
+    document.querySelector('.small-input[placeholder="ILAR"]').value = '';
+    document.querySelector('.large-input[placeholder="MOGTA TRN CAN"]').value = '';
+
+    // Reseta a rota de voo
+    flightRoute = [];
+	draw();
+    console.log("Plano de voo resetado!");
 }
 
 function resetHighlights() {

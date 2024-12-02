@@ -1179,7 +1179,7 @@ const controlAreas = [
         ],
     },
     {
-        name: "WTL",
+        name: "OWO",
         real_name: "Waterloo",
         type: "Airport",
         originalscale: 2,
@@ -1192,6 +1192,211 @@ const controlAreas = [
             "Waterloo Tower",
         ],
     },
+    {
+        name: "TVO",
+        real_name: "Tavaro Seabase",
+        type: "Airport",
+        originalscale: 2,
+        scale: 2,
+        coordinates: [170.76, 568.00],
+        towerfreq: "None",
+        tower: false,
+        towerATC: "",
+        atcs: [
+            "Tavaro Tower",
+        ],
+    },
+];
+
+const Waypoints = [
+    ////EXAMPLES
+    //Waypoints
+    //{ name: "WAYPO", type: "Waypoint", coordinates: [, ] },
+    //VORs
+    //{ name: "VOR", type: "VOR", coordinates: [, ] },
+
+    ////IRFD FIR
+    //Waypoints
+    { name: "ENDER", type: "Waypoint", coordinates: [401.64, 593.26] },
+    { name: "KENED", type: "Waypoint", coordinates: [492.85, 622.96] },
+    { name: "SETHR", type: "Waypoint", coordinates: [651.95, 663.27] },
+    { name: "SUNST", type: "Waypoint", coordinates: [345.07, 637.81] },
+    { name: "BUCFA", type: "Waypoint", coordinates: [407.29, 673.17] },
+    { name: "KUNAV", type: "Waypoint", coordinates: [493.56, 681.65] },
+    { name: "HAWFA", type: "Waypoint", coordinates: [531.74, 701.45] },
+    { name: "QUEEN", type: "Waypoint", coordinates: [588.11, 739.51] },
+    { name: "LAVNO", type: "Waypoint", coordinates: [639.93, 762.97] },
+    { name: "ATPEV", type: "Waypoint", coordinates: [673.17, 750.24] },
+    { name: "SAWPE", type: "Waypoint", coordinates: [320.32, 694.38] },
+    { name: "ICTAM", type: "Waypoint", coordinates: [473.05, 710.64] },
+    { name: "BEANS", type: "Waypoint", coordinates: [325.98, 775.70] },
+    { name: "LOGAN", type: "Waypoint", coordinates: [400.22, 791.25] },
+    { name: "MOGTA", type: "Waypoint", coordinates: [494.97, 819.54] },
+    { name: "JAMSI", type: "Waypoint", coordinates: [709.23, 810.34] },
+    { name: "EXMOR", type: "Waypoint", coordinates: [413.66, 853.48] },
+    { name: "PEPUL", type: "Waypoint", coordinates: [524.67, 873.98] },
+    { name: "GODLU", type: "Waypoint", coordinates: [651.95, 859.13] },
+    { name: "LAZER", type: "Waypoint", coordinates: [702.16, 879.64] },
+    { name: "EMJAY", type: "Waypoint", coordinates: [457.50, 946.82] },
+    { name: "ODOKU", type: "Waypoint", coordinates: [574.88, 946.82] },
+    { name: "DEATH", type: "Waypoint", coordinates: [412.24, 1063.43] },
+    { name: "TRELN", type: "Waypoint", coordinates: [506.29, 1041.57] },
+    { name: "REAPR", type: "Waypoint", coordinates: [601.04, 1026.01] },
+    //VORs
+    { name: "MLR", type: "VOR", coordinates: [409.41, 733.98] },
+    { name: "BLA", type: "VOR", coordinates: [533.16, 736.81] },
+    { name: "RFD", type: "VOR", coordinates: [574.31, 787.01] },
+    { name: "GRY", type: "VOR", coordinates: [444.77, 819.54] },
+    { name: "TRN", type: "VOR", coordinates: [591.14, 887.42] },
+
+    ////ITKO FIR
+    //Waypoints
+    { name: "SHELL", type: "Waypoint", coordinates: [341.00, 161.50] },
+    { name: "KIKON", type: "Waypoint", coordinates: [494.00, 142.50] },
+    { name: "CHILY", type: "Waypoint", coordinates: [661.50, 159.00] },
+    { name: "SHIBA", type: "Waypoint", coordinates: [427.50, 188.00] },
+    { name: "LETSE", type: "Waypoint", coordinates: [573.00, 214.00] },
+    { name: "HONDA", type: "Waypoint", coordinates: [692.00, 214.00] },
+    { name: "ASTRO", type: "Waypoint", coordinates: [456.50, 258.50] },
+    { name: "GULEG", type: "Waypoint", coordinates: [387.00, 307.50] },
+    { name: "PIPER", type: "Waypoint", coordinates: [479.00, 314.50] },
+    { name: "ONDER", type: "Waypoint", coordinates: [561.50, 335.00] },
+    { name: "KNIFE", type: "Waypoint", coordinates: [637.00, 317.50] },
+    { name: "TUDEP", type: "Waypoint", coordinates: [449.50, 383.00] },
+    { name: "ALLRY", type: "Waypoint", coordinates: [690.00, 383.50] },
+    //VORs
+    { name: "HME", type: "VOR", coordinates: [534.00, 246.50] },
+
+    ////IPPH FIR
+    //Waypoints
+    { name: "CRAZY", type: "Waypoint", coordinates: [812.11, 218.53] },
+    { name: "WOTAN", type: "Waypoint", coordinates: [979.68, 236.94] },
+    { name: "WAGON", type: "Waypoint", coordinates: [1082.81, 269.47] },
+    { name: "WELLS", type: "Waypoint", coordinates: [880.24, 307.53] },
+    { name: "SQUID", type: "Waypoint", coordinates: [1003.62, 309.37] },
+    { name: "ZESTA", type: "Waypoint", coordinates: [1111.66, 335.77] },
+    { name: "TINDR", type: "Waypoint", coordinates: [726.17, 345.59] },
+    { name: "NOONU", type: "Waypoint", coordinates: [927.51, 378.74] },
+    { name: "KELLA", type: "Waypoint", coordinates: [980.91, 382.42] },
+    { name: "STRAX", type: "Waypoint", coordinates: [744.58, 396.54] },
+    { name: "SISTA", type: "Waypoint", coordinates: [960.04, 442.58] },
+    { name: "TALIS", type: "Waypoint", coordinates: [890.68, 453.63] },
+    //VORs
+    { name: "COC", type: "VOR", coordinates: [778.35, 297.71] },
+    { name: "PER", type: "VOR", coordinates: [786.94, 362.78] },
+    { name: "BTM", type: "VOR", coordinates: [874.10, 371.99] },
+    { name: "ORG", type: "VOR", coordinates: [815.79, 418.02] },
+
+    ////ILAR FIR
+    //Waypoints
+    { name: "FORIA", type: "Waypoint", coordinates: [683.25, 1010.62] },
+    { name: "AQWRT", type: "Waypoint", coordinates: [776.12, 953.12] },
+    { name: "FORCE", type: "Waypoint", coordinates: [825.02, 1078.34] },
+    { name: "GRASS", type: "Waypoint", coordinates: [805.39, 848.35] },
+    { name: "RENTS", type: "Waypoint", coordinates: [885.47, 814.23] },
+    { name: "MASEV", type: "Waypoint", coordinates: [836.68, 1040.51] },
+    { name: "JACKI", type: "Waypoint", coordinates: [975.12, 886.19] },
+    { name: "ALTRS", type: "Waypoint", coordinates: [989.95, 1080.46] },
+    { name: "MUONE", type: "Waypoint", coordinates: [1022.48, 1011.87] },
+    { name: "BOBUX", type: "Waypoint", coordinates: [1035.91, 945.40] },
+    { name: "DEBUG", type: "Waypoint", coordinates: [1112.99, 887.42] },
+    { name: "JAZZR", type: "Waypoint", coordinates: [1111.57, 1011.87] },
+    { name: "NUBER", type: "Waypoint", coordinates: [1197.84, 959.54] },
+    //VORs
+    { name: "DIR", type: "VOR", coordinates: [746.75,1031.25] },
+    { name: "CAN", type: "VOR", coordinates: [719.00, 982.75] },
+    { name: "LCK", type: "VOR", coordinates: [838.50, 909.00] },
+    { name: "KIN", type: "VOR", coordinates: [929.50, 868.50] },
+    { name: "PFO", type: "VOR", coordinates: [936.50, 935.25] },
+    { name: "HUT", type: "VOR", coordinates: [931.00, 985.75] },
+    
+    ////IZOL FIR
+    //Waypoints
+    { name: "CAMEL", type: "Waypoint", coordinates: [831.75, 515.62] },
+    { name: "DUNKS", type: "Waypoint", coordinates: [907.87, 518.69] },
+    { name: "ROSMO", type: "Waypoint", coordinates: [1031.86, 483.09] },
+    { name: "UDMUG", type: "Waypoint", coordinates: [1147.88, 437.05] },
+    { name: "CYRIL", type: "Waypoint", coordinates: [889.45, 584.37] },
+    { name: "MORRD", type: "Waypoint", coordinates: [1147.88, 558.59] },
+    { name: "LLIME", type: "Waypoint", coordinates: [1181.64, 495.37] },
+    { name: "DOGGO", type: "Waypoint", coordinates: [990.73, 652.51] },
+    { name: "ABSRS", type: "Waypoint", coordinates: [1197.60, 646.37] },
+    { name: "BILLO", type: "Waypoint", coordinates: [1110.43, 691.79] },
+    { name: "JUSTY", type: "Waypoint", coordinates: [1016.51, 740.90] },
+    { name: "CHAIN", type: "Waypoint", coordinates: [1196.98, 769.14] },
+    //VORs
+    { name: "HOT", type: "VOR", coordinates: [987.05, 534.04] },
+    { name: "NJF", type: "VOR", coordinates: [1095.09, 582.53] },
+    { name: "IZO", type: "VOR", coordinates: [1084.04, 621.20] },
+    { name: "DIZ", type: "VOR", coordinates: [1127.01, 626.11] },
+    { name: "TRE", type: "VOR", coordinates: [981.53, 587.44] },
+    { name: "DET", type: "VOR", coordinates: [1107.98, 760.54] },
+
+    ////IGRV FIR
+    //Waypoints
+    { name: "BULLY", type: "Waypoint", coordinates: [273.77, 279.30] },
+    { name: "FROOT", type: "Waypoint", coordinates: [206.25, 354.18] },
+    { name: "EURAD", type: "Waypoint", coordinates: [340.68, 375.05] },
+    { name: "BOBOS", type: "Waypoint", coordinates: [136.27, 415.57] },
+    { name: "BLANK", type: "Waypoint", coordinates: [368.92, 433.37] },
+    { name: "THENR", type: "Waypoint", coordinates: [204.41, 449.33] },
+    { name: "ACRES", type: "Waypoint", coordinates: [ 86.55, 469.59] },
+    { name: "YOUTH", type: "Waypoint", coordinates: [282.98, 488.00] },
+    { name: "UWAIS", type: "Waypoint", coordinates: [ 32.53, 518.08] },
+    { name: "EZYDB", type: "Waypoint", coordinates: [373.21, 533.42] },
+    { name: "FRANK", type: "Waypoint", coordinates: [ 38.67, 596.04] },
+    { name: "CELAR", type: "Waypoint", coordinates: [229.58, 628.57] },
+    { name: "THAGC", type: "Waypoint", coordinates: [ 38.06, 681.36] },
+    { name: "SHREK", type: "Waypoint", coordinates: [133.82, 688.73] },
+    { name: "SPACE", type: "Waypoint", coordinates: [234.49, 707.75] },
+    //VORs
+    { name: "GOL", type: "VOR", coordinates: [112.95, 553.68] },
+    { name: "GVK", type: "VOR", coordinates: [160.21, 544.47] },
+    { name: "HAW", type: "VOR", coordinates: [203.79, 517.47] },
+
+    ////ISAU FIR
+    //Waypoints
+    { name: "HACKE", type: "Waypoint", coordinates: [53.00, 791.00] },
+    { name: "GEORG", type: "Waypoint", coordinates: [143.00, 816.50] },
+    { name: "SEEKS", type: "Waypoint", coordinates: [237.00, 847.00] },
+    { name: "HECKS", type: "Waypoint", coordinates: [31.00, 890.50] },
+    { name: "PACKT", type: "Waypoint", coordinates: [107.00, 911.00] },
+    { name: "STACK", type: "Waypoint", coordinates: [207.50, 946.00] },
+    { name: "ALDER", type: "Waypoint", coordinates: [329.50, 922.50] },
+    { name: "WASTE", type: "Waypoint", coordinates: [101.00, 995.50] },
+    { name: "HOGGS", type: "Waypoint", coordinates: [314.50, 986.00] },
+    { name: "ROBUX", type: "Waypoint", coordinates: [268.50, 1067.50] },
+    //VORs
+    { name: "KRT", type: "VOR", coordinates: [82.50, 834.00] },
+    { name: "SAU", type: "VOR", coordinates: [136.50, 860.50] },
+    { name: "BAR", type: "VOR", coordinates: [222.50, 891.50] },
+
+    ////IBTH FIR
+    //Waypoints
+    { name: "GERLD", type: "Waypoint", coordinates: [443.50, 422.50] },
+    { name: "RENDR", type: "Waypoint", coordinates: [487.00, 432.00] },
+    { name: "JOOPY", type: "Waypoint", coordinates: [589.50, 421.50] },
+    { name: "PROBE", type: "Waypoint", coordinates: [530.50, 471.00] },
+    { name: "DINER", type: "Waypoint", coordinates: [654.00, 476.50] },
+    { name: "WELSH", type: "Waypoint", coordinates: [486.50, 531.50] },
+    { name: "INDEX", type: "Waypoint", coordinates: [545.50, 569.50] },
+    { name: "GAVIN", type: "Waypoint", coordinates: [679.00, 590.00] },
+    { name: "SILVA", type: "Waypoint", coordinates: [798.00, 592.00] },
+    { name: "OCEEN", type: "Waypoint", coordinates: [735.00, 628.50] },
+    //VORs
+    { name: "ROM", type: "VOR", coordinates: [710.50, 468.50] },
+    { name: "RES", type: "VOR", coordinates: [612.00, 535.50] },
+    { name: "VOX", type: "VOR", coordinates: [737.50, 532.00] },
+
+    ////ISKP FIR
+    //Waypoints
+    { name: "ANYMS", type: "Waypoint", coordinates: [768.00, 764.50] },
+    { name: "CAWZE", type: "Waypoint", coordinates: [815.62, 659.12] },
+    //VORs
+    { name: "CLR", type: "VOR", coordinates: [829.87, 731.75] },
+    { name: "DEL", type: "VOR", coordinates: [912.12, 696.25] },
+
+
 ];
 
 // Função para aplicar coordenadas da FIR para a CTR correspondente e sincronizar o valor de active
@@ -1233,6 +1438,8 @@ const settings = [
     'showFIRlines',
     'showAPPlines',
     'showOnlineATC',
+    'showNavaids',
+    'showNavaidsLabels',
 ];
 
 const settingsValues = {
@@ -1241,10 +1448,12 @@ const settingsValues = {
     showFIRlines: true,
     showAPPlines: false,
     showOnlineATC: true,
+    showNavaids: false,
+    showNavaidsLabels: false,
 };
 
 const websiteInfo = {
-    version: "DEV 0.1.4.6.5",
+    version: "DEV 0.1.5",
 };
 
 const localInfo = {};
@@ -1268,5 +1477,17 @@ const specialUsers = {
     "BEANZBURGERBEANZ": [{
         "Role": "24SPY First User",
         "DiscordNick": "echogecko89",
+    }],
+    "frozenterror13": [{
+        "Role": "Chart Maker",
+        "DiscordNick": "aerosd",
+    }],
+    "EzyDubbs": [{
+        "Role": "Chart Maker",
+        "DiscordNick": "ezydubbs",
+    }],
+    "2316Nati": [{
+        "Role": "Contributor",
+        "DiscordNick": "bedsdrout",
     }],
 };

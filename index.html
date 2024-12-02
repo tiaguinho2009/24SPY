@@ -14,8 +14,8 @@
             <img src="assets/Icons/24SPY-logo.svg" alt="SPY Logo" class="SPY-logo">
          </h1>
          <div class="header-left-buttons">
-            <button class="fpl-button">
-               <img src="assets/Icons/map-svgrepo-com.svg" class="fpl-icon">
+            <button class="fpl-button" id="FlpButton" onclick="toggleFlpMenu()">
+               <img src="assets/Icons/map-svgrepo-com.svg" class="fpl-icon" id="FlpIcon">
                Flight Plan
             </button>
             <button class="atc-left-button">
@@ -55,11 +55,17 @@
             </button>
          </span>
          <div class="content">
-            <h2>[DEV 0.1.4.6.5] - 29/11/2024</h2>
+            <h2>[DEV 0.1.5] - 03/12/2024</h2>
             <h3>Added</h3>
             <ul>
-               <li>Added missing "airfields" Sea Haven and Waterloo.</li>
-               <li>Started working with Flight Plan and ATC Menus Buttons (They don't work for now).</li>
+               <li>Added missing "airfield" Tavaro Seabase.</li>
+               <li>Added all the navaids(Waypoints and VORs) of the ATC24 Airspace.</li>
+               <li>New Fligh Plan feuture!</li>
+               <li>Added 2 new Map settings "Show Navaids" and "Show Navaids Labels".</li>
+            </ul>
+            <h3>Corrected</h3>
+            <ul>
+               <li>ICAO Code of the Waterloo corrected to "OWO".</li>
             </ul>
          </div>
       </div>     
@@ -90,10 +96,38 @@
                <input type="checkbox" onchange="onCheckBoxChange(this)" id="showOnlineATC" checked>
                <label for="showOnlineATC">Show Online ATC</label>
             </div>
+            <div class="map-option">
+               <input type="checkbox" onchange="onCheckBoxChange(this)" id="showNavaids" checked>
+               <label for="showNavaids">Show Navaids</label>
+            </div>
+            <div class="map-option">
+               <input type="checkbox" onchange="onCheckBoxChange(this)" id="showNavaidsLabels" checked>
+               <label for="showNavaidsLabels">Show Navaids Labels</label>
+            </div>
+         </div>
+      </div>
+      <div class="flp-menu" id="FlpMenu">
+         <h3>Flight Plan (Beta)</h3>
+         <hr class="menu-divider">
+         <div class="form-row">
+             <label>Departure:</label>
+             <textarea class="small-input" placeholder="IRFD"></textarea>
+         </div>
+         <div class="form-row">
+             <label>Arrival:</label>
+             <textarea class="small-input" placeholder="ILAR"></textarea>
+         </div>
+         <div class="form-row">
+             <label>Waypoints:</label>
+             <textarea class="large-input" placeholder="MOGTA TRN CAN"></textarea>
+         </div>
+         <div class="Buttons">
+            <button class="Save" onclick="saveFlp()">Save</button>
+            <button class="Reset" onclick="resetFlp()">Reset</button>
          </div>
       </div>
       <div class="footer">24SPY | <span id="version"></span> | © Made by tiaguinho_2009</div>
-      <!-- Container do mapa -->
+
       <div id="map-container">
          <canvas id="map"></canvas>
       </div>

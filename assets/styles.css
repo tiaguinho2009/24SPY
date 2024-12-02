@@ -48,31 +48,41 @@ header h1 {
 
 .fpl-button {
     font-size: 16px;
-    color: #919191; /*#ffffff*/
+    color: #e2e2e2;
     text-align: center;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #19191d; /*#202024*/
-    height: 45px;
+    background-color: #202024;
+    height: 40px;
     width: 150px;
     margin-left: 20px;
     border: none;
     border-radius: 5px;
-    /*cursor: pointer;*/
-    transition: background-color 0.3s ease-in-out;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+.fpl-button.on {
+    background-color: #3b6cec; /* Cor ativa */
+    color: #ffffff; /* Cor do texto quando ativo */
+}
+
+.fpl-button.on:hover {
+    background-color: #4b7eff;
 }
 
 .fpl-button .fpl-icon {
     height: 30px;
     width: 30px;
     margin-right: 7px;
-    filter: brightness(0.3);
+    filter: brightness(0.8);
+    transition: filter 0.2s ease-in-out;
 }
 
-/*.fpl-button:hover {
+.fpl-button:hover {
     background-color: #323237; 
-}*/
+}
 
 .atc-left-button {
     font-size: 16px;
@@ -82,7 +92,7 @@ header h1 {
     align-items: center;
     justify-content: center;
     background-color: #19191d; /*#202024*/
-    height: 45px;
+    height: 40px;
     width: 100px;
     margin-left: 5px;
     border: none;
@@ -341,6 +351,129 @@ header h1 {
 .map-option label {
     color: #fff;
     font-size: 0.9em;
+}
+
+.flp-menu {
+    display: none;
+    flex-direction: column;
+    align-items: flex-start;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    padding: 15px;
+    background-color: #131316;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    z-index: 100;
+}
+
+.flp-menu h3 {
+    font-size: 1.6rem;
+    margin-bottom: 10px;
+    color: #3b6cec;
+    text-align: left;
+    width: 100%;
+}
+
+.menu-divider {
+    border: none;
+    height: 2px;
+    width: 100%;
+    background-color: #3b6cec;
+    margin-bottom: 20px;
+}
+
+.form-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.form-row label {
+    font-size: 1rem;
+    color: #bdbdbd;
+    width: 30%;
+    text-align: left;
+    line-height: 1.5;
+}
+
+.form-row textarea {
+    background-color: #2d2d2d;
+    border: 2px solid #3b6cec;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 1rem;
+    resize: none;
+    text-align: left;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    padding: 2px;
+}
+
+.small-input {
+    width: 70px;
+    height: 20px;
+    text-align: center;
+}
+
+.large-input {
+    width: 100%;
+    height: 40px;
+}
+
+textarea:focus, textarea:hover {
+    outline: none;
+    border-color: #0048ff;
+    box-shadow: 0 0 5px rgba(59, 108, 236, 0.7);
+}
+
+.flp-menu .Buttons button {
+    background-color: #3b6cec;
+    color: #fff;
+    font-size: 1rem;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.Buttons button:hover {
+    background-color: #0048ff;
+    transform: scale(1.05);
+}
+
+.Buttons button:active {
+    background-color: #002d99;
+    transform: scale(0.95);
+}
+
+.Buttons button.Save {
+    background-color: #28a745; /* Verde para salvar */
+}
+
+.Buttons button.Save:hover {
+    background-color: #218838;
+}
+
+.Buttons button.Save:active {
+    background-color: #1e7e34;
+}
+
+.Buttons button.Reset {
+    background-color: #dc3545; /* Vermelho para reset */
+}
+
+.Buttons button.Reset:hover {
+    background-color: #c82333;
+}
+
+.Buttons button.Reset:active {
+    background-color: #bd2130;
 }
 
 /* Container principal para o mapa */
