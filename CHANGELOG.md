@@ -1,5 +1,9 @@
 # Changelog
 
+## [DEV 0.1.5.0.1] - 04/12/2024
+### Changed
+- 24SPY Logo changed to the Christmas Version.
+
 ## [DEV 0.1.5] - 03/12/2024
 ### Added
 - Added missing "airfield" Tavaro Seabase.

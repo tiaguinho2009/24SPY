@@ -18,6 +18,7 @@
 | ![status: Planned](https://img.shields.io/badge/status-Planned-blue) | Make the Labels of the Waypoints interactive.|
 | ![status: Planned](https://img.shields.io/badge/status-Planned-blue) | Add Airways to the FLP System.|
 | ![status: Planned](https://img.shields.io/badge/status-Planned-blue) | Refactor code for better organization and otimization |
+| ![status: Idea](https://img.shields.io/badge/status-Idea-lightgrey) | Make a FLP Generator. |
 | ![status: Idea](https://img.shields.io/badge/status-Idea-lightgrey) | "Mobile friendly" version |
 | ![status: Idea](https://img.shields.io/badge/status-Idea-lightgrey) | Show the ATIS |
 | ![status: Idea](https://img.shields.io/badge/status-Idea-lightgrey) | Show the Planes |
@@ -26,11 +27,6 @@
 
 For new users or anyone with questions on how to display online ATCs from ATC24 on the website, refer to the [Wiki](https://github.com/tiaguinho2009/24SPY/wiki) for guidance.
 
-## [DEV 0.1.5] - 03/12/2024
-### Added
-- Added missing "airfield" Tavaro Seabase.
-- Added all the navaids(Waypoints and VORs) of the ATC24 Airspace.
-- New Fligh Plan feuture!
-- Added 2 new Map settings "Show Navaids" and "Show Navaids Labels".
-### Corrected
-- ICAO Code of the Waterloo corrected to "OWO".
+## [DEV 0.1.5.0.1] - 04/12/2024
+### Changed
+- 24SPY Logo changed to the Christmas Version.

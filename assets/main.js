@@ -356,9 +356,9 @@ function createAirportUI(airport) {
         <hr class="menu-divider">
         <div class="controller-info-section">
             <p><strong>Controller:</strong> ${atcName}</p>
-            <p><strong>Frequency:</strong> ${frequency} <strong>Time Online:</strong> ${getTimeOnline()}</p>
+            <p><strong>Frequency:</strong> ${frequency} </p>
         </div>
-    `;
+    `;//<strong>Time Online:</strong> ${getTimeOnline()}
 
     const [x, y] = transformCoordinates(airport.coordinates);
     airportInfoMenu.style.left = `${x - (airportUI.offsetWidth / 2)}px`;
