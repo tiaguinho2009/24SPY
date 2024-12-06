@@ -1,5 +1,13 @@
 # Changelog
 
+## [DEV 0.1.5.0.3] - 08/12/2024
+### Added
+- More optimization to the website!
+
+## [DEV 0.1.5.0.2] - 06/12/2024
+### Added
+- New feuture, now when your zoom is less then 3 the website will render a otmized version of the map. (Just to save some RAM).
+
 ## [DEV 0.1.5.0.1] - 04/12/2024
 ### Changed
 - 24SPY Logo changed to the Christmas Version.

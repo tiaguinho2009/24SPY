@@ -15,10 +15,11 @@
 | ![status: Done](https://img.shields.io/badge/status-Done-brightgreen) | Have a menu with the ground charts of each Airport.|
 | ![status: Done](https://img.shields.io/badge/status-Done-brightgreen) | Show the Waypoints on the map and be able to put the FPL on the map.|
 | ![status: In-Progress](https://img.shields.io/badge/status-In_Progress-orange) | Buy a mini pc to be a backhand server for the website |
+| ![status: Planned](https://img.shields.io/badge/status-Planned-blue) | Create a tiles system for the map. |
 | ![status: Planned](https://img.shields.io/badge/status-Planned-blue) | Make the Labels of the Waypoints interactive.|
 | ![status: Planned](https://img.shields.io/badge/status-Planned-blue) | Add Airways to the FLP System.|
 | ![status: Planned](https://img.shields.io/badge/status-Planned-blue) | Refactor code for better organization and otimization |
-| ![status: Idea](https://img.shields.io/badge/status-Idea-lightgrey) | Make a FLP Generator. |
+| ![status: Idea](https://img.shields.io/badge/status-Idea-lightgrey) | Make a FLP Generator with A*. |
 | ![status: Idea](https://img.shields.io/badge/status-Idea-lightgrey) | "Mobile friendly" version |
 | ![status: Idea](https://img.shields.io/badge/status-Idea-lightgrey) | Show the ATIS |
 | ![status: Idea](https://img.shields.io/badge/status-Idea-lightgrey) | Show the Planes |
@@ -27,6 +28,6 @@
 
 For new users or anyone with questions on how to display online ATCs from ATC24 on the website, refer to the [Wiki](https://github.com/tiaguinho2009/24SPY/wiki) for guidance.
 
-## [DEV 0.1.5.0.1] - 04/12/2024
-### Changed
-- 24SPY Logo changed to the Christmas Version.
+## [DEV 0.1.5.0.3] - 08/12/2024
+### Added
+- More optimization to the website!

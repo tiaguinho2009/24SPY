@@ -13,6 +13,19 @@ let startX, startY;
 let onlineATC = 0;
 let flightRoute = [];
 
+// Imagens do mapa
+const mapImages = {
+	normal: 'PTFS-Map-Grey.png',
+	smallScale: 'PTFS-Map-1200px.png'
+};
+const mapImageNormal = new Image();
+const mapImageSmallScale = new Image();
+mapImageNormal.src = mapImages.normal;
+mapImageSmallScale.src = mapImages.smallScale;
+
+// Imagem atualmente utilizada
+let currentMapImage = mapImageNormal;
+
 // Configuração do tamanho do canvas
 function resizeCanvas() {
 	canvas.width = window.innerWidth;
@@ -20,11 +33,6 @@ function resizeCanvas() {
 	draw();
 }
 window.addEventListener('resize', resizeCanvas);
-
-// Carregamento da imagem do mapa
-const mapImage = new Image();
-mapImage.src = 'PTFS-Map-Grey.png';
-mapImage.onload = resizeCanvas;
 
 // Função de transformação das coordenadas
 function transformCoordinates(coord) {
@@ -37,9 +45,17 @@ function transformCoordinates(coord) {
 // Função de desenho
 function draw() {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+	// Alterna entre as imagens com base na escala
+	currentMapImage = scale < 3 ? mapImageSmallScale : mapImageNormal;
+
+	// Calcula tamanho ajustado do mapa
 	const mapWidth = 1200 * scale;
 	const mapHeight = 1200 * scale;
-	ctx.drawImage(mapImage, offsetX, offsetY, mapWidth, mapHeight);
+
+	// Desenha a imagem do mapa
+	ctx.drawImage(currentMapImage, offsetX, offsetY, mapWidth, mapHeight);
+
 	drawControlAreas();
 	drawFlightPlan(flightRoute);
 	resetChartsMenu();
@@ -414,12 +430,6 @@ document.addEventListener('ATCLogoff', detectATCLogoff);
 
 let startTime;
 loadStartTime();
-
-	
-	
-	
-	
-
 	const controlBadge = airportUI.querySelector('.badge.C');
 	const approachBadge = airportUI.querySelector('.badge.A');
 	const towerBadge = airportUI.querySelector('.badge.T');
@@ -515,40 +525,54 @@ loadStartTime();
 }
 
 function resetAllAirportsUI() {
-	// Percorre todas as áreas de controle e reseta apenas as do tipo 'Airport'
-	controlAreas.forEach(area => {
-		if (area.type === 'Airport') {
-			// Busca o elemento correspondente à interface do aeroporto
-			const airportUIs = document.querySelectorAll(`.airport-ui`); // Seleciona todos os aeroportos
+	// Selecionar todos os elementos de interface de aeroporto
+	const airportUIs = document.querySelectorAll(`.airport-ui`);
 
-			airportUIs.forEach(airportUI => {
-				// Remove event listeners dos badges
-				const controlBadge = airportUI.querySelector('.badge.C');
-				const towerBadge = airportUI.querySelector('.badge.T');
-				const groundBadge = airportUI.querySelector('.badge.G');
+	airportUIs.forEach(airportUI => {
+		// Remover event listeners dos badges
+		const controlBadge = airportUI.querySelector('.badge.C');
+		const approachBadge = airportUI.querySelector('.badge.A');
+		const towerBadge = airportUI.querySelector('.badge.T');
+		const groundBadge = airportUI.querySelector('.badge.G');
+		const icaoCodeButton = airportUI.querySelector('.icao-code');
 
-				if (controlBadge) {
-					controlBadge.removeEventListener('mouseenter', showInfoMenu);
-					controlBadge.removeEventListener('mouseleave', hideInfoMenu);
-				}
-				if (towerBadge) {
-					towerBadge.removeEventListener('mouseenter', showInfoMenu);
-					towerBadge.removeEventListener('mouseleave', hideInfoMenu);
-				}
-				if (groundBadge) {
-					groundBadge.removeEventListener('mouseenter', showInfoMenu);
-					groundBadge.removeEventListener('mouseleave', hideInfoMenu);
-				}
-
-				// Remove o elemento da interface do DOM
-				airportUI.remove();
-			});
+		if (controlBadge) {
+			controlBadge.removeEventListener('mouseenter', showInfoMenu);
+			controlBadge.removeEventListener('mouseleave', hideInfoMenu);
 		}
+		if (approachBadge) {
+			approachBadge.removeEventListener('mouseenter', showInfoMenu);
+			approachBadge.removeEventListener('mouseleave', hideInfoMenu);
+		}
+		if (towerBadge) {
+			towerBadge.removeEventListener('mouseenter', showInfoMenu);
+			towerBadge.removeEventListener('mouseleave', hideInfoMenu);
+		}
+		if (groundBadge) {
+			groundBadge.removeEventListener('mouseenter', showInfoMenu);
+			groundBadge.removeEventListener('mouseleave', hideInfoMenu);
+		}
+
+		// Remover event listener do botão ICAO
+		if (icaoCodeButton) {
+			icaoCodeButton.removeEventListener('click', toggleIcaoMenu);
+		}
+
+		// Remover o elemento da interface do DOM
+		airportUI.remove();
 	});
 
-	// Remove event listeners globais (opcional, pode ser gerido caso tenha múltiplos aeroportos)
+	// Remover menus adicionais
+	const airportInfoMenus = document.querySelectorAll('.airport-info-menu');
+	airportInfoMenus.forEach(menu => menu.remove());
+
+	const icaoMenus = document.querySelectorAll('.icao-menu');
+	icaoMenus.forEach(menu => menu.remove());
+
+	// Remover event listeners globais
 	window.removeEventListener('resize', updatePosition);
 	canvas.removeEventListener('mousemove', updatePosition);
+	canvas.removeEventListener('wheel', updatePosition);
 }
 
 function displayAirports() {
@@ -584,6 +608,7 @@ canvas.addEventListener('mouseup', () => {
 
 let isZooming = false;
 
+// Evento de zoom
 canvas.addEventListener('wheel', (e) => {
 	e.preventDefault();
 
@@ -624,6 +649,12 @@ canvas.addEventListener('wheel', (e) => {
 		});
 	}
 });
+
+// Carregar as imagens e inicializar o canvas
+Promise.all([
+	new Promise((resolve) => (mapImageNormal.onload = resolve)),
+	new Promise((resolve) => (mapImageSmallScale.onload = resolve))
+]).then(resizeCanvas);
 
 let lastMouseX = 0;
 let lastMouseY = 0;
