@@ -13,6 +13,19 @@ let startX, startY;
 let onlineATC = 0;
 let flightRoute = [];
 
+// Imagens do mapa
+const mapImages = {
+	normal: 'PTFS-Map-Grey.png',
+	smallScale: 'PTFS-Map-1200px.png'
+};
+const mapImageNormal = new Image();
+const mapImageSmallScale = new Image();
+mapImageNormal.src = mapImages.normal;
+mapImageSmallScale.src = mapImages.smallScale;
+
+// Imagem atualmente utilizada
+let currentMapImage = mapImageNormal;
+
 // Configuração do tamanho do canvas
 function resizeCanvas() {
 	canvas.width = window.innerWidth;
@@ -20,11 +33,6 @@ function resizeCanvas() {
 	draw();
 }
 window.addEventListener('resize', resizeCanvas);
-
-// Carregamento da imagem do mapa
-const mapImage = new Image();
-mapImage.src = 'PTFS-Map-Grey.png';
-mapImage.onload = resizeCanvas;
 
 // Função de transformação das coordenadas
 function transformCoordinates(coord) {
@@ -37,9 +45,17 @@ function transformCoordinates(coord) {
 // Função de desenho
 function draw() {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+	// Alterna entre as imagens com base na escala
+	currentMapImage = scale < 3 ? mapImageSmallScale : mapImageNormal;
+
+	// Calcula tamanho ajustado do mapa
 	const mapWidth = 1200 * scale;
 	const mapHeight = 1200 * scale;
-	ctx.drawImage(mapImage, offsetX, offsetY, mapWidth, mapHeight);
+
+	// Desenha a imagem do mapa
+	ctx.drawImage(currentMapImage, offsetX, offsetY, mapWidth, mapHeight);
+
 	drawControlAreas();
 	drawFlightPlan(flightRoute);
 	resetChartsMenu();
@@ -414,12 +430,6 @@ document.addEventListener('ATCLogoff', detectATCLogoff);
 
 let startTime;
 loadStartTime();
-
-	
-	
-	
-	
-
 	const controlBadge = airportUI.querySelector('.badge.C');
 	const approachBadge = airportUI.querySelector('.badge.A');
 	const towerBadge = airportUI.querySelector('.badge.T');
@@ -584,6 +594,7 @@ canvas.addEventListener('mouseup', () => {
 
 let isZooming = false;
 
+// Evento de zoom
 canvas.addEventListener('wheel', (e) => {
 	e.preventDefault();
 
@@ -624,6 +635,12 @@ canvas.addEventListener('wheel', (e) => {
 		});
 	}
 });
+
+// Carregar as imagens e inicializar o canvas
+Promise.all([
+	new Promise((resolve) => (mapImageNormal.onload = resolve)),
+	new Promise((resolve) => (mapImageSmallScale.onload = resolve))
+]).then(resizeCanvas);
 
 let lastMouseX = 0;
 let lastMouseY = 0;
