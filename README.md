@@ -28,12 +28,6 @@
 
 For new users or anyone with questions on how to display online ATCs from ATC24 on the website, refer to the [Wiki](https://github.com/tiaguinho2009/24SPY/wiki) for guidance.
 
-<<<<<<< HEAD
 ## [DEV 0.1.5.0.3] - 08/12/2024
 ### Added
 - More optimization to the website!
-=======
-## [DEV 0.1.5.0.2] - 06/12/2024
-### Added
-- New feuture, now when your zoom is less then 3 the website will render a otmized version of the map. (Just to save some RAM).
->>>>>>> da08200ca5c20fd02633d3ee478a0c7c23157857
