@@ -1,5 +1,10 @@
 # Changelog
 
+## [DEV 0.1.5.0.4] - 12/12/2024
+### Added
+- Changed the cursor type to "grab" when the cursor is over the map.
+- Now the footer is clickable and it will redirect to the License of the Website.
+
 ## [DEV 0.1.5.0.3] - 08/12/2024
 ### Added
 - More optimization to the website!

@@ -484,6 +484,11 @@ textarea:focus, textarea:hover {
     left: 0;
     right: 0;
     background-color: rgba(19, 19, 19, 255);
+    cursor: grab;
+}
+
+#map-container:active {
+    cursor: grabbing;
 }
 
 canvas {
@@ -740,8 +745,17 @@ canvas {
     position: absolute;
     bottom: 5px;
     right: 5px;
-    color: #bdbdbd; /* Cor cinza clara */
+    color: #bdbdbd;
     font-size: 0.7em;
     z-index: 1000;
     user-select: none;
+}
+
+.footer-link {
+    color: #bdbdbd;
+    text-decoration: none;
+}
+
+.footer-link:hover {
+    text-decoration: underline;
 }
