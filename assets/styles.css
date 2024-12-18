@@ -201,6 +201,11 @@ header h1 {
     cursor: pointer;
     height: 35px;
     width: 35px;
+    transition: background-color 0.3s ease;
+}
+
+.cl-close-button:hover {
+    background-color: rgba(50, 50, 55, 1);
 }
 
 .Changelog-menu .content {
@@ -236,6 +241,25 @@ header h1 {
 
 .Changelog-menu .content li::marker {
     color: #ff6b6b; /* Cor do marcador */
+}
+
+.Changelog-menu::-webkit-scrollbar {
+    width: 8px;
+}
+
+.Changelog-menu::-webkit-scrollbar-track {
+    background: none;
+}
+
+.Changelog-menu::-webkit-scrollbar-thumb {
+    background-color: #3b6cec;
+    border-radius: 4px;
+}
+
+/* Compatibilidade com navegadores que suportam scrollbar não-Webkit */
+.Changelog-menu {
+    scrollbar-color: #3b6cec transparent;
+    scrollbar-width: thin;
 }
 
 /* Estilo do botão de configurações */
@@ -412,6 +436,7 @@ header h1 {
     text-align: left;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
     padding: 2px;
+    text-transform: uppercase;
 }
 
 .small-input {

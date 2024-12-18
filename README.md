@@ -30,7 +30,11 @@
 
 For new users or anyone with questions on how to display online ATCs from ATC24 on the website, refer to the [Wiki](https://github.com/tiaguinho2009/24SPY/wiki) for guidance.
 
-## [DEV 0.1.5.0.4] - 12/12/2024
+## [DEV 0.1.5.1] - 18/12/2024
 ### Added
-- Changed the cursor type to "grab" when the cursor is over the map.
-- Now the footer is clickable and it will redirect to the License of the Website.
+- More MAP Optimization! (Bugs with Airports UIs resolved.)
+- New HDG and Distances Labels for the Flight Plans!
+- New small feutures to the footer of the website.
+### In the next Update
+- The new ATC Menu will be released!
+- New Official 24SPY back-end Server. (Only after Christmas)

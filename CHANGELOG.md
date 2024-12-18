@@ -1,5 +1,14 @@
 # Changelog
 
+## [DEV 0.1.5.1] - 18/12/2024
+### Added
+- More MAP Optimization! (Bugs with Airports UIs resolved.)
+- New HDG and Distances Labels for the Flight Plans!
+- New small feutures to the footer of the website.
+### In the next Update
+- The new ATC Menu will be released!
+- New Official 24SPY back-end Server. (Only after Christmas)
+
 ## [DEV 0.1.5.0.4] - 12/12/2024
 ### Added
 - Changed the cursor type to "grab" when the cursor is over the map.

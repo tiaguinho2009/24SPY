@@ -60,6 +60,7 @@ function draw() {
 	drawFlightPlan(flightRoute);
 	resetChartsMenu();
 	drawNavaids();
+	updateAllAirportsUI();
 }
 
 // Função para desenhar áreas de controle
@@ -163,6 +164,11 @@ function drawFlightPlan(points) {
     ctx.strokeStyle = "#cc4265";
     ctx.lineWidth = 2;
 
+    // Fator de escala calculado a partir da referência dada
+    const referenceDistanceEuclidean = Math.sqrt((534.22 - 512.13) ** 2 + (243.11 - 225.89) ** 2);
+    const referenceDistanceNM = 1478 / 1852; // 1478 metros em NM (1 NM = 1852 metros)
+    const scaleFactor = referenceDistanceNM / referenceDistanceEuclidean;
+
     const transformedPoints = points.map(point => ({
         ...point,
         transformedCoordinates: transformCoordinates(point.coordinates),
@@ -175,13 +181,57 @@ function drawFlightPlan(points) {
     );
 
     for (let i = 1; i < transformedPoints.length; i++) {
-        ctx.lineTo(
-            transformedPoints[i].transformedCoordinates[0],
-            transformedPoints[i].transformedCoordinates[1]
-        );
+        const current = transformedPoints[i - 1];
+        const next = transformedPoints[i];
+
+        const currentTrans = current.transformedCoordinates;
+        const nextTrans = next.transformedCoordinates;
+
+        // Desenha a linha
+        ctx.lineTo(nextTrans[0], nextTrans[1]);
+
+        // Calcula o HDG
+        const dx = nextTrans[0] - currentTrans[0];
+        const dy = nextTrans[1] - currentTrans[1];
+        const hdg = Math.round((Math.atan2(dx, -dy) * (180 / Math.PI) + 360) % 360);
+
+        // Calcula a distância diretamente das coordenadas sem transformá-las
+        const dxRaw = next.coordinates[0] - current.coordinates[0];
+        const dyRaw = next.coordinates[1] - current.coordinates[1];
+        const distanceEuclidean = Math.sqrt(dxRaw ** 2 + dyRaw ** 2);
+        const distanceNM = (distanceEuclidean * scaleFactor).toFixed(2);
+
+        // Calcula a posição para exibir as labels (meio do segmento)
+        const midX = (currentTrans[0] + nextTrans[0]) / 2;
+        const midY = (currentTrans[1] + nextTrans[1]) / 2;
+
+        // Rotaciona o contexto para alinhar com o ângulo da rota
+        ctx.save();
+        ctx.translate(midX, midY);
+        let angle = Math.atan2(dy, dx);
+        if (angle > Math.PI / 2 || angle < -Math.PI / 2) {
+            angle += Math.PI; // Inverte para evitar que fique de cabeça para baixo
+        }
+        ctx.rotate(angle);
+
+        // Desenha o HDG
+        ctx.fillStyle = "#bbbbbb";
+        ctx.font = "12px Arial";
+        ctx.textAlign = "center";
+        ctx.fillText(`${hdg}°`, 0, -5);
+
+        // Desenha a Distância em NM
+        ctx.fillStyle = "#bbbbbb";
+        ctx.font = "12px Arial";
+        ctx.textAlign = "center";
+        ctx.fillText(`${distanceNM} NM`, 0, 15);
+
+        // Restaura o contexto
+        ctx.restore();
     }
     ctx.stroke();
 
+    // Desenha os pontos transformados
     transformedPoints.forEach((point, index) => {
         const [x, y] = point.transformedCoordinates;
 
@@ -266,12 +316,24 @@ function updatePosition(airportUI, airport) {
 	airportUI.style.top = `${y + uiHeight / 2}px`;
 }
 
+function updateAllAirportsUI() {
+    controlAreas.forEach(area => {
+        if (area.type === 'Airport') {
+            const airportUI = document.querySelector(`.airport-ui[id="${area.name}"]`);
+            if (airportUI) {
+                updatePosition(airportUI, area);
+            }
+        }
+    });
+}
+
 const icaoMenuCount = 0;
 
 function createAirportUI(airport) {
 	if (settingsValues.showAirportUI === false) {return};
 	const airportUI = document.createElement('div');
 	airportUI.className = 'airport-ui';
+	airportUI.id = airport.name
 	airportUI.style.zIndex = 10 + (3 - airport.originalscale);
 	airportUI.innerHTML = `
 		<button class="icao-code">${airport.name}</button>
@@ -518,10 +580,6 @@ loadStartTime();
 	}		
 
 	updatePosition(airportUI, airport);
-
-	window.addEventListener('resize', () => updatePosition(airportUI, airport));
-	canvas.addEventListener('mousemove', () => updatePosition(airportUI, airport));
-	canvas.addEventListener('wheel', () => updatePosition(airportUI, airport));
 }
 
 function resetAllAirportsUI() {
@@ -587,24 +645,78 @@ function displayAirports() {
 // Exibe os aeroportos na inicialização
 displayAirports();
 
-// Evento para arrastar o mapa
+let velocityX = 0, velocityY = 0;
+let friction = 0.85;
+const MIN_VELOCITY_THRESHOLD = 0.1;
+
 canvas.addEventListener('mousedown', (e) => {
-	isDragging = true;
-	startX = e.clientX - offsetX;
-	startY = e.clientY - offsetY;
+    isDragging = true;
+    startX = e.clientX;
+    startY = e.clientY;
+    velocityX = 0;
+    velocityY = 0;
 });
 
 canvas.addEventListener('mousemove', (e) => {
-	if (isDragging) {
-		offsetX = e.clientX - startX;
-		offsetY = e.clientY - startY;
-		draw();
-	}
+    if (isDragging) {
+        const currentX = e.clientX;
+        const currentY = e.clientY;
+
+        // Calcula o deslocamento
+        const dx = currentX - startX;
+        const dy = currentY - startY;
+
+        // Atualiza a posição do mapa
+        offsetX += dx;
+        offsetY += dy;
+
+        // Calcula a velocidade apenas se houver movimento significativo
+        if (Math.abs(dx) > MIN_VELOCITY_THRESHOLD || Math.abs(dy) > MIN_VELOCITY_THRESHOLD) {
+            velocityX = dx;
+            velocityY = dy;
+        } else {
+            velocityX = 0; // Considera que o rato está parado
+            velocityY = 0;
+        }
+
+        // Atualiza o ponto inicial
+        startX = currentX;
+        startY = currentY;
+
+        // Redesenha o canvas
+        draw();
+    }
 });
 
 canvas.addEventListener('mouseup', () => {
-	isDragging = false;
+    isDragging = false;
+
+    // Só aplica inércia se a velocidade for significativa
+    if (Math.abs(velocityX) > MIN_VELOCITY_THRESHOLD || Math.abs(velocityY) > MIN_VELOCITY_THRESHOLD) {
+        applyInertia();
+    }
 });
+
+function applyInertia() {
+    // Aplica a inércia até que a velocidade seja insignificante
+    if (Math.abs(velocityX) > MIN_VELOCITY_THRESHOLD || Math.abs(velocityY) > MIN_VELOCITY_THRESHOLD) {
+        offsetX += velocityX;
+        offsetY += velocityY;
+
+        // Aplica atrito para reduzir a velocidade gradualmente
+        velocityX *= friction;
+        velocityY *= friction;
+
+        draw();
+
+        // Continua a aplicar inércia
+        requestAnimationFrame(applyInertia);
+    } else {
+        // Zera as velocidades quando a inércia para
+        velocityX = 0;
+        velocityY = 0;
+    }
+}
 
 let isZooming = false;
 
