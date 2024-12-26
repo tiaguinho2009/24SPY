@@ -435,6 +435,7 @@ function createAirportUI(airport) {
         <div class="controller-info-section">
             <p><strong>Controller:</strong> ${atcName}</p>
             <p><strong>Frequency:</strong> ${frequency} </p>
+			<p><strong>Online:</strong> ${airport.uptime} </p>
         </div>
     `;//<strong>Time Online:</strong> ${getTimeOnline()}
 
@@ -923,25 +924,27 @@ function ATCOnlinefuncion(atcList) {
 			area.ground = false;
 			area.towerAtc = '';
 			area.groundAtc = '';
+			area.uptime = ''; // Inicializa a propriedade uptime
 			area.scale = area.originalscale;
 		} else if (area.type === 'polygon') {
 			area.active = false; // Desativa TMAs/CTRs inicialmente
 		}
 	});
 
-	if (settingsValues.showOnlineATC === false) {updateATCCount(); refreshUI(); return};
+	if (settingsValues.showOnlineATC === false) {updateATCCount(); refreshUI(); return;}
 
 	// Processa cada objeto da lista ATC
 	atcList.forEach(atcData => {
-		const { holder, claimable, airport, position } = atcData;
-		
+		const { holder, claimable, airport, position, uptime } = atcData;
+
 		if (claimable) return;
-		
+
 		// Encontra a área correspondente ao aeroporto
 		controlAreas.forEach(area => {
-			
 			if (area.type === 'Airport' && area.real_name === airport) {
 				area.scale = 0; // Reduz o scale ao ativar uma posição no aeroporto
+				area.uptime = uptime || 'error'; // Armazena o uptime se disponível
+
 				if (position === "tower") {
 					area.tower = true;
 					area.towerAtc = holder;
@@ -977,43 +980,81 @@ function ATCOnlinefuncion(atcList) {
 	refreshUI();
 }
 
-ATCOnlinefuncion(PTFSAPI);
-
 // Função para buscar dados do endpoint e atualizar o estado de ATC
 function fetchATCDataAndUpdate() {
-	function toggleUpdateClass() {
-		const mapUpdateTime = document.getElementById('mapUpdateTime');
-		const originalColor = 'rgba(32, 32, 36, 1)'
-	
-		mapUpdateTime.style.backgroundColor = '#ff7a00';
-	
-		setTimeout(() => {
-			mapUpdateTime.style.backgroundColor = originalColor;
-		}, 150);
-	}
-	
-    fetch('https://ptfs.xyz/api/controllers')
+    function toggleUpdateClass() {
+        const mapUpdateTime = document.getElementById('mapUpdateTime');
+        const originalColor = 'rgba(32, 32, 36, 1)';
+    
+        mapUpdateTime.style.backgroundColor = '#ff7a00';
+    
+        setTimeout(() => {
+            mapUpdateTime.style.backgroundColor = originalColor;
+        }, 150);
+    }
+
+    // URL padrão caso a URL dinâmica falhe
+    const defaultURL = 'https://ptfs.xyz/api/controllers';
+    const dynamicURLRepository = 'https://raw.githubusercontent.com/tiaguinho2009/24SPY-Backend/main/backend';
+
+    // Busca a URL dinâmica do repositório GitHub
+    fetch(dynamicURLRepository)
         .then(response => {
             if (!response.ok) {
-                throw new Error(`Erro ao buscar dados: ${response.status}`);
+                throw new Error(`Erro ao buscar repositório: ${response.status}`);
             }
-            return response.json();
+            return response.text();
+        })
+        .then(repositoryContent => {
+            // Extração da URL dinâmica do repositório
+            const dynamicURLMatch = repositoryContent.match(/https?:\/\/[\w.-]+\.trycloudflare\.com/g);
+            if (dynamicURLMatch && dynamicURLMatch.length > 0) {
+                const dynamicURL = dynamicURLMatch[0] + '/api/controllers';
+
+                // Tenta buscar dados do endpoint dinâmico
+                return fetch(dynamicURL)
+                    .then(response => {
+                        if (response.ok) {
+                            return response.json();
+                        } else {
+                            throw new Error(`Erro ao buscar URL dinâmica: ${response.status}`);
+                        }
+                    });
+            } else {
+                throw new Error('Nenhuma URL dinâmica encontrada no repositório.');
+            }
         })
         .then(data => {
             PTFSAPI = data;
-
             ATCOnlinefuncion(PTFSAPI);
-			toggleUpdateClass();
+            toggleUpdateClass();
         })
         .catch(error => {
-            console.error('Erro ao buscar os dados ATC:', error);
-			PTFSAPI = PTFSAPIError
-			ATCOnlinefuncion(PTFSAPI);
-			toggleUpdateClass();
+            console.error('Erro ao usar a URL dinâmica, fallback para a URL padrão:', error);
+
+            // Fallback para a URL padrão
+            fetch(defaultURL)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Erro ao buscar dados na URL padrão: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    PTFSAPI = data;
+                    ATCOnlinefuncion(PTFSAPI);
+                    toggleUpdateClass();
+                })
+                .catch(err => {
+                    console.error('Erro ao buscar dados na URL padrão:', err);
+                    PTFSAPI = PTFSAPIError;
+                    ATCOnlinefuncion(PTFSAPI);
+                    toggleUpdateClass();
+                });
         });
 
-		const time = getTime()
-		document.querySelector('.mapUpdateTime .time').textContent = ` ${time}`;
+    const time = getTime();
+    document.querySelector('.mapUpdateTime .time').textContent = ` ${time}`;
 }
 
 setInterval(fetchATCDataAndUpdate, 30000);

@@ -1,5 +1,12 @@
 # Changelog
 
+## [DEV 0.1.5.2] - 26/12/2024
+### Added
+- New backend Server for the 24SPY website! (Still in tests but already working!)
+- Now if the backend Server is online the website will show the online time of the atcs!
+### In the next Update
+- The new ATC Menu will be released!
+
 ## [DEV 0.1.5.1] - 18/12/2024
 ### Added
 - More MAP Optimization! (Bugs with Airports UIs resolved.)

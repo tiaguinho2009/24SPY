@@ -14,7 +14,7 @@
 | ![status: Done](https://img.shields.io/badge/status-Done-brightgreen) | Add User Settings |
 | ![status: Done](https://img.shields.io/badge/status-Done-brightgreen) | Have a menu with the ground charts of each Airport.|
 | ![status: Done](https://img.shields.io/badge/status-Done-brightgreen) | Show the Waypoints on the map and be able to put the FPL on the map.|
-| ![status: In-Progress](https://img.shields.io/badge/status-In_Progress-orange) | Buy a mini pc to be a backhand server for the website |
+| ![status: Done](https://img.shields.io/badge/status-Done-brightgreen) | Buy a mini pc to be a backend server for the website |
 | ![status: Planned](https://img.shields.io/badge/status-Planned-blue) | Create the ATC Menu. |
 | ![status: Planned](https://img.shields.io/badge/status-Planned-blue) | Create a tiles system for the map. |
 | ![status: Planned](https://img.shields.io/badge/status-Planned-blue) | Make the Labels of the Waypoints interactive.|
@@ -30,11 +30,9 @@
 
 For new users or anyone with questions on how to display online ATCs from ATC24 on the website, refer to the [Wiki](https://github.com/tiaguinho2009/24SPY/wiki) for guidance.
 
-## [DEV 0.1.5.1] - 18/12/2024
+## [DEV 0.1.5.2] - 26/12/2024
 ### Added
-- More MAP Optimization! (Bugs with Airports UIs resolved.)
-- New HDG and Distances Labels for the Flight Plans!
-- New small feutures to the footer of the website.
+- New backend Server for the 24SPY website! (Still in tests but already working!)
+- Now if the backend Server is online the website will show the online time of the atcs!
 ### In the next Update
 - The new ATC Menu will be released!
-- New Official 24SPY back-end Server. (Only after Christmas)
