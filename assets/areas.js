@@ -962,6 +962,8 @@ const controlAreas = [
         ],
         charts: [
             ["Official", "https://ptfs.xyz/charts/dark/IMLR%20Ground%20Chart.png"],
+            ["AeroNav", "https://drive.google.com/file/d/1iJ-5He0OgX4FMW6Y32DRKr9rAh4hgQ4R/view"],
+            ["AeroNav IRFD SOP", "https://docs.google.com/document/d/1_g0U7Zf4VtxZSkpNLzIEAaU4rEW0m-Uma1jnO_BoCvU/edit?usp=sharing"],
         ],
     },
     {
@@ -1158,7 +1160,7 @@ const controlAreas = [
         oceanic: true,
         charts: [
             ["Official", "https://ptfs.xyz/charts/dark/ISKP%20Ground%20Chart.png"],
-            //["TUGACHARTS", "https://drive.google.com/file/d/1BEaoKLa9hvXCPPKdkc4IGa9Wc22OXr0s/view"]//NOT PUBLISHIED YET
+            ["TUGACHARTS", "https://drive.google.com/file/d/1BEaoKLa9hvXCPPKdkc4IGa9Wc22OXr0s/view"]
         ],
     },
     {

@@ -1,6 +1,6 @@
 # 24SPY License
 
-Copyright (c) 2024 Tiago Murteira (nickname: tiaguinho_2009)
+Copyright (c) 2025 Tiago Murteira (nickname: tiaguinho_2009)
 
 Permission is hereby granted to any person obtaining a copy of this software and associated documentation files (the "Software"), to use, modify, and redistribute the Software, under the following conditions:
 
