@@ -30,9 +30,9 @@
 
 For new users or anyone with questions on how to display online ATCs from ATC24 on the website, refer to the [Wiki](https://github.com/tiaguinho2009/24SPY/wiki) for guidance.
 
-## [DEV 0.1.5.2] - 26/12/2024
-### Added
-- New backend Server for the 24SPY website! (Still in tests but already working!)
-- Now if the backend Server is online the website will show the online time of the atcs!
-### In the next Update
-- The new ATC Menu will be released!
+## [DEV 0.1.5.2.1] - 11/01/2024
+### Changed
+- No more holiday spirit, Christmas has past. (Changed the logo to the normal version) - by awdev1 (i don't wanna work)
+- Changed the gradient color to a blue.
+### Litle thing
+- I wish you a good 2025 :D

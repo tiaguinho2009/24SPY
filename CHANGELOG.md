@@ -1,5 +1,12 @@
 # Changelog
 
+## [DEV 0.1.5.2.1] - 11/01/2024
+### Changed
+- No more holiday spirit, Christmas has past. (Changed the logo to the normal version) - by awdev1 (i don't wanna work)
+- Changed the gradient color to a blue.
+### Litle thing
+- I wish you a good 2025 :D
+
 ## [DEV 0.1.5.2] - 26/12/2024
 ### Added
 - New backend Server for the 24SPY website! (Still in tests but already working!)

@@ -1455,7 +1455,7 @@ const settingsValues = {
 };
 
 const websiteInfo = {
-    version: "DEV 0.1.5.2",
+    version: "DEV 0.1.5.2.1",
 };
 
 const localInfo = {};
