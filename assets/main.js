@@ -35,23 +35,37 @@ mapImageSmallScale.src = mapImages.smallScale;
 // Imagem atualmente utilizada
 let currentMapImage = mapImageNormal;
 
-function showMessage(title, message, button) {
+function showMessage(title, message, button, button2) {
     return new Promise((resolve) => {
         const menu = document.getElementById("MessageMenu");
         const titleElement = menu.querySelector(".title");
         const contentElement = menu.querySelector(".content p");
-        const closeButton = menu.querySelector(".close-button");
+        const closeButton1 = document.getElementById("message-button1");
+        const closeButton2 = document.getElementById("message-button2");
 
         titleElement.textContent = title;
         contentElement.textContent = message;
-		if (button) {closeButton.textContent = button}
+        closeButton1.textContent = button || "Close";
+
+        if (button2) {
+            closeButton2.textContent = button2;
+            closeButton2.style.display = "flex";
+        } else {
+            closeButton2.style.display = "none";
+        }
 
         menu.style.display = "flex";
 
-        // Evento de fechar
-        closeButton.onclick = () => {
+        // Evento de fechar para o primeiro botão
+        closeButton1.onclick = () => {
             menu.style.display = "none";
-            resolve();
+            resolve(1);
+        };
+
+        // Evento de fechar para o segundo botão
+        closeButton2.onclick = () => {
+            menu.style.display = "none";
+            resolve(2);
         };
     });
 }
@@ -1377,6 +1391,22 @@ window.addEventListener('keydown', (e) => {
 		copyCoordinatesToClipboard(mouseX, mouseY);
 	}
 });
+
+function executeOnce() {
+    const hasExecuted = localStorage.getItem('hasExecuted');
+
+    if (!hasExecuted) {
+        showMessage("24SPY Discord Server", "How about joining our Discord Server, where you can receive updated news about 24SPY, make suggestions and questions and much more?", "Join", "Close").then((response) => {
+            if (response === 1) {
+                window.open("https://discord.gg/8cQAguPjkh", "_blank");
+            }
+        });
+
+        // Defina a variável no localStorage para indicar que a função já foi executada
+        localStorage.setItem('hasExecuted', 'true');
+    }
+}
+executeOnce();
 
 // Inicializa o canvas
 resizeCanvas();

@@ -876,7 +876,7 @@ canvas {
 }
 
 .message-menu .content {
-    margin: 0px 0px 0px 15px;
+    margin: 0px 15px 0px 15px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
     text-align: left;
@@ -901,6 +901,7 @@ canvas {
 
 .message-menu .close-button:hover {
     background-color: #4b7eff;
+    transform: scale(1.0);
 }
 
 .message-menu .content::-webkit-scrollbar {
