@@ -31,20 +31,20 @@
                Map last update:<span class="time"></span>
             </div>
             <!-- Botão da Wiki -->
-            <button class="settings-button" onclick="redirectToWiki()">
-            <img src="assets/Icons/book-open-svgrepo-com.svg" alt="Wiki" class="settings-icon">
-            </button>
+            <a class="header-button2" href="https://github.com/tiaguinho2009/24SPY/wiki" target="_blank">
+               <img src="assets/Icons/book-open-svgrepo-com.svg" class="icon">
+            </a>
             <!-- Botão do GitHub -->
-            <button class="settings-button" onclick="redirectToGitHub()">
-            <img src="assets/Icons/github-142-svgrepo-com.svg" alt="GitHub" class="settings-icon">
-            </button>
+            <a class="header-button2" href="https://github.com/tiaguinho2009/24SPY" target="_blank">
+               <img src="assets/Icons/github-142-svgrepo-com.svg" class="icon">
+            </a>
             <!-- Botão do Discord -->
-            <button class="settings-button" onclick="redirectToDiscord()">
-            <img src="assets/Icons/discord-svgrepo-com.svg" alt="Discord" class="settings-icon">
-            </button>
+            <a class="header-button2" href="https://discord.gg/8cQAguPjkh" target="_blank">
+               <img src="assets/Icons/discord-svgrepo-com.svg" class="icon">
+            </a>
             <!-- Botão de Configurações -->
             <button class="settings-button" onclick="toggleSettingsMenu()">
-            <img src="assets/Icons/settings-svgrepo-com.svg" alt="Configurações" class="settings-icon">
+               <img src="assets/Icons/settings-svgrepo-com.svg" alt="Configurações" class="settings-icon">
             </button>
          </div>
       </header>
@@ -55,15 +55,14 @@
             </button>
          </span>
          <div class="content">
-            <h2>[DEV 0.1.5.2.1] - 11/01/2024</h2>
+            <h2>[DEV 0.1.5.3] - 16/02/2025</h2>
             <h3>Changed</h3>
             <ul>
-               <li>No more holiday spirit, Christmas has past. (Changed the logo to the normal version) - by awdev1 (i don't wanna work)</li>
-               <li>Changed the gradient color to a blue.</li>
-            </ul>
-            <h3>Litle thing</h3>
-            <ul>
-               <li>I wish you a good 2025 :D</li>
+               <li>New message log system. (So when some error happens u know that)</li>
+               <li>Updated the Fligh Plan System with Runways.</li>
+               <li>New system in the Flight Plan menu to help you select the correct options!</li>
+               <li>More optimization!</li>
+               <li>More charts!</li>
             </ul>
          </div>
       </div>     
@@ -108,22 +107,33 @@
          <h3>Flight Plan (Beta)</h3>
          <hr class="menu-divider">
          <div class="form-row">
-             <label>Departure:</label>
-             <textarea class="small-input" placeholder="IRFD"></textarea>
+             <label for="departure">Departure:</label>
+             <textarea id="departure" class="small-input" placeholder="IRFD" maxlength="4"></textarea>
+             <label for="departureRwy">RWY:</label>
+             <textarea id="departureRwy" class="small-input" placeholder="07R" maxlength="3"></textarea>
          </div>
          <div class="form-row">
-             <label>Arrival:</label>
-             <textarea class="small-input" placeholder="ILAR"></textarea>
+             <label for="arrival">Arrival:</label>
+             <textarea id="arrival" class="small-input" placeholder="ILAR" maxlength="4"></textarea>
+             <label for="arrivalRwy">RWY:</label>
+             <textarea id="arrivalRwy" class="small-input" placeholder="06" maxlength="3"></textarea>
          </div>
          <div class="form-row">
-             <label>Waypoints:</label>
-             <textarea class="large-input" placeholder="MOGTA TRN CAN"></textarea>
+             <label for="waypoints">Waypoints:</label>
+             <textarea id="waypoints" class="large-input" placeholder="MOGTA TRN CAN"></textarea>
          </div>
-         <div class="Buttons">
-            <button class="Save" onclick="saveFlp()">Save</button>
-            <button class="Reset" onclick="resetFlp()">Reset</button>
+         <div class="buttons">
+             <button class="save" onclick="saveFlp()">Save</button>
+             <button class="reset" onclick="resetFlp()">Reset</button>
          </div>
       </div>
+      <div class="message-menu" id="MessageMenu">
+         <div class="title">Error</div>
+         <div class="content">
+             <p>Message</p>
+         </div>
+         <button class="close-button" onclick="toggleMessageMenu()">Close</button>
+     </div>
       <div class="footer">
          <a href="https://tiaguinho2009.github.io/24SPY/" target="_blank" class="footer-link">24SPY</a>
           | 

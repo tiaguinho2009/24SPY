@@ -13,6 +13,15 @@ let startX, startY;
 let onlineATC = 0;
 let flightRoute = [];
 
+const sortedAirports = controlAreas
+    .filter(area => area.type === "Airport")
+    .map(area => area.name)
+    .sort();
+
+const sortedWaypoints = Waypoints
+    .map(wp => wp.name)
+    .sort();
+
 // Imagens do mapa
 const mapImages = {
 	normal: 'PTFS-Map-Grey.png',
@@ -25,6 +34,31 @@ mapImageSmallScale.src = mapImages.smallScale;
 
 // Imagem atualmente utilizada
 let currentMapImage = mapImageNormal;
+
+function showMessage(title, message, button) {
+    return new Promise((resolve) => {
+        const menu = document.getElementById("MessageMenu");
+        const titleElement = menu.querySelector(".title");
+        const contentElement = menu.querySelector(".content p");
+        const closeButton = menu.querySelector(".close-button");
+
+        titleElement.textContent = title;
+        contentElement.textContent = message;
+		if (button) {closeButton.textContent = button}
+
+        menu.style.display = "flex";
+
+        // Evento de fechar
+        closeButton.onclick = () => {
+            menu.style.display = "none";
+            resolve();
+        };
+    });
+}
+
+//showMessage("Test", "Test Message").then(() => {
+//	showMessage("Test", "OMG U PRESSED THE CLOSE BUTTON", "DON'T PRESS ME AGAIN")
+//});
 
 // Configuração do tamanho do canvas
 function resizeCanvas() {
@@ -47,7 +81,7 @@ function draw() {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 	// Alterna entre as imagens com base na escala
-	currentMapImage = scale < 3 ? mapImageSmallScale : mapImageNormal;
+	currentMapImage = scale < 4 ? mapImageSmallScale : mapImageNormal;
 
 	// Calcula tamanho ajustado do mapa
 	const mapWidth = 1200 * scale;
@@ -201,33 +235,10 @@ function drawFlightPlan(points) {
         const distanceEuclidean = Math.sqrt(dxRaw ** 2 + dyRaw ** 2);
         const distanceNM = (distanceEuclidean * scaleFactor).toFixed(2);
 
-        // Calcula a posição para exibir as labels (meio do segmento)
-        const midX = (currentTrans[0] + nextTrans[0]) / 2;
-        const midY = (currentTrans[1] + nextTrans[1]) / 2;
-
-        // Rotaciona o contexto para alinhar com o ângulo da rota
-        ctx.save();
-        ctx.translate(midX, midY);
-        let angle = Math.atan2(dy, dx);
-        if (angle > Math.PI / 2 || angle < -Math.PI / 2) {
-            angle += Math.PI; // Inverte para evitar que fique de cabeça para baixo
+        // Chama a função para desenhar as labels secundárias se o zoom for maior que 1
+        if (scale > 0.5) {
+            drawSecondaryLabels(currentTrans, nextTrans, hdg, distanceNM);
         }
-        ctx.rotate(angle);
-
-        // Desenha o HDG
-        ctx.fillStyle = "#bbbbbb";
-        ctx.font = "12px Arial";
-        ctx.textAlign = "center";
-        ctx.fillText(`${hdg}°`, 0, -5);
-
-        // Desenha a Distância em NM
-        ctx.fillStyle = "#bbbbbb";
-        ctx.font = "12px Arial";
-        ctx.textAlign = "center";
-        ctx.fillText(`${distanceNM} NM`, 0, 15);
-
-        // Restaura o contexto
-        ctx.restore();
     }
     ctx.stroke();
 
@@ -257,6 +268,36 @@ function drawFlightPlan(points) {
         ctx.font = "14px Arial";
         ctx.fillText(point.name, x + 5, y - 5);
     });
+}
+
+function drawSecondaryLabels(currentTrans, nextTrans, hdg, distanceNM) {
+    // Calcula a posição para exibir as labels (meio do segmento)
+    const midX = (currentTrans[0] + nextTrans[0]) / 2;
+    const midY = (currentTrans[1] + nextTrans[1]) / 2;
+
+    // Rotaciona o contexto para alinhar com o ângulo da rota
+    ctx.save();
+    ctx.translate(midX, midY);
+    let angle = Math.atan2(nextTrans[1] - currentTrans[1], nextTrans[0] - currentTrans[0]);
+    if (angle > Math.PI / 2 || angle < -Math.PI / 2) {
+        angle += Math.PI; // Inverte para evitar que fique de cabeça para baixo
+    }
+    ctx.rotate(angle);
+
+    // Desenha o HDG
+    ctx.fillStyle = "#bbbbbb";
+    ctx.font = "12px Arial";
+    ctx.textAlign = "center";
+    ctx.fillText(`${hdg}°`, 0, -5);
+
+    // Desenha a Distância em NM
+    ctx.fillStyle = "#bbbbbb";
+    ctx.font = "12px Arial";
+    ctx.textAlign = "center";
+    ctx.fillText(`${distanceNM} NM`, 0, 15);
+
+    // Restaura o contexto
+    ctx.restore();
 }
 
 function drawNavaids() {
@@ -398,101 +439,58 @@ function createAirportUI(airport) {
 	}	
 
 	function showInfoMenu(badge) {
-    const position =
-        badge.classList.contains('C') ? (airport.ctr && airport.oceanic ? 'Oceanic' : 'Control') :
-        badge.classList.contains('A') ? 'Approach' :
-        badge.classList.contains('T') ? 'Tower' :
-        badge.classList.contains('G') ? 'Ground' :
-        badge.classList.contains('D') ? 'Delivery' :
-        'Unknown';
+		const position =
+			badge.classList.contains('C') ? (airport.ctr && airport.oceanic ? 'Oceanic' : 'Control') :
+			badge.classList.contains('A') ? 'Approach' :
+			badge.classList.contains('T') ? 'Tower' :
+			badge.classList.contains('G') ? 'Ground' :
+			badge.classList.contains('D') ? 'Delivery' :
+			'Unknown';
 
-    const atcName = (position === 'Control' || position === 'Oceanic' || position === 'Approach' || position === 'Tower') ?
-        airport.towerAtc :
-        (position === 'Ground' || position === 'Delivery') ?
-        airport.groundAtc :
-        null;
+		const atcName = (position === 'Control' || position === 'Oceanic' || position === 'Approach' || position === 'Tower') ?
+			airport.towerAtc :
+			(position === 'Ground' || position === 'Delivery') ?
+			airport.groundAtc :
+			null;
 
-    const frequency = position === 'Ground' ? airport.groundfreq : airport.towerfreq;
+		const frequency = position === 'Ground' ? airport.groundfreq : airport.towerfreq;
 
-    let atcName2 = atcName;
-    if (atcName.includes("|")) {
-        atcName2 = atcName.split("|")[0].trim();
-    }
-    let roleText = "";
-    let roleIndex = "role2";
-    if (specialUsers[atcName2]) {
-        roleText = specialUsers[atcName2][0].Role;
-        roleIndex = "role1";
-    }
+		let atcName2 = atcName;
+		if (atcName.includes("|")) {
+			atcName2 = atcName.split("|")[0].trim();
+		}
+		let roleText = "";
+		let roleIndex = "role2";
+		if (specialUsers[atcName2]) {
+			roleText = specialUsers[atcName2][0].Role;
+			roleIndex = "role1";
+		}
 
-    airportInfoMenu.style.display = 'block';
-    airportInfoMenu.innerHTML = `
-        <div class="title">
-            ${airport.real_name} ${position}
-            <div class="${roleIndex}">${roleText}</div>
-        </div>
-        <hr class="menu-divider">
-        <div class="controller-info-section">
-            <p><strong>Controller:</strong> ${atcName}</p>
-            <p><strong>Frequency:</strong> ${frequency} </p>
-			<p><strong>Online:</strong> ${airport.uptime} </p>
-        </div>
-    `;//<strong>Time Online:</strong> ${getTimeOnline()}
+		airportInfoMenu.style.display = 'block';
+		airportInfoMenu.innerHTML = `
+			<div class="title">
+				${airport.real_name} ${position}
+				<div class="${roleIndex}">${roleText}</div>
+			</div>
+			<hr class="menu-divider">
+			<div class="controller-info-section">
+				<p><strong>Controller:</strong> ${atcName}</p>
+				<p><strong>Frequency:</strong> ${frequency} </p>
+				<p><strong>Online:</strong> ${airport.uptime} </p>
+			</div>
+		`;//<strong>Time Online:</strong> ${getTimeOnline()}
 
-    const [x, y] = transformCoordinates(airport.coordinates);
-    airportInfoMenu.style.left = `${x - (airportUI.offsetWidth / 2)}px`;
-    airportInfoMenu.style.top = `${y + airportUI.offsetHeight / 2 + 60}px`;
-}
+		const [x, y] = transformCoordinates(airport.coordinates);
+		airportInfoMenu.style.left = `${x - (airportUI.offsetWidth / 2)}px`;
+		airportInfoMenu.style.top = `${y + airportUI.offsetHeight / 2 + 60}px`;
+	}
 
-function hideInfoMenu() {
-    document.querySelectorAll('.airport-info-menu').forEach(menu => {
-        menu.style.display = 'none';
-    });
-}
+	function hideInfoMenu() {
+		document.querySelectorAll('.airport-info-menu').forEach(menu => {
+			menu.style.display = 'none';
+		});
+	}
 
-function loadStartTime() {
-    const savedTime = localStorage.getItem('startTime');
-    if (savedTime) {
-        startTime = new Date(savedTime);
-    } else {
-        resetTimer();  // Set start time to the current time if not available
-    }
-}
-
-function getTimeOnline() {
-    let currentTime = new Date();
-    let timeDiff = Math.abs(currentTime - startTime);
-    let hours = Math.floor(timeDiff / 3600000);
-    let minutes = Math.floor((timeDiff % 3600000) / 60000);
-    return `${hours}:${minutes.toString().padStart(2, '0')}`;
-}
-
-function resetTimer() {
-    startTime = new Date();
-    localStorage.setItem('startTime', startTime.toISOString());
-}
-
-function onATCConnectionEvent() {
-    resetTimer();
-}
-
-// Assume these functions detect ATC log on/log off events
-function detectATCLogon() {
-    // Example function body
-    onATCConnectionEvent();
-}
-
-function detectATCLogoff() {
-    // Example function body
-    onATCConnectionEvent();
-}
-
-// Example event listeners for ATC logon/logoff
-document.addEventListener('ATCLogon', detectATCLogon);
-document.addEventListener('ATCLogoff', detectATCLogoff);
-
-let startTime;
-loadStartTime();
 	const controlBadge = airportUI.querySelector('.badge.C');
 	const approachBadge = airportUI.querySelector('.badge.A');
 	const towerBadge = airportUI.querySelector('.badge.T');
@@ -824,10 +822,11 @@ function repositionFlpMenu() {
 repositionFlpMenu()
 
 function saveFlp() {
-    // Obtém os valores das text areas
-    const departure = document.querySelector('.small-input[placeholder="IRFD"]').value.trim().toUpperCase();
-    const arrival = document.querySelector('.small-input[placeholder="ILAR"]').value.trim().toUpperCase();
-    const waypoints = document.querySelector('.large-input[placeholder="MOGTA TRN CAN"]').value.trim().toUpperCase();
+    const departure = document.getElementById('departure').value.trim().toUpperCase();
+    const departureRwy = document.getElementById('departureRwy').value.trim().toUpperCase();
+    const arrival = document.getElementById('arrival').value.trim().toUpperCase();
+    const arrivalRwy = document.getElementById('arrivalRwy').value.trim().toUpperCase();
+    const waypoints = document.getElementById('waypoints').value.trim().toUpperCase();
 
     // Divide os waypoints em uma lista
     const inputPoints = [departure, ...waypoints.split(' ').map(wp => wp.trim()), arrival];
@@ -840,6 +839,28 @@ function saveFlp() {
 
     const flightPlanPoints = [];
 
+    // Fator de escala calculado a partir da referência dada
+    const referenceDistanceEuclidean = Math.sqrt((534.22 - 512.13) ** 2 + (243.11 - 225.89) ** 2);
+    const referenceDistanceNM = 1478 / 1852; // 1478 metros em NM (1 NM = 1852 metros)
+    const scaleFactor = referenceDistanceNM / referenceDistanceEuclidean;
+
+    function calculateAlignmentPoint(airport, runwayNumber, rotate) {
+        const runway = airport.runways.find(rwy => rwy.number === runwayNumber);
+        if (!runway) return null;
+
+        const hdgRad = (runway.hdg - (rotate ? 180 : 0)) * (Math.PI / 180);
+        const distanceNM = 1.5;
+        const distanceEuclidean = distanceNM / scaleFactor; // Converte NM para a distância euclidiana
+
+        // Usa as coordenadas da pista se disponíveis, caso contrário, usa as coordenadas do aeroporto
+        const baseCoordinates = runway.coordinates || airport.coordinates;
+
+        const x = baseCoordinates[0] + distanceEuclidean * Math.sin(hdgRad);
+        const y = baseCoordinates[1] - distanceEuclidean * Math.cos(hdgRad);
+
+        return { name: `${runwayNumber}`, coordinates: [x, y], type: "Waypoint" };
+    }
+
     // Procura cada ponto na lista de dados
     inputPoints.forEach(input => {
         const matchedPoint = allPoints.find(point => point.name === input);
@@ -847,31 +868,198 @@ function saveFlp() {
         if (matchedPoint) {
             flightPlanPoints.push(matchedPoint);
         } else {
-            console.error(`Ponto "${input}" não encontrado em controlAreas ou Waypoints!`);
+            if (input !== "") {
+                showMessage('Flight Plan Error', `Waypoint "${input}" not found!`);
+            }
         }
     });
 
     // Verifica se há pelo menos dois pontos válidos
     if (flightPlanPoints.length < 2) {
-        console.error("É necessário pelo menos dois pontos válidos para desenhar o plano de voo!");
+        showMessage('Flight Plan Error', `It is necessary at least two valid points to draw the flight plan!`);
         return;
     }
 
-	flightRoute = flightPlanPoints;
+    // Adiciona os pontos de alinhamento e as pistas ao plano de voo
+    const departureAirport = allPoints.find(point => point.name === departure && point.type === "Airport");
+    const arrivalAirport = allPoints.find(point => point.name === arrival && point.type === "Airport");
+	if (!departureAirport) {
+		showMessage('Flight Plan Error', `Departure airport "${departure}" not found!`);
+	}
+	if (!arrivalAirport) {
+		showMessage('Flight Plan Error', `Arrival airport "${arrival}" not found!`);
+	}
+
+    if (departureAirport && departureRwy) {
+        const departureRunway = departureAirport.runways.find(rwy => rwy.number === departureRwy);
+        if (departureRunway && departureRunway.coordinates) {
+			flightPlanPoints.splice(0, 1);
+			flightPlanPoints.splice(0, 0, { name: "", coordinates: departureRunway.coordinates, type: "Runway" })
+            const alignmentPoint = calculateAlignmentPoint(departureAirport, departureRwy, false);
+            if (alignmentPoint) {
+                flightPlanPoints.splice(1, 0, alignmentPoint); // Insere como o segundo ponto
+            }
+        } else {
+            showMessage('Flight Plan Error', `Departure runway "${departureRwy}" not found at airport "${departure}"!`);
+        }
+    }
+
+    if (arrivalAirport && arrivalRwy) {
+		const arrivalRunway = arrivalAirport.runways.find(rwy => rwy.number === arrivalRwy);
+		if (arrivalRunway && arrivalRunway.coordinates) {
+			const alignmentPoint = calculateAlignmentPoint(arrivalAirport, arrivalRwy, true);
+			if (alignmentPoint) {
+				flightPlanPoints.splice(flightPlanPoints.length - 1, 0, alignmentPoint); // Insere como o penúltimo ponto
+			}
+			flightPlanPoints.splice(flightPlanPoints.length - 1, 1); // Remove o último ponto (aeroporto)
+			flightPlanPoints.push({ name: "", coordinates: arrivalRunway.coordinates, type: "Runway" });
+		} else {
+			showMessage('Flight Plan Error', `Arrival runway "${arrivalRwy}" not found at airport "${arrival}"!`);
+		}
+	}
+
+    flightRoute = flightPlanPoints;
     draw();
 }
 
 function resetFlp() {
-    // Limpa os valores das text areas
-    document.querySelector('.small-input[placeholder="IRFD"]').value = '';
-    document.querySelector('.small-input[placeholder="ILAR"]').value = '';
-    document.querySelector('.large-input[placeholder="MOGTA TRN CAN"]').value = '';
+    // Limpa os valores das text areas pelos seus IDs
+    document.getElementById('departure').value = '';
+    document.getElementById('departureRwy').value = '';
+    document.getElementById('arrival').value = '';
+    document.getElementById('arrivalRwy').value = '';
+    document.getElementById('waypoints').value = '';
 
     // Reseta a rota de voo
     flightRoute = [];
-	draw();
-    console.log("Plano de voo resetado!");
+    draw();
 }
+
+function createList(textareaId, options) {
+    const textarea = document.getElementById(textareaId);
+    if (!textarea) {
+        console.error(`Textarea with ID "${textareaId}" not found!`);
+        return;
+    }
+
+    // Ordena as opções alfabeticamente
+    options.sort();
+
+    // Cria o container da lista
+    const listContainer = document.createElement('div');
+    listContainer.className = 'list-container';
+    listContainer.style.width = `${textarea.offsetWidth}px`;
+
+    // Posiciona o container da lista abaixo da textarea
+    const rect = textarea.getBoundingClientRect();
+    listContainer.style.left = `${rect.left + window.scrollX}px`;
+    listContainer.style.top = `${rect.bottom + window.scrollY}px`;
+
+    // Função para calcular a proximidade da correspondência
+    function calculateMatchScore(option, filter) {
+        if (option.startsWith(filter)) {
+            return 0; // Melhor correspondência
+        } else if (option.includes(filter)) {
+            return 1; // Boa correspondência
+        } else {
+            return 2; // Correspondência menos relevante
+        }
+    }
+
+    // Função para atualizar a lista com base no filtro
+    function updateList(filter) {
+        listContainer.innerHTML = ''; // Limpa a lista atual
+
+        const filteredOptions = options
+            .filter(option => option.toLowerCase().includes(filter.toLowerCase()))
+            .sort((a, b) => calculateMatchScore(a.toLowerCase(), filter.toLowerCase()) - calculateMatchScore(b.toLowerCase(), filter.toLowerCase()));
+
+        filteredOptions.forEach(option => {
+            const button = document.createElement('button');
+            button.textContent = option;
+
+            // Evento de clique para preencher a textarea com a opção selecionada
+            button.addEventListener('click', () => {
+                if (textareaId === 'waypoints') {
+                    // Adiciona o valor selecionado ao valor existente na textarea de waypoints
+                    const words = textarea.value.split(' ');
+                    words[words.length - 1] = option;
+                    textarea.value = words.join(' ') + ' ';
+                } else {
+                    // Substitui o valor da textarea com o valor selecionado
+                    textarea.value = option;
+                }
+                document.body.removeChild(listContainer); // Remove a lista após a seleção
+            });
+
+            listContainer.appendChild(button);
+        });
+    }
+
+    // Adiciona os botões de opções à lista inicialmente
+    updateList('');
+
+    // Adiciona o container da lista ao corpo do documento
+    document.body.appendChild(listContainer);
+
+    // Adiciona evento de input para filtrar a lista
+    textarea.addEventListener('input', () => {
+        const filter = textareaId === 'waypoints' ? textarea.value.split(' ').pop() : textarea.value;
+        updateList(filter);
+    });
+
+    // Remove a lista se clicar fora dela
+    document.addEventListener('click', function handleClickOutside(event) {
+        if (!listContainer.contains(event.target) && event.target !== textarea) {
+            document.body.removeChild(listContainer);
+            document.removeEventListener('click', handleClickOutside);
+        }
+    });
+}
+
+document.getElementById('departure').addEventListener('focus', () => {
+    createList('departure', sortedAirports);
+});
+
+document.getElementById('arrival').addEventListener('focus', () => {
+    createList('arrival', sortedAirports);
+});
+
+document.getElementById('departureRwy').addEventListener('focus', () => {
+    const departureAirport = document.getElementById('departure').value.trim().toUpperCase();
+    const airport = controlAreas.find(area => area.name === departureAirport && area.type === "Airport");
+    const departureInput = document.getElementById('departure');
+    if (!airport) {
+        departureInput.style.borderColor = 'red';
+    } else {
+        const runways = airport.runways.map(rwy => rwy.number);
+        createList('departureRwy', runways);
+    }
+});
+
+document.getElementById('departureRwy').addEventListener('blur', () => {
+    document.getElementById('departure').style.borderColor = ''; // Reseta a cor da borda
+});
+
+document.getElementById('arrivalRwy').addEventListener('focus', () => {
+    const arrivalAirport = document.getElementById('arrival').value.trim().toUpperCase();
+    const airport = controlAreas.find(area => area.name === arrivalAirport && area.type === "Airport");
+    const arrivalInput = document.getElementById('arrival');
+    if (!airport) {
+        arrivalInput.style.borderColor = 'red';
+    } else {
+        const runways = airport.runways.map(rwy => rwy.number);
+        createList('arrivalRwy', runways);
+    }
+});
+
+document.getElementById('arrivalRwy').addEventListener('blur', () => {
+    document.getElementById('arrival').style.borderColor = ''; // Reseta a cor da borda
+});
+
+document.getElementById('waypoints').addEventListener('focus', () => {
+    createList('waypoints', sortedWaypoints);
+});
 
 function resetHighlights() {
     controlAreas.forEach(area =>{
@@ -1046,6 +1234,9 @@ function fetchATCDataAndUpdate() {
                     toggleUpdateClass();
                 })
                 .catch(err => {
+					showMessage('Server Error', 'Couldnt get the info from the Server, please check your internet connection.','Reload').then(() => {
+						fetchATCDataAndUpdate();
+					})
                     console.error('Erro ao buscar dados na URL padrão:', err);
                     PTFSAPI = PTFSAPIError;
                     ATCOnlinefuncion(PTFSAPI);
@@ -1108,22 +1299,9 @@ function generateATCsListFromAreas() {
 
 generateATCsListFromAreas()
 
-function redirectToDiscord() {
-	window.open('https://discord.gg/8cQAguPjkh');
-}
-
-function redirectToGitHub() {
-	window.open('https://github.com/tiaguinho2009/24SPY');
-}
-
-function redirectToWiki() {
-	window.open('https://github.com/tiaguinho2009/24SPY/wiki');
-}
-
 function saveToLocalStorage() {
     localStorage.setItem('settingsValues', JSON.stringify(settingsValues));
     localStorage.setItem('websiteInfo', JSON.stringify(websiteInfo));
-    console.log('Dados salvos no localStorage.');
 }
 
 function loadFromLocalStorage() {

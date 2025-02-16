@@ -1,5 +1,13 @@
 # Changelog
 
+## [DEV 0.1.5.3] - 16/02/2025
+### Changed
+- New message log system. (So when some error happens u know that)
+- Updated the Fligh Plan System with Runways.
+- New system in the Flight Plan menu to help you select the correct options!
+- More optimization!
+- More charts!
+
 ## [DEV 0.1.5.2.1] - 11/01/2024
 ### Changed
 - No more holiday spirit, Christmas has past. (Changed the logo to the normal version) - by awdev1 (i don't wanna work)

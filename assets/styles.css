@@ -262,6 +262,29 @@ header h1 {
     scrollbar-width: thin;
 }
 
+.header-button2 {
+    background-color: rgba(32, 32, 36, 1);
+    border: none;
+    border-radius: 5px;
+    padding: 5px; /* Espaçamento interno para centralizar */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    height: 25px;
+    width: 25px;
+    transition: background-color 0.3s ease;
+}
+
+.header-button2:hover {
+    background-color: rgba(50, 50, 55, 1);
+}
+
+.header-button2 .icon {
+    width: 18px;
+    height: 18px;
+}
+
 /* Estilo do botão de configurações */
 .settings-button,
 .close-button {
@@ -407,23 +430,23 @@ header h1 {
     height: 2px;
     width: 100%;
     background-color: #3b6cec;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 .form-row {
     display: flex;
-    align-items: flex-start;
-    gap: 15px;
+    align-items: center;
+    justify-content: space-between;
     width: 100%;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
 
 .form-row label {
     font-size: 1rem;
     color: #bdbdbd;
-    width: 30%;
-    text-align: left;
-    line-height: 1.5;
+    width: 35%;
+    text-align: right;
+    padding-right: 10px;
 }
 
 .form-row textarea {
@@ -433,16 +456,15 @@ header h1 {
     color: #fff;
     font-size: 1rem;
     resize: none;
-    text-align: left;
+    text-align: center;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
     padding: 2px;
     text-transform: uppercase;
 }
 
 .small-input {
-    width: 70px;
+    width: 60px;
     height: 20px;
-    text-align: center;
 }
 
 .large-input {
@@ -456,7 +478,14 @@ textarea:focus, textarea:hover {
     box-shadow: 0 0 5px rgba(59, 108, 236, 0.7);
 }
 
-.flp-menu .Buttons button {
+.buttons {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.buttons button {
     background-color: #3b6cec;
     color: #fff;
     font-size: 1rem;
@@ -465,40 +494,91 @@ textarea:focus, textarea:hover {
     padding: 10px 15px;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s ease;
+    width: 48%;
 }
 
-.Buttons button:hover {
-    background-color: #0048ff;
+.buttons button:hover {
+    background-color: #4b7eff;
     transform: scale(1.05);
 }
 
-.Buttons button:active {
+.buttons button:active {
     background-color: #002d99;
     transform: scale(0.95);
 }
 
-.Buttons button.Save {
-    background-color: #28a745; /* Verde para salvar */
+.buttons .save {
+    background-color: #28a745;
 }
 
-.Buttons button.Save:hover {
-    background-color: #218838;
+.buttons .save:hover {
+    background-color: #4b7eff;
 }
 
-.Buttons button.Save:active {
+.buttons .save:active {
     background-color: #1e7e34;
 }
 
-.Buttons button.Reset {
-    background-color: #dc3545; /* Vermelho para reset */
+.buttons .reset {
+    background-color: #dc3545;
 }
 
-.Buttons button.Reset:hover {
-    background-color: #c82333;
+.buttons .reset:hover {
+    background-color: #4b7eff;
 }
 
-.Buttons button.Reset:active {
+.buttons .reset:active {
     background-color: #bd2130;
+}
+
+/* Estilo para o container da lista */
+.list-container {
+    position: absolute;
+    max-height: 150px; /* Limite de altura para tornar a lista rolável */
+    overflow-y: auto;
+    border: 1px solid #3b6cec;
+    background-color: #131316;
+    z-index: 101;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+}
+
+/* Estilo para os botões de opções */
+.list-container button {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    border: none;
+    background-color: #2d2d2d;
+    color: #fff;
+    padding: 10px;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.list-container button:hover {
+    background-color: #3b6cec;
+    color: #fff;
+}
+
+.list-container::-webkit-scrollbar {
+    width: 1px;
+}
+
+.list-container::-webkit-scrollbar-track {
+    background: none;
+}
+
+.list-container::-webkit-scrollbar-thumb {
+    background-color: #3b6cec;
+    border-radius: 2px;
+}
+
+/* Compatibilidade com navegadores que suportam scrollbar não-Webkit */
+.list-container {
+    scrollbar-width: thin;
+    scrollbar-color: #3b6cec transparent;
 }
 
 /* Container principal para o mapa */
@@ -764,6 +844,79 @@ canvas {
     margin: 4px 0;
     color: #ddd;
     font-size: 0.9em;
+}
+
+.message-menu {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #131316;
+    color: #ffffff;
+    width: 60%;
+    max-width: 400px;
+    max-height: 350px;
+    min-height: 150px;
+    position: fixed;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    z-index: 101;
+    display: none;
+    flex-direction: column;
+}
+
+.message-menu .title {
+    background-color: #202024;
+    padding: 10px;
+    font-size: 1.5em;
+    font-weight: bold;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom: 1px solid #444;
+    position: relative;
+}
+
+.message-menu .content {
+    margin: 0px 0px 0px 15px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    text-align: left;
+    max-height: 150px;
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+.message-menu .close-button {
+    background-color: #3b6cec;
+    color: #fff;
+    font-size: 1.2rem;
+    border: none;
+    cursor: pointer;
+    width: calc(100% - 20px);
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
+    padding: 15px;
+    margin: 0 10px 10px 10px;
+    align-self: flex-end;
+}
+
+.message-menu .close-button:hover {
+    background-color: #4b7eff;
+}
+
+.message-menu .content::-webkit-scrollbar {
+    width: 8px;
+}
+.message-menu .content::-webkit-scrollbar-track {
+    background: none;
+}
+.message-menu .content::-webkit-scrollbar-thumb {
+    background-color: #3b6cec;
+    border-radius: 4px;
+}
+
+.message-menu .content {
+    scrollbar-color: #3b6cec transparent;
+    scrollbar-width: thin;
 }
 
 .footer {

@@ -30,9 +30,10 @@
 
 For new users or anyone with questions on how to display online ATCs from ATC24 on the website, refer to the [Wiki](https://github.com/tiaguinho2009/24SPY/wiki) for guidance.
 
-## [DEV 0.1.5.2.1] - 11/01/2024
+## [DEV 0.1.5.3] - 16/02/2025
 ### Changed
-- No more holiday spirit, Christmas has past. (Changed the logo to the normal version) - by awdev1 (i don't wanna work)
-- Changed the gradient color to a blue.
-### Litle thing
-- I wish you a good 2025 :D
+- New message log system. (So when some error happens u know that)
+- Updated the Fligh Plan System with Runways.
+- New system in the Flight Plan menu to help you select the correct options!
+- More optimization!
+- More charts!
