@@ -1,26 +1,5 @@
 let PTFSAPIError = []
-
-let PTFSAPI = [
-    //example
-    {
-      "holder": "Test",
-      "claimable": true,
-      "airport": "Tokyo",
-      "position": "tower"
-    },
-    {
-      "holder": "",
-      "claimable": true,
-      "airport": "Tokyo",
-      "position": "ground"
-    },
-    {
-      "holder": "",
-      "claimable": true,
-      "airport": "Barra",
-      "position": "tower"
-    }
-]
+let PTFSAPI = []
 
 const controlAreas = [
     //TMA/RDR
@@ -737,12 +716,88 @@ const controlAreas = [
             ["AeroNav SOP", "https://docs.google.com/document/d/1_g0U7Zf4VtxZSkpNLzIEAaU4rEW0m-Uma1jnO_BoCvU/edit?usp=sharing"],
         ],
         runways: [
-            { number: "07L", length: 3408, hdg:  67, glideslope: 3.00, coordinates: [567.48, 786.74]},
-            { number: "25L", length: 3408, hdg: 247, glideslope: 3.00, coordinates: [589.02, 785.36]},
-            { number: "07C", length: 3680, hdg:  67, glideslope: 3.00, coordinates: [573.79, 787.51]},
-            { number: "25C", length: 3680, hdg: 247, glideslope: 3.00, coordinates: [597.17, 777.82]},
-            { number: "07R", length: 3917, hdg:  67, glideslope: 3.00, coordinates: [568.56, 793.36]},
-            { number: "25R", length: 3917, hdg: 247, glideslope: 3.00, coordinates: [583.64, 779.67]},
+            { number: "07L", length: 3408, hdg:  67, glideslope: 3.00, coordinates: [566.69, 786.65]},
+            { number: "25R", length: 3917, hdg: 247, glideslope: 3.00, coordinates: [584.56, 779.06]},
+            { number: "07C", length: 3680, hdg:  67, glideslope: 3.00, coordinates: [579.16, 784.66]},
+            { number: "25C", length: 3680, hdg: 247, glideslope: 3.00, coordinates: [597.36, 776.93]},
+            { number: "07R", length: 3917, hdg:  67, glideslope: 3.00, coordinates: [568.82, 793.33]},
+            { number: "25L", length: 3408, hdg: 247, glideslope: 3.00, coordinates: [588.70, 784.93]},
+        ],
+        SIDs: [
+            //DARRK 3 DEP TRANSITIONS
+            { name: "DARRK", transition: "SPACE", rwy: ["25C", "25R"], waypoints: ["DLREY", "ALOHA", "DARRK", "BEANS", "RIZIN", "SPACE"]},
+            { name: "DARRK", transition: "SEEKS", rwy: ["25L", "25C", "25R"], waypoints: ["DLREY", "ALOHA", "DARRK", "BEANS", "DINTY", "SEEKS"]},
+            { name: "DARRK", transition: "SPACE", rwy: ["25L"], waypoints: ["DLREY", "ALOHA", "DARRK", "BEANS", "RIZIN", "SPACE"]},
+            { name: "DARRK", transition: "SEEKS", rwy: ["25L"], waypoints: ["DOCKR", "EXMOR", "DARRK", "BEANS", "DINTY", "SEEKS"]},
+            
+            // KENED 3 DEP TRANSITIONS
+            { name: "KENED", transition: "RENDR", rwy: ["25L", "25C", "25R", "07L", "07C", "07R"], waypoints: ["KUNAV", "KENED", "WELSH", "RENDR"]},
+            { name: "KENED", transition: "JOOPY", rwy: ["25L", "25C", "25R", "07L", "07C", "07R"], waypoints: ["KUNAV", "KENED", "WELSH", "PROBE", "JOOPY"]},
+            { name: "KENED", transition: "DINER", rwy: ["25L", "25C", "25R", "07L", "07C", "07R"], waypoints: ["KUNAV", "KENED", "INDEX", "NKITA", "DINER"]},
+            
+            // LOGAN 4 DEP TRANSITIONS
+            { name: "LOGAN", transition: "RENDR", rwy: ["25R", "25C"], waypoints: ["DLREY", "DAALE", "LOGAN", "BUCFA", "SKYDV", "WELSH", "RENDR"]},
+            { name: "LOGAN", transition: "DINER", rwy: ["25R", "25C"], waypoints: ["DLREY", "DAALE", "LOGAN", "BUCFA", "SKYDV", "WELSH", "MDWAY", "DINER"]},
+            { name: "LOGAN", transition: "RENDR", rwy: ["25L"], waypoints: ["DOCKR", "QURAN", "EXMOR", "LOGAN", "BUCFA", "SKYDV", "WELSH", "RENDR"]},
+            { name: "LOGAN", transition: "DINER", rwy: ["25L"], waypoints: ["DOCKR", "QURAN", "EXMOR", "LOGAN", "BUCFA", "SKYDV", "WELSH", "RENDR"]},
+        
+            //OSHNN 1 DEP TRANSITIONS
+            { name: "OSHNN", transition: "SILVA", rwy: ["25R", "25C"], waypoints: ["FABRA", "SHAEF", "PEVEE", "HOLTZ", "OSHNN", "CAHIL", "ZOOMM", "SEBBY", "ATPEV", "ARCUS", "OCEEN", "SILVA"]},
+            { name: "OSHNN", transition: "CYRIL", rwy: ["25R", "25C"], waypoints: ["FABRA", "SHAEF", "PEVEE", "HOLTZ", "OSHNN", "CAHIL", "ZOOMM", "SEBBY", "ATPEV", "ARCUS", "OCEEN", "GOOSE", "CYRIL"]},
+            { name: "OSHNN", transition: "GRASS", rwy: ["25R", "25C"], waypoints: ["FABRA", "SHAEF", "PEVEE", "HOLTZ", "OSHNN", "CAHIL", "ZOOMM", "JAMSI", "PMPKN", "GRASS"]},
+            { name: "OSHNN", transition: "SILVA", rwy: ["25L"], waypoints: ["HIIPR", "SHAEF", "PEVEE", "HOLTZ", "OSHNN", "CAHIL", "ZOOMM", "SEBBY", "ATPEV", "ARCUS", "OCEEN", "SILVA"]},
+            { name: "OSHNN", transition: "CYRIL", rwy: ["25L"], waypoints: ["HIIPR", "SHAEF", "PEVEE", "HOLTZ", "OSHNN", "CAHIL", "ZOOMM", "SEBBY", "ATPEV", "ARCUS", "OCEEN", "GOOSE", "CYRIL"]},
+            { name: "OSHNN", transition: "GRASS", rwy: ["25L"], waypoints: ["HIIPR", "SHAEF", "PEVEE", "HOLTZ", "OSHNN", "CAHIL", "ZOOMM", "JAMSI", "PMPKN", "GRASS"]},
+        
+            //ROCKFORD 5 DEP (VER DPS PQ SIM)
+
+            //TRAINING 1 DEP TRANSITIONS
+            { name: "TRAIN", transition: "SILVA", rwy: ["25R", "25C"], waypoints: ["DLREY", "PEPUL", "HAYNK", "TRN", "MDWST", "ATPEV", "OCEEN", "SILVA"]},
+            { name: "TRAIN", transition: "CYRIL", rwy: ["25R", "25C"], waypoints: ["DLREY", "PEPUL", "HAYNK", "TRN", "MDWST", "ATPEV", "OCEEN", "CYRIL"]},
+            { name: "TRAIN", transition: "GRASS", rwy: ["25R", "25C"], waypoints: ["DLREY", "PEPUL", "HAYNK", "TRN", "GODLU", "JAMSI", "GRASS"]},
+            { name: "TRAIN", transition: "SILVA", rwy: ["25L"], waypoints: ["DOCKR", "WEILR", "TRN", "MDWST", "ATPEV", "OCEEN", "SILVA"]},
+            { name: "TRAIN", transition: "CYRIL", rwy: ["25L"], waypoints: ["DOCKR", "WEILR", "TRN", "MDWST", "ATPEV", "OCEEN", "CYRIL"]},
+            { name: "TRAIN", transition: "GRASS", rwy: ["25L"], waypoints: ["DOCKR", "WEILR", "TRN", "GODLU", "JAMSI", "GRASS"]},
+
+            //WINDY 3 DEP TRANSITIONS
+            { name: "WINDY", transition: "SILVA", rwy: ["07R", "07C", "07L"], waypoints: ["MJSTY", "WNNDY", "OCEEN", "SILVA"]},
+            { name: "WINDY", transition: "NARXX", rwy: ["07R", "07C", "07L"], waypoints: ["MJSTY", "WNNDY", "GREEK", "NARXX"]},
+        
+        ], 
+
+        STARs: [
+            //BEANS 1 ARR TRANSITIONS
+            { name: "BEANS", transition: "SEEKS", rwy: ["07L", "07C", "07R"], waypoints: ["SEEKS", "BEANS", "LOGAN"]},
+            { name: "BEANS", transition: "SPACE", rwy: ["07L", "07C", "07R"], waypoints: ["SPACE", "BEANS", "LOGAN"]},
+            { name: "BEANS", transition: "SEEKS", rwy: ["25L", "25C", "25R"], waypoints: ["SEEKS", "BEANS", "BRDGE", "ICTAM", "HAWFA"]},
+            { name: "BEANS", transition: "SPACE", rwy: ["25L", "25C", "25R"], waypoints: ["SPACE", "BEANS", "BRDGE", "ICTAM", "HAWFA"]},
+
+            //KUNAV 1 ARR TRANSITIONS
+            { name: "KUNAV", transition: "RENDR", rwy: ["07L", "07C", "07R"], waypoints: ["RENDR", "WELSH", "KENED", "KUNAV", "BRDGE", "ALISO"]},
+            { name: "KUNAV", transition: "DINER", rwy: ["07L", "07C", "07R"], waypoints: ["DINER", "SURGE", "INDEX", "KENED", "KUNAV", "BRDGE", "ALISO"]},
+            { name: "KUNAV", transition: "RENDR", rwy: ["25L", "25C", "25R"], waypoints: ["RENDR", "WELSH", "KENED", "KUNAV", "HAWFA", "SWEET"]},
+            { name: "KUNAV", transition: "DINER", rwy: ["25L", "25C", "25R"], waypoints: ["DINER", "SURGE", "INDEX", "KENED", "KUNAV", "HAWFA", "SWEET"]},
+
+            //POPPY 2 ARR TRANSITIONS
+            { name: "POPPY", transition: "NARXX", rwy: ["25L", "25C", "25R", "07L", "07C", "07R"], waypoints: ["NARXX", "GAVIN", "SETHR", "POPPY"]},
+            { name: "POPPY", transition: "CYRIL", rwy: ["25L", "25C", "25R", "07L", "07C", "07R"], waypoints: ["CYRIL", "SILVA", "OCEEN", "SETHR", "POPPY"]},
+            { name: "POPPY", transition: "CAWZE", rwy: ["25L", "25C", "25R", "07L", "07C", "07R"], waypoints: ["CAWZE", "OCEEN", "SETHR", "POPPY"]},
+
+            //SUNST 2 ARR TRANSITIONS    
+            { name: "SUNST", transition: "LAAMP", rwy: ["07L", "07C", "07R"], waypoints: ["SUNST", "LAAMP", "LOGAN"]},
+            { name: "SUNST", transition: "BUCFA", rwy: ["25L", "25C", "25R"], waypoints: ["SUNST", "BUCFA", "HAWFA", "SWEET", "POPPY"]},
+        ],
+        
+        APPs: [
+            //ILS OR LOC 25R/C/L
+            { name: "ILS", rwy: ["25L"], waypoints: ["FISSK", "COTAF", "BACHE"]},
+            { name: "ILS", rwy: ["25C"], waypoints: ["PAYNZ", "DUNES", "ATPEV"]},
+            { name: "ILS", rwy: ["25R"], waypoints: ["ROCKY", "TORUS", "BRISK"]},
+
+            //RNAV ARR 07R/C/L
+            { name: "RNAV", rwy: ["07L"], waypoints: ["OTTES", "GUPPI", "REEBO"]},
+            { name: "RNAV", rwy: ["07C"], waypoints: ["MOGTA", "DIGGY", "TURKA"]},
+            { name: "RNAV", rwy: ["07R"], waypoints: ["TIMSE", "JACKI", "FUMBL"]},
         ]
     },
     {
@@ -771,9 +826,9 @@ const controlAreas = [
         ],
         runways: [
             { number: "15", length: 3281, hdg: 151, glideslope: 3.00, coordinates: [791.40, 352.06]},
-            { number: "33", length: 3281, hdg: 151, glideslope: 3.00, coordinates: [800.20, 369.06]},
+            { number: "33", length: 3281, hdg: 331, glideslope: 3.00, coordinates: [800.20, 369.06]},
             { number: "11", length: 4314, hdg: 111, glideslope: 3.00, coordinates: [788.50, 359.46]},
-            { number: "29", length: 4314, hdg: 111, glideslope: 3.00, coordinates: [812.23, 367.80]},
+            { number: "29", length: 4314, hdg: 291, glideslope: 3.00, coordinates: [812.23, 367.80]},
         ]
     },
     {
@@ -800,8 +855,8 @@ const controlAreas = [
         ],
         runways: [
             { number: "28", length: 3281, hdg: 288, glideslope: 3.00, coordinates: [1087.90, 613.69]},
-            { number: "10", length: 3281, hdg: 151, glideslope: 3.00, coordinates: [1061.90, 606.49]},
-         ]
+            { number: "10", length: 3281, hdg: 106, glideslope: 3.00, coordinates: [1061.90, 606.49]},
+        ]
     },
     {
         name: "ITKO",
@@ -832,7 +887,7 @@ const controlAreas = [
             { number: "31", length: 4850, hdg: 307, glideslope: 3.00, coordinates: [534.31, 243.66]},
             { number: "02", length: 3754, hdg:  20, glideslope: 3.00, coordinates: [538.31, 256.66]},
             { number: "20", length: 3754, hdg: 200, glideslope: 3.00, coordinates: [545.21, 237.76]},
-         ]
+        ]
     },
     {
         name: "ILAR",
@@ -861,7 +916,7 @@ const controlAreas = [
         runways: [
             { number: "24", length: 3355, hdg: 244, glideslope: 3.00, coordinates: [841.10, 907.97]},
             { number: "06", length: 3355, hdg:  64, glideslope: 3.00, coordinates: [823.00, 916.67]},
-         ]
+        ]
     },
     {
         name: "IGRV",
@@ -886,11 +941,11 @@ const controlAreas = [
         runways: [
             { number: "06", length: 2391, hdg:  62, glideslope: 3.00, coordinates: [155.72, 550.01]},
             { number: "24", length: 2391, hdg: 242, glideslope: 3.00, coordinates: [169.02, 542.81]},
-         ]
+        ]
     },
     {
         name: "IBTH",
-        real_name: "Saint BarthÃ©lemy",
+        real_name: "Saint Barthélemy",
         type: "Airport",
         app: "IBTH APP",
         originalscale: 0,
@@ -902,7 +957,7 @@ const controlAreas = [
         towerATC: "",
         groundATC: "",
         atcs: [
-            "Saint BarthÃ©lemy Tower",
+            "Saint Barthélemy Tower",
         ],
         oceanic: true,
         charts: [
@@ -913,8 +968,8 @@ const controlAreas = [
         ],
         runways: [
             { number: "09", length: 1547, hdg:  90, glideslope: 3.00, coordinates: [666.46, 529.74]},
-            { number: "33", length: 1547, hdg: 270, glideslope: 3.00, coordinates: [674.56, 529.24]},
-         ]
+            { number: "27", length: 1547, hdg: 270, glideslope: 3.00, coordinates: [674.56, 529.24]},
+        ]
     },
     {
         name: "ISAU",
@@ -939,7 +994,7 @@ const controlAreas = [
         runways: [
             { number: "08", length: 2554, hdg:  81, glideslope: 3.00, coordinates: [125.28, 862.53]},
             { number: "26", length: 2554, hdg: 261, glideslope: 3.00, coordinates: [139.18, 861.03]},
-         ]
+        ]
     },
     //1
     {
@@ -964,7 +1019,7 @@ const controlAreas = [
         runways: [
             { number: "17", length: 3404, hdg: 174, glideslope: 3.00, coordinates: [939.10, 922.89]},
             { number: "35", length: 3404, hdg: 354, glideslope: 3.00, coordinates: [941.00, 941.29]},
-         ]
+        ]
     },
     {
         name: "IMLR",
@@ -989,7 +1044,7 @@ const controlAreas = [
         runways: [
             { number: "07", length: 2997, hdg:  66, glideslope: 3.00, coordinates: [401.12, 733.76]},
             { number: "25", length: 2997, hdg: 246, glideslope: 3.00, coordinates: [416.92, 726.76]},
-         ]
+        ]
     },
     {
         name: "IDCS",
@@ -1011,7 +1066,7 @@ const controlAreas = [
         runways: [
             { number: "25", length: 750, hdg: 251, glideslope: 3.00, coordinates: [556.96, 110.11]},
             { number: "07", length: 750, hdg:  71, glideslope: 3.00, coordinates: [563.16, 108.51]},
-         ]
+        ]
     },
     {
         name: "IGAR",
@@ -1031,9 +1086,9 @@ const controlAreas = [
             ["Official", "https://ptfs.xyz/charts/dark/IGAR%20Ground%20Chart.png"],
         ],
         runways: [
-            { number: "04", length: 2980, hdg:  42, glideslope: 3.00},
-            { number: "22", length: 2980, hdg: 222, glideslope: 3.00},
-         ]
+            { number: "04", length: 2980, hdg:  42, glideslope: 3.00, coordinates: [435.48, 828.25]},
+            { number: "22", length: 2980, hdg: 222, glideslope: 3.00, coordinates: [446.98, 815.62]},
+        ]
     },
     {
         name: "IIAB",
@@ -1059,7 +1114,7 @@ const controlAreas = [
             { number: "27L", length: 4329, hdg: 275, glideslope: 3.00, coordinates: [866.02, 999.63]},
             { number: "09R", length: 4329, hdg:  95, glideslope: 3.00, coordinates: [838.27, 997.63]},
             { number: "27R", length: 4329, hdg: 275, glideslope: 3.00, coordinates: [864.77, 996.13]},
-         ]
+        ]
     },
     {
         name: "ISCM",
@@ -1081,7 +1136,7 @@ const controlAreas = [
         runways: [
             { number: "13", length: 1812, hdg: 126, glideslope: 3.00, coordinates: [980.56, 521.01]},
             { number: "31", length: 1812, hdg: 306, glideslope: 3.00, coordinates: [989.36, 527.21]},
-         ]
+        ]
     },
     //2
     {
@@ -1103,7 +1158,7 @@ const controlAreas = [
         runways: [
             { number: "01", length: 1378, hdg:  14, glideslope: 3.00, coordinates: [493.50, 761.77]},
             { number: "19", length: 1378, hdg: 194, glideslope: 3.00, coordinates: [494.90, 753.67]},
-         ]
+        ]
     },
     {
         name: "ILKL",
@@ -1124,7 +1179,7 @@ const controlAreas = [
         runways: [
             { number: "09", length: 1303, hdg:  89, glideslope: 3.00, coordinates: [842.26, 404.35]},
             { number: "27", length: 1303, hdg: 269, glideslope: 3.00, coordinates: [844.66, 407.65]},
-         ]
+        ]
     },
     {
         name: "ITRN",
@@ -1145,7 +1200,7 @@ const controlAreas = [
         runways: [
             { number: "18", length: 1286, hdg: 180, glideslope: 3.00, coordinates: [588.72, 887.83]},
             { number: "36", length: 1286, hdg: 360, glideslope: 3.00, coordinates: [588.62, 895.13]},
-         ]
+        ]
     },
     {
         name: "IJAF",
@@ -1166,7 +1221,7 @@ const controlAreas = [
         runways: [
             { number: "07", length: 2278, hdg: 251, glideslope: 3.00, coordinates: [1083.60, 580.97]},
             { number: "25", length: 2278, hdg:  71, glideslope: 3.00, coordinates: [1096.00, 576.87]},
-         ]
+        ]
     },
     {
         name: "IHEN",
@@ -1187,7 +1242,7 @@ const controlAreas = [
         runways: [
             { number: "17", length: 1170, hdg: 172, glideslope: 3.00, coordinates: [788.34, 1000.24]},
             { number: "35", length: 1170, hdg: 352, glideslope: 3.00, coordinates: [788.34, 1000.24]},
-         ]
+        ]
     },
     {
         name: "IBAR",
@@ -1341,7 +1396,7 @@ const Waypoints = [
     ////ITKO FIR
     //Waypoints
     { name: "SHELL", type: "Waypoint", coordinates: [341.00, 161.50] },
-    { name: "KIKON", type: "Waypoint", coordinates: [494.00, 142.50] },
+    { name: "NIKON", type: "Waypoint", coordinates: [494.00, 142.50] },
     { name: "CHILY", type: "Waypoint", coordinates: [661.50, 159.00] },
     { name: "SHIBA", type: "Waypoint", coordinates: [427.50, 188.00] },
     { name: "LETSE", type: "Waypoint", coordinates: [573.00, 214.00] },
@@ -1435,7 +1490,7 @@ const Waypoints = [
     { name: "EZYDB", type: "Waypoint", coordinates: [373.21, 533.42] },
     { name: "FRANK", type: "Waypoint", coordinates: [ 38.67, 596.04] },
     { name: "CELAR", type: "Waypoint", coordinates: [229.58, 628.57] },
-    { name: "THAGC", type: "Waypoint", coordinates: [ 38.06, 681.36] },
+    { name: "THACC", type: "Waypoint", coordinates: [ 38.06, 681.36] },
     { name: "SHREK", type: "Waypoint", coordinates: [133.82, 688.73] },
     { name: "SPACE", type: "Waypoint", coordinates: [234.49, 707.75] },
     //VORs
@@ -1488,6 +1543,64 @@ const Waypoints = [
 
 ];
 
+const CustomWaypoints = [
+
+    ////IRFD FIR
+    //Custom Waypoints
+    { name: "DLREY", type: "Waypoint", coordinates: [538.50, 838.58] },
+    { name: "DOCKR", type: "Waypoint", coordinates: [544.17, 848.75] },
+    { name: "ALOHA", type: "Waypoint", coordinates: [440.13, 834.94] },
+    { name: "QURAN", type: "Waypoint", coordinates: [456.26, 870.57] },
+    { name: "DARRK", type: "Waypoint", coordinates: [384.93, 814.12] },
+    { name: "DINTY", type: "Waypoint", coordinates: [297.93, 802.12] },
+    { name: "RIZIN", type: "Waypoint", coordinates: [288.43, 752.12] },
+    { name: "NKITA", type: "Waypoint", coordinates: [604.43, 522.40] },
+    { name: "DAALE", type: "Waypoint", coordinates: [474.72, 845.48] },
+    { name: "SKYDV", type: "Waypoint", coordinates: [455.76, 588.34] },
+    { name: "MDWAY", type: "Waypoint", coordinates: [547.85, 513.05] },
+    { name: "FABRA", type: "Waypoint", coordinates: [503.43, 817.69] },
+    { name: "HIIPR", type: "Waypoint", coordinates: [510.86, 819.62] },
+    { name: "SHAEF", type: "Waypoint", coordinates: [473.46, 879.89] },
+    { name: "PEVEE", type: "Waypoint", coordinates: [515.70, 950.34] },
+    { name: "HOLTZ", type: "Waypoint", coordinates: [550.32, 949.79] },
+    { name: "OSHNN", type: "Waypoint", coordinates: [582.41, 949.57] },
+    { name: "CAHIL", type: "Waypoint", coordinates: [610.34, 869.47] },
+    { name: "ZOOMM", type: "Waypoint", coordinates: [620.01, 835.97] },
+    { name: "SEEBY", type: "Waypoint", coordinates: [645.38, 796.31] },
+    { name: "ARCUS", type: "Waypoint", coordinates: [705.96, 689.43] },
+    { name: "GOOSE", type: "Waypoint", coordinates: [833.16, 598.60] },
+    { name: "WEILR", type: "Waypoint", coordinates: [554.43, 874.23] },
+    { name: "HAYNK", type: "Waypoint", coordinates: [546.43, 895.03] },
+    { name: "MDWST", type: "Waypoint", coordinates: [636.43, 815.03] },
+    { name: "MJSTY", type: "Waypoint", coordinates: [662.72, 707.30] },
+    { name: "WNNDY", type: "Waypoint", coordinates: [678.08, 669.26] },
+    { name: "GREEK", type: "Waypoint", coordinates: [695.08, 601.26] },
+    { name: "FISSK", type: "Waypoint", coordinates: [718.03, 730.24] },
+    { name: "COTAF", type: "Waypoint", coordinates: [703.08, 736.72] },
+    { name: "BACHE", type: "Waypoint", coordinates: [685.50, 743.77] },
+    { name: "PAYNZ", type: "Waypoint", coordinates: [707.21, 730.36] },
+    { name: "DUNES", type: "Waypoint", coordinates: [693.04, 736.18] },
+    { name: "ROCKY", type: "Waypoint", coordinates: [713.32, 724.31] },
+    { name: "TORUS", type: "Waypoint", coordinates: [700.27, 730.20] },
+    { name: "BRISK", type: "Waypoint", coordinates: [682.37, 737.80] },
+    { name: "JACKI", type: "Waypoint", coordinates: [518.88, 813.64] },
+    { name: "TIMSE", type: "Waypoint", coordinates: [491.61, 825.07] },
+    { name: "FUMBL", type: "Waypoint", coordinates: [542.81, 803.28] },
+    { name: "TURKA", type: "Waypoint", coordinates: [539.09, 801.75] },
+    { name: "DIGGY", type: "Waypoint", coordinates: [546.87, 798.55] },
+    { name: "OTTES", type: "Waypoint", coordinates: [498.60, 814.37] },
+    { name: "GUPPI", type: "Waypoint", coordinates: [527.28, 803.46] },
+    { name: "REEBO", type: "Waypoint", coordinates: [540.78, 798.16] },
+    { name: "LAAMP", type: "Waypoint", coordinates: [386.49, 711.37] },
+    { name: "POPPY", type: "Waypoint", coordinates: [631.85, 694.72] },
+    { name: "SWEET", type: "Waypoint", coordinates: [580.39, 709.85] },
+    { name: "NARXX", type: "Waypoint", coordinates: [717.54, 537.03] },
+    { name: "BRDGE", type: "Waypoint", coordinates: [435.68, 726.13] },       
+    { name: "ALISO", type: "Waypoint", coordinates: [432.61, 796.83] },    
+    { name: "SURGE", type: "Waypoint", coordinates: [610.04, 535.60] },
+    { name: "PMPKN", type: "Waypoint", coordinates: [758.45, 828.41] },
+];
+
 // Função para aplicar coordenadas da FIR para a CTR correspondente e sincronizar o valor de active
 function assignCTRCoordinates() {
     controlAreas.forEach(area => {
@@ -1529,6 +1642,7 @@ const settings = [
     'showOnlineATC',
     'showNavaids',
     'showNavaidsLabels',
+    'showBetterMap',
 ];
 
 const settingsValues = {
@@ -1539,10 +1653,11 @@ const settingsValues = {
     showOnlineATC: true,
     showNavaids: false,
     showNavaidsLabels: false,
+    showBetterMap: false,
 };
 
 const websiteInfo = {
-    version: "DEV 0.1.5.3",
+    version: "DEV 0.2",
 };
 
 const localInfo = {};
@@ -1556,7 +1671,7 @@ const specialUsers = {
         "DiscordNick": "tiaguinho_2009",
     }],
     "aaronandethan123": [{
-        "Role": "Developer",
+        "Role": "Contributor",
         "DiscordNick": "awdev_",
     }],
     "AvatarRoblox2018": [{

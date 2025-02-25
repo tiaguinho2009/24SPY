@@ -84,33 +84,37 @@ header h1 {
     background-color: #323237; 
 }
 
+.fpl-button:active {
+    background-color: #3b6cec;
+    color: #ffffff;
+}
+
 .atc-left-button {
     font-size: 16px;
-    color: #919191; /*#ffffff*/
+    color: #a0a0a0; /* Texto mais escuro */
     text-align: center;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #19191d; /*#202024*/
+    background-color: #17171a; /* Fundo mais escuro */
     height: 40px;
-    width: 100px;
+    width: 110px;
     margin-left: 5px;
     border: none;
     border-radius: 5px;
-    /*cursor: pointer;*/
-    transition: background-color 0.3s ease-in-out;
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+    text-decoration: none;
+    user-select: none;
+    opacity: 0.7; /* Deixa o botão visualmente mais apagado */
 }
 
 .atc-left-button .atc-left-icon {
     height: 30px;
     width: 30px;
     margin-right: 7px;
-    filter: brightness(0.3);
+    filter: brightness(0.6); /* Ícone mais escuro */
+    transition: filter 0.2s ease-in-out;
 }
-
-/*.atc-left-button:hover {
-    background-color: #323237; 
-}*/
 
 .atc-online {
     font-size: 15px;
@@ -152,9 +156,16 @@ header h1 {
     margin-left: 5px;
 }
 
+header a {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
 .SPY-logo {
     width: 150px;
     height: auto;
+    align-self: center;
 }
 
 .Changelog-menu {
@@ -305,29 +316,36 @@ header h1 {
     background-color: rgba(50, 50, 55, 1);
 }
 
+.settings-button:active {
+    background-color: #3b6cec;
+}
+
+.settings-button.on {
+    background-color: #3b6cec; /* Cor ativa */
+}
+
 .close-button:hover {
     background-color: rgba(50, 50, 55, 1);
 }
 
 .settings-icon,
 .close-icon {
-    width: 18px; /* Ajuste o tamanho do SVG conforme necessário */
+    width: 18px;
     height: 18px;
 }
 
 .settings-menu {
     display: none;
     position: fixed;
-    top: 50%; /* Centraliza verticalmente */
-    left: 50%; /* Centraliza horizontalmente */
-    transform: translate(-50%, -50%); /* Move o elemento para o centro exato */
+    top: 80px;
+    right: 20px;
     width: 300px;
     max-height: 90vh; /* Limita a altura ao tamanho da tela */
-    overflow-y: auto; /* Adiciona rolagem vertical */
+    overflow-y: auto;
     background-color: #131316;
     border-radius: 5px;
     padding: 20px;
-    box-shadow: 4px 0px 10px rgba(0, 0, 0, 0.5); /* Sombra lateral */
+    box-shadow: 4px 0px 10px rgba(0, 0, 0, 0.5);
     z-index: 101;
 }
 
@@ -405,16 +423,31 @@ header h1 {
     flex-direction: column;
     align-items: flex-start;
     position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    top: 80px; /* Ajuste para ficar abaixo do cabeçalho */
+    left: 20px; /* Ajuste para ficar no canto superior esquerdo */
     width: 300px;
     padding: 15px;
     background-color: #131316;
+    border-radius: 10px;
     color: #fff;
     font-family: Arial, sans-serif;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
     z-index: 100;
+}
+
+@media (max-width: 768px) {
+    .flp-menu {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .settings-menu {
+        top: 50%;
+        left: 50%;
+        right: 0;
+        transform: translate(-50%, -50%);
+    }
 }
 
 .flp-menu h3 {
@@ -465,6 +498,11 @@ header h1 {
 .small-input {
     width: 60px;
     height: 20px;
+    overflow: hidden;
+}
+
+.form-row span {
+    width: 70px;
 }
 
 .large-input {
@@ -536,6 +574,7 @@ textarea:focus, textarea:hover {
     position: absolute;
     max-height: 150px; /* Limite de altura para tornar a lista rolável */
     overflow-y: auto;
+    overflow-x: hidden;
     border: 1px solid #3b6cec;
     background-color: #131316;
     z-index: 101;
@@ -551,7 +590,7 @@ textarea:focus, textarea:hover {
     border: none;
     background-color: #2d2d2d;
     color: #fff;
-    padding: 10px;
+    padding: 8px 0px 8px 0px;
     cursor: pointer;
     text-align: center;
     transition: background-color 0.3s ease, color 0.3s ease;
@@ -559,26 +598,22 @@ textarea:focus, textarea:hover {
 
 .list-container button:hover {
     background-color: #3b6cec;
-    color: #fff;
+    color: #ffffff;
 }
 
 .list-container::-webkit-scrollbar {
-    width: 1px;
+    width: 5px;
 }
 
 .list-container::-webkit-scrollbar-track {
-    background: none;
+    background: #1e1e1e;
+    border-radius: 10px;
 }
 
 .list-container::-webkit-scrollbar-thumb {
     background-color: #3b6cec;
-    border-radius: 2px;
-}
-
-/* Compatibilidade com navegadores que suportam scrollbar não-Webkit */
-.list-container {
-    scrollbar-width: thin;
-    scrollbar-color: #3b6cec transparent;
+    border-radius: 10px;
+    border: 1px solid #1e1e1e;
 }
 
 /* Container principal para o mapa */
@@ -846,6 +881,19 @@ canvas {
     font-size: 0.9em;
 }
 
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(29, 29, 29, 0.7);
+    z-index: 101;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
 .message-menu {
     top: 50%;
     left: 50%;
@@ -859,14 +907,14 @@ canvas {
     position: fixed;
     border-radius: 10px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
-    z-index: 101;
+    z-index: 102;
     display: none;
     flex-direction: column;
 }
 
 .message-menu .title {
     background-color: #202024;
-    padding: 10px;
+    padding: 10px 15px 10px 15px;
     font-size: 1.5em;
     font-weight: bold;
     border-top-left-radius: 10px;

@@ -10,18 +10,18 @@
    <body>
       <!-- Cabeçalho -->
       <header>
-         <h1>
+         <a href="https://tiaguinho2009.github.io/24SPY/">
             <img src="assets/Icons/24SPY-logo.svg" alt="SPY Logo" class="SPY-logo">
-         </h1>
+         </a>
          <div class="header-left-buttons">
             <button class="fpl-button" id="FlpButton" onclick="toggleFlpMenu()">
                <img src="assets/Icons/map-svgrepo-com.svg" class="fpl-icon" id="FlpIcon">
                Flight Plan
             </button>
-            <button class="atc-left-button">
-               <img src="assets/Icons/radar-2-svgrepo-com.svg" class="atc-left-icon">
-               ATC
-            </button>
+            <a class="atc-left-button">
+               <img src="assets/Icons/server-minimalistic-svgrepo-com.svg" class="atc-left-icon">
+               Stats
+            </a>
          </div>
          <div class="header-buttons">
             <div class="atc-online">
@@ -55,14 +55,35 @@
             </button>
          </span>
          <div class="content">
-            <h2>[DEV 0.1.5.3] - 16/02/2025</h2>
-            <h3>Changed</h3>
+            <h2>[DEV 0.2] - 25/02/2025</h2>
+            <h3>Added</h3>
             <ul>
-               <li>New message log system. (So when some error happens u know that)</li>
-               <li>Updated the Fligh Plan System with Runways.</li>
-               <li>New system in the Flight Plan menu to help you select the correct options!</li>
-               <li>More optimization!</li>
-               <li>More charts!</li>
+               <li>New SIDs/STARs System! (Only works for IRFD for now...) (They are complety optional, if don't want to use it you don't need.)</li>
+               <li>New option called "Show a Higher Quality Map", when ur zoom is > 10 it will render a 14Kx14K image of the map for better view. (This already was working in the past but now u can turn it on or off so ur screen does not freezes for 5 seconds loading the image).</li>
+               <li>Now the zoom its animated (or smoother).</li>
+               <li>The Back-End server of 24SPY is Online again!!!</li>
+               <li>New function for the "Show Navaids Labels" option, before it only worked for global rendering, now it also works in FPL.</li>
+               <li>New small system that detects when a new update is released while with the website open.</li>
+            </ul>
+            <h3>Corrected</h3>
+            <ul>
+               <li>Bug of zooming in and back out leaves you at a different spot than before fixed.</li>
+               <li>Bug of cursor leaving the map does not stop map moving fixed.</li>
+               <li>IGAR RWYs not working fixed.</li>
+               <li>IPPH RWYs HDGs fixed.</li>
+               <li>IZOL RWYs and HDGs fixed.</li>
+               <li>IBTH RWYs corrected.</li>
+               <li>IRFD RWYs corrected.</li>
+               <li>Some fixes Names corrected.</li>
+               <li>Code of the Flight Plans and AirportUI was rewrited. (No visual changes)</li>
+               <li>And a LOT of other bugs that i don't remember were fixed.</li>
+            </ul>
+            <h3>Comments</h3>
+            <ul>
+               <li>This was a BIG update so pls share the website with friends and maybe join our discord server :D</li>
+               <li>A big thanks for Galaxy, for helping me with the database.</li>
+               <li>Thanks for all the BETA Testers!</li>
+               <li>Enjoy the update :D</li>
             </ul>
          </div>
       </div>     
@@ -101,53 +122,79 @@
                <input type="checkbox" onchange="onCheckBoxChange(this)" id="showNavaidsLabels" checked>
                <label for="showNavaidsLabels">Show Navaids Labels</label>
             </div>
+            <div class="map-option">
+               <input type="checkbox" onchange="onCheckBoxChange(this)" id="showBetterMap" checked>
+               <label for="showBetterMap">Show a Higher Quality Map</label>
+            </div>
          </div>
       </div>
       <div class="flp-menu" id="FlpMenu">
          <h3>Flight Plan (Beta)</h3>
          <hr class="menu-divider">
          <div class="form-row">
-             <label for="departure">Departure:</label>
-             <textarea id="departure" class="small-input" placeholder="IRFD" maxlength="4"></textarea>
-             <label for="departureRwy">RWY:</label>
-             <textarea id="departureRwy" class="small-input" placeholder="07R" maxlength="3"></textarea>
+            <label for="departure">Departure:</label>
+            <textarea id="departure" class="small-input" placeholder="IRFD" maxlength="4"></textarea>
+            <label for="departureRwy">RWY:</label>
+            <textarea id="departureRwy" class="small-input" placeholder="07R" maxlength="3"></textarea>
          </div>
          <div class="form-row">
-             <label for="arrival">Arrival:</label>
-             <textarea id="arrival" class="small-input" placeholder="ILAR" maxlength="4"></textarea>
-             <label for="arrivalRwy">RWY:</label>
-             <textarea id="arrivalRwy" class="small-input" placeholder="06" maxlength="3"></textarea>
+            <label for="sid">SID:</label>
+            <textarea id="sid" class="small-input" placeholder="DARRK" maxlength="5"></textarea>
+            <label for="deptrans">Trans:</label>
+            <textarea id="deptrans" class="small-input" placeholder="SPACE" maxlength="3"></textarea>
+         </div>
+         <hr class="menu-divider">
+         <div class="form-row">
+            <label for="arrival">Arrival:</label>
+            <textarea id="arrival" class="small-input" placeholder="ILAR" maxlength="4"></textarea>
+            <label for="arrivalRwy">RWY:</label>
+            <textarea id="arrivalRwy" class="small-input" placeholder="06" maxlength="3"></textarea>
          </div>
          <div class="form-row">
-             <label for="waypoints">Waypoints:</label>
-             <textarea id="waypoints" class="large-input" placeholder="MOGTA TRN CAN"></textarea>
+            <label for="star">STAR:</label>
+            <textarea id="star" class="small-input" placeholder="BEANS" maxlength="5"></textarea>
+            <label for="arrtrans">Trans:</label>
+            <textarea id="arrtrans" class="small-input" placeholder="SEEKS" maxlength="3"></textarea>   
+         </div>
+         <div class="form-row">
+            <label for="app">APP:</label>
+            <textarea id="app" class="small-input" placeholder="ILS 07C" maxlength="7"></textarea>
+            <span class="small-input"></span><label></label>
+         </div>
+         <hr class="menu-divider">
+         <div class="form-row">
+            <label for="waypoints">Waypoints:</label>
+            <textarea id="waypoints" class="large-input" placeholder="MOGTA TRN CAN"></textarea>
          </div>
          <div class="buttons">
-             <button class="save" onclick="saveFlp()">Save</button>
-             <button class="reset" onclick="resetFlp()">Reset</button>
+            <button class="save" onclick="saveFlp()">Save</button>
+            <button class="reset" onclick="resetFlp()">Reset</button>
          </div>
       </div>
       <div class="message-menu" id="MessageMenu">
          <div class="title">Error</div>
          <div class="content">
-             <p>Message</p>
+            <p>Message</p>
          </div>
          <div class="buttons">
-             <button class="close-button" id="message-button1">Close</button>
-             <button class="close-button" id="message-button2" style="display: none;">Secondary</button>
+            <button class="close-button" id="message-button1">Close</button>
+            <button class="close-button" id="message-button2" style="display: none;">Secondary</button>
          </div>
       </div>
       <div class="footer">
          <a href="https://tiaguinho2009.github.io/24SPY/" target="_blank" class="footer-link">24SPY</a>
-          | 
+         | 
          <a href="https://github.com/tiaguinho2009/24SPY?tab=readme-ov-file#readme" target="_blank" class="footer-link" id="version"></a>
-          | 
+         | 
          <a href="https://github.com/tiaguinho2009/24SPY?tab=License-1-ov-file#readme" target="_blank" class="footer-link">© Made by tiaguinho_2009</a>
       </div>     
 
       <div id="map-container">
          <canvas id="map"></canvas>
       </div>
+
+      <div id="overlay"></div>
+      
       <script src="assets/areas.js"></script>
       <script src="assets/main.js"></script>
    </body>
