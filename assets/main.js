@@ -1298,15 +1298,11 @@ async function fetchDynamicURL() {
 }
 
 async function fetchATCData(url) {
-    let response = null;
-
     try {
-        if (url === defaultURL) {
-            response = await fetch(url);
-        } else {
-            response = await fetch(url, { headers: { 'uniqueid': uniqueUserId } });
-        }
-        
+        const response = url === defaultURL 
+            ? await fetch(url) 
+            : await fetch(url, { headers: { 'uniqueid': uniqueUserId } });
+
         if (!response.ok) throw new Error(`Erro ao buscar dados: ${response.status}`);
         return await response.json();
     } catch (error) {
@@ -1321,22 +1317,36 @@ async function fetchATCDataAndUpdate() {
         mapUpdateTime.style.backgroundColor = '#ff7a00';
         setTimeout(() => mapUpdateTime.style.backgroundColor = 'rgba(32, 32, 36, 1)', 150);
     }
-    
-    if (!cachedDynamicURL) await fetchDynamicURL();
-    let data = cachedDynamicURL ? await fetchATCData(cachedDynamicURL) : null;
+
+    let localCachedURL = localStorage.getItem("cachedDynamicURL");
+    let data = localCachedURL ? await fetchATCData(localCachedURL) : null;
+
+    if (!data) {
+        await fetchDynamicURL();
+        if (cachedDynamicURL) {
+            data = await fetchATCData(cachedDynamicURL);
+            if (data) {
+                localStorage.setItem("cachedDynamicURL", cachedDynamicURL);
+            }
+        }
+    }
+
     if (!data) data = await fetchATCData(defaultURL);
-    
+
     if (data) {
         PTFSAPI = data;
         ATCOnlinefuncion(PTFSAPI);
         toggleUpdateClass();
     } else {
-        if (!window.location.href.includes('DEV')) showMessage('Server Error', 'Couldn’t get the info from the server, please check your internet connection.', 'Retry').then(() => fetchATCDataAndUpdate());
+        if (!window.location.href.includes('DEV')) {
+            showMessage('Server Error', 'Couldn’t get the info from the server, please check your internet connection.', 'Retry')
+                .then(() => fetchATCDataAndUpdate());
+        }
         PTFSAPI = PTFSAPIError;
         ATCOnlinefuncion(PTFSAPI);
         toggleUpdateClass();
     }
-    
+
     document.querySelector('.mapUpdateTime .time').textContent = ` ${getTime()}`;
     if (!window.location.href.includes('DEV')) {
         fetchATCDataAndUpdateTimesExecuted += 1;
