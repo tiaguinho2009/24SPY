@@ -33,56 +33,67 @@ mapImageSmallScale.src = mapImages.smallScale;
 
 let currentMapImage = mapImageSmallScale;
 
+const messageQueue = [];
+let isMessageVisible = false;
+
 function showMessage(title, message, button, button2) {
     return new Promise((resolve) => {
-        const menu = document.getElementById("MessageMenu");
-        const overlay = document.getElementById("overlay");
-        const titleElement = menu.querySelector(".title");
-        const contentElement = menu.querySelector(".content p");
-        const closeButton1 = document.getElementById("message-button1");
-        const closeButton2 = document.getElementById("message-button2");
-
-        titleElement.textContent = title;
-        contentElement.textContent = message;
-        closeButton1.textContent = button || "Close";
-
-        if (button2) {
-            closeButton2.textContent = button2;
-            closeButton2.style.display = "flex";
-            closeButton1.classList.add("button-half");
-            closeButton2.classList.add("button-half");
-        } else {
-            closeButton2.style.display = "none";
-            closeButton1.classList.remove("button-half");
-            closeButton2.classList.remove("button-half");
+        messageQueue.push({ title, message, button, button2, resolve });
+        if (!isMessageVisible) {
+            processQueue();
         }
-
-        menu.style.display = "flex";
-        overlay.style.display = "block"; // Mostrar o overlay
-        setTimeout(() => {
-            overlay.style.opacity = 1; // Tornar o overlay visível
-        }, 10); // Pequeno atraso para garantir que a transição funcione
-
-        // Evento de fechar para o primeiro botão
-        closeButton1.onclick = () => {
-            menu.style.display = "none";
-            overlay.style.opacity = 0; // Tornar o overlay invisível
-            setTimeout(() => {
-                overlay.style.display = "none"; // Esconder o overlay após a transição
-            }, 500); // Tempo da transição
-            resolve(1);
-        };
-
-        // Evento de fechar para o segundo botão
-        closeButton2.onclick = () => {
-            menu.style.display = "none";
-            overlay.style.opacity = 0; // Tornar o overlay invisível
-            setTimeout(() => {
-                overlay.style.display = "none"; // Esconder o overlay após a transição
-            }, 500); // Tempo da transição
-            resolve(2);
-        };
     });
+}
+
+function processQueue() {
+    if (messageQueue.length === 0) {
+        isMessageVisible = false;
+        return;
+    }
+
+    isMessageVisible = true;
+    const { title, message, button, button2, resolve } = messageQueue.shift();
+    
+    const menu = document.getElementById("MessageMenu");
+    const overlay = document.getElementById("overlay");
+    const titleElement = menu.querySelector(".title");
+    const contentElement = menu.querySelector(".content p");
+    const closeButton1 = document.getElementById("message-button1");
+    const closeButton2 = document.getElementById("message-button2");
+
+    titleElement.textContent = title;
+    contentElement.textContent = message;
+    closeButton1.textContent = button || "Close";
+
+    if (button2) {
+        closeButton2.textContent = button2;
+        closeButton2.style.display = "flex";
+        closeButton1.classList.add("button-half");
+        closeButton2.classList.add("button-half");
+    } else {
+        closeButton2.style.display = "none";
+        closeButton1.classList.remove("button-half");
+        closeButton2.classList.remove("button-half");
+    }
+
+    menu.style.display = "flex";
+    overlay.style.display = "block";
+    setTimeout(() => {
+        overlay.style.opacity = 1;
+    }, 10);
+
+    function closeMenu(result) {
+        menu.style.display = "none";
+        overlay.style.opacity = 0;
+        setTimeout(() => {
+            overlay.style.display = "none";
+            resolve(result);
+            processQueue(); // Mostrar a próxima mensagem da fila
+        }, 500);
+    }
+
+    closeButton1.onclick = () => closeMenu(1);
+    closeButton2.onclick = () => closeMenu(2);
 }
 
 //showMessage("Test", "Test Message").then(() => {
@@ -482,7 +493,7 @@ function createAirportElement(airport) {
     `;
 
     if (airportUI.querySelector('.badge')) {
-		airportUI.style.backgroundColor = "rgba(32, 47, 54, 0.5)";
+		airportUI.style.backgroundColor = "rgba(40, 40, 55, 0.5)";
 		airportUI.style.color = "#ffffff";
 		
 		const icaoButton = airportUI.querySelector('.icao-code');
@@ -1287,8 +1298,15 @@ async function fetchDynamicURL() {
 }
 
 async function fetchATCData(url) {
+    let response = null;
+
     try {
-        const response = await fetch(url, { headers: { 'uniqueid': uniqueUserId } });
+        if (url === defaultURL) {
+            response = await fetch(url);
+        } else {
+            response = await fetch(url, { headers: { 'uniqueid': uniqueUserId } });
+        }
+        
         if (!response.ok) throw new Error(`Erro ao buscar dados: ${response.status}`);
         return await response.json();
     } catch (error) {
