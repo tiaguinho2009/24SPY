@@ -1427,7 +1427,6 @@ async function fetchATCDataAndUpdate() {
     }
 }
 
-// Função para verificar atualizações
 async function checkUpdate() {
     try {
         const response = await fetch('https://raw.githubusercontent.com/tiaguinho2009/24SPY-Backend/main/version');
@@ -1443,6 +1442,7 @@ async function checkUpdate() {
         console.error('Erro ao buscar versão:', error);
     }
 }
+
 
 function ActiveAllATCfunction() {
     const allAirports = [];
