@@ -12,6 +12,34 @@ let isDragging = false;
 let startX, startY;
 let onlineATC = 0;
 let flightRoute = [];
+let onlineATCs = {};
+
+const positionMapping = {
+    center: 'CTR',
+    control: 'CTR',
+    approach: 'APP',
+    departure: 'APP',
+    director: 'APP',
+    tower: 'TWR',
+    ground: 'GND',
+    delivery: 'DEL',
+    atis: 'ATS',
+    ats: 'ATS'
+};
+
+const positionMapping2 = {
+    CTR: 'CTR',
+    OCA: 'CTR',
+    OCC: 'CTR',
+    APP: 'APP',
+    DEP: 'APP',
+    DIR: 'APP',
+    TWR: 'TWR',
+    RDO: 'TWR',
+    GND: 'GND',
+    DEL: 'DEL',
+    ATS: 'ATS'
+}
 
 const sortedAirports = controlAreas
 	.filter(area => area.type === "Airport")
@@ -33,61 +61,68 @@ mapImageSmallScale.src = mapImages.smallScale;
 
 let currentMapImage = mapImageSmallScale;
 
+const messageQueue = [];
+let isMessageVisible = false;
+
 function showMessage(title, message, button, button2) {
     return new Promise((resolve) => {
-        const menu = document.getElementById("MessageMenu");
-        const overlay = document.getElementById("overlay");
-        const titleElement = menu.querySelector(".title");
-        const contentElement = menu.querySelector(".content p");
-        const closeButton1 = document.getElementById("message-button1");
-        const closeButton2 = document.getElementById("message-button2");
-
-        titleElement.textContent = title;
-        contentElement.textContent = message;
-        closeButton1.textContent = button || "Close";
-
-        if (button2) {
-            closeButton2.textContent = button2;
-            closeButton2.style.display = "flex";
-            closeButton1.classList.add("button-half");
-            closeButton2.classList.add("button-half");
-        } else {
-            closeButton2.style.display = "none";
-            closeButton1.classList.remove("button-half");
-            closeButton2.classList.remove("button-half");
+        messageQueue.push({ title, message, button, button2, resolve });
+        if (!isMessageVisible) {
+            processQueue();
         }
-
-        menu.style.display = "flex";
-        overlay.style.display = "block"; // Mostrar o overlay
-        setTimeout(() => {
-            overlay.style.opacity = 1; // Tornar o overlay visível
-        }, 10); // Pequeno atraso para garantir que a transição funcione
-
-        // Evento de fechar para o primeiro botão
-        closeButton1.onclick = () => {
-            menu.style.display = "none";
-            overlay.style.opacity = 0; // Tornar o overlay invisível
-            setTimeout(() => {
-                overlay.style.display = "none"; // Esconder o overlay após a transição
-            }, 500); // Tempo da transição
-            resolve(1);
-        };
-
-        // Evento de fechar para o segundo botão
-        closeButton2.onclick = () => {
-            menu.style.display = "none";
-            overlay.style.opacity = 0; // Tornar o overlay invisível
-            setTimeout(() => {
-                overlay.style.display = "none"; // Esconder o overlay após a transição
-            }, 500); // Tempo da transição
-            resolve(2);
-        };
     });
 }
 
-//showMessage("Test", "Test Message").then(() => {
-//	showMessage("Test", "OMG U PRESSED THE CLOSE BUTTON", "DON'T PRESS ME AGAIN")
-//});
+function processQueue() {
+    if (messageQueue.length === 0) {
+        isMessageVisible = false;
+        return;
+    }
+
+    isMessageVisible = true;
+    const { title, message, button, button2, resolve } = messageQueue.shift();
+    
+    const menu = document.getElementById("MessageMenu");
+    const overlay = document.getElementById("overlay");
+    const titleElement = menu.querySelector(".title");
+    const contentElement = menu.querySelector(".content p");
+    const closeButton1 = document.getElementById("message-button1");
+    const closeButton2 = document.getElementById("message-button2");
+
+    titleElement.textContent = title;
+    contentElement.textContent = message;
+    closeButton1.textContent = button || "Close";
+
+    if (button2) {
+        closeButton2.textContent = button2;
+        closeButton2.style.display = "flex";
+        closeButton1.classList.add("button-half");
+        closeButton2.classList.add("button-half");
+    } else {
+        closeButton2.style.display = "none";
+        closeButton1.classList.remove("button-half");
+        closeButton2.classList.remove("button-half");
+    }
+
+    menu.style.display = "flex";
+    overlay.style.display = "block";
+    setTimeout(() => {
+        overlay.style.opacity = 1;
+    }, 10);
+
+    function closeMenu(result) {
+        menu.style.display = "none";
+        overlay.style.opacity = 0;
+        setTimeout(() => {
+            overlay.style.display = "none";
+            resolve(result);
+            processQueue(); // Mostrar a próxima mensagem da fila
+        }, 500);
+    }
+
+    closeButton1.onclick = () => closeMenu(1);
+    closeButton2.onclick = () => closeMenu(2);
+}
 
 // Configuração do tamanho do canvas
 function resizeCanvas() {
@@ -115,121 +150,210 @@ function transformCoordinates(coord) {
 	];
 }
 
-// Função de desenho
-function draw() {
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
+function updateOnlineATCs(atcList) {
+    onlineATCs = {};
 
-	if (settingsValues.showBetterMap) {
-		currentMapImage = scale < 10 ? mapImageSmallScale : mapImageNormal;
-	} else {
-		currentMapImage = mapImageSmallScale;
-	}
+    atcList.forEach(atcData => {
+        const { holder, claimable, airport, position, uptime, frequency: initialFrequency } = atcData;
+        if (claimable) return;
 
-	// Calcula tamanho ajustado do mapa
-	const mapWidth = 1200 * scale;
-	const mapHeight = 1200 * scale;
+        let frequency = initialFrequency;
 
-	// Desenha a imagem do mapa
-	ctx.drawImage(currentMapImage, offsetX, offsetY, mapWidth, mapHeight);
+        if (!frequency) {
+            controlAreas.forEach(area => {
+                if (area.type === 'Airport' && area.real_name === airport) {
+                    const position2 = positionMapping[position];
+                    if (position2 === 'CTR' || position2 === 'APP' || position2 === 'TWR') {
+                        frequency = area.towerfreq;
+                    } else {
+                        frequency = area.groundfreq;
+                    }
+                }
+            });
+        }
 
-	drawControlAreas();
-	drawFlightPlan(flightRoute);
-	resetChartsMenu();
-	drawNavaids();
-	updateAllAirportsUI();
+        const mappedPosition = positionMapping[position];
+        if (!mappedPosition) {
+            console.error(`Invalid position: ${position} for airport: ${airport}`);
+            return;
+        }
+
+        if (!onlineATCs[airport]) {
+            onlineATCs[airport] = { CTR: [], APP: [], TWR: [], GND: [], DEL: [], ATS: [] };
+        }
+
+        onlineATCs[airport][mappedPosition].push({ holder, uptime, frequency });
+    });
 }
 
-// Função para desenhar áreas de controle
+// Função para verificar se um ATC está online
+function isATCOnline(airport, position) {
+    const mappedPosition = positionMapping[position];
+    return onlineATCs[airport] && onlineATCs[airport][mappedPosition].length > 0;
+}
+
+// Função para obter a lista de ATCs online em um aeroporto
+function getOnlineATCs(airport) {
+    return onlineATCs[airport] || { TWR: [], GND: [], APP: [], CTR: [], DEL: [], ATS: [] };
+}
+
+function isSpecialUser(atcName) {
+    const baseName = atcName.split(' | ')[0];
+    return Object.keys(specialUsers).includes(baseName);
+}
+
+// Função de desenho
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    if (settingsValues.showBetterMap) {
+        currentMapImage = scale < 10 ? mapImageSmallScale : mapImageNormal;
+    } else {
+        currentMapImage = mapImageSmallScale;
+    }
+
+    // Calcula tamanho ajustado do mapa
+    const mapWidth = 1200 * scale;
+    const mapHeight = 1200 * scale;
+
+    // Desenha a imagem do mapa
+    ctx.drawImage(currentMapImage, offsetX, offsetY, mapWidth, mapHeight);
+
+    drawControlAreas();
+    drawFlightPlan(flightRoute);
+    resetChartsMenu();
+    drawNavaids();
+    updateAllAirportsUI();
+}
+
 function drawControlAreas() {
-	// Desenho das polylines
-	controlAreas.forEach(area => {
-		if (area.active && area.type === 'polyline') {
-			let drawLine = false;
+    // Desenho das polylines
+    controlAreas.forEach(area => {
+        if (area.active && area.type === 'polyline') {
+            let drawLine = false;
 
-			if (area.name.includes('TMA') && settingsValues.showAPPlines) {
-				drawLine = true;
-			};
-			if (area.name.includes('FIR') && settingsValues.showFIRlines) {
-				drawLine = true;
-			};
+            if (area.name.includes('TMA') && settingsValues.showAPPlines) {
+                drawLine = true;
+            }
+            if (area.name.includes('FIR') && settingsValues.showFIRlines) {
+                drawLine = true;
+            }
 
-			const coordinates = area.coordinates.map(transformCoordinates);
-			ctx.beginPath();
-			ctx.strokeStyle = area.color;
-			ctx.lineWidth = 0.5;
+            const coordinates = area.coordinates.map(transformCoordinates);
+            ctx.beginPath();
+            ctx.strokeStyle = area.color;
+            ctx.lineWidth = 0.5;
 
-			if (drawLine) {
-				coordinates.forEach((point, index) => {
-					if (index === 0) {
-						ctx.moveTo(point[0], point[1]);
-					} else {
-						ctx.lineTo(point[0], point[1]);
-					}
-				});
-				ctx.stroke();
-			}
-		}
-	});
+            if (drawLine) {
+                coordinates.forEach((point, index) => {
+                    if (index === 0) {
+                        ctx.moveTo(point[0], point[1]);
+                    } else {
+                        ctx.lineTo(point[0], point[1]);
+                    }
+                });
+                ctx.stroke();
+            }
+        }
+    });
 
-	// Desenho dos polygons (TMAs e CTRs)
-	controlAreas.forEach(area => {
-		if (area.type === 'polygon') {
-			let drawCTR = false;
-			let drawAPP = false;
+    // Desenho dos polygons (TMAs e CTRs)
+    controlAreas.forEach(area => {
+        if (area.type === 'polygon') {
+            let drawCTR = false;
+            let drawAPP = false;
 
-			// Verifica se algum aeroporto possui o valor "ctr" ou "app" igual ao nome da área e "tower" ativo
-			controlAreas.forEach(airport => {
-				if (airport.type === 'Airport' && airport.tower) {
-					if (airport.ctr === area.name) {
-						drawCTR = true;
-					}
-					if (airport.app === area.name) {
-						drawAPP = true;
-					}
-				}
-			});
+            // Verifica se algum aeroporto possui o valor "ctr" ou "app" igual ao nome da área e "tower" ativo
+            controlAreas.forEach(airport => {
+                if (airport.type === 'Airport') {
+                    const atcs = getOnlineATCs(airport.real_name);
 
-			// Desenha o CTR se existir
-			if (drawCTR) {
-				const coordinates = area.coordinates.map(transformCoordinates);
-				ctx.beginPath();
-				ctx.strokeStyle = area.color;
-				ctx.fillStyle = area.fillColor;
-				ctx.lineWidth = 0.5;
+                    if (atcs.CTR.length > 0 && airport.ctr === area.name) {
+                        drawCTR = true;
+                    }
+                    if (atcs.APP.length > 0 && airport.app === area.name) {
+                        drawAPP = true;
+                    }
+                }
+            });
 
-				coordinates.forEach((point, index) => {
-					if (index === 0) {
-						ctx.moveTo(point[0], point[1]);
-					} else {
-						ctx.lineTo(point[0], point[1]);
-					}
-				});
-				ctx.closePath();
-				ctx.fill();
-				ctx.stroke();
-			}
+            // Desenha o CTR se existir
+            if (drawCTR) {
+                const coordinates = area.coordinates.map(transformCoordinates);
+                ctx.beginPath();
+                ctx.strokeStyle = area.color;
+                ctx.fillStyle = area.fillColor;
+                ctx.lineWidth = 0.5;
 
-			// Desenha o APP se existir
-			if (drawAPP) {
-				const coordinates = area.coordinates.map(transformCoordinates);
-				ctx.beginPath();
-				ctx.strokeStyle = area.color;
-				ctx.fillStyle = area.fillColor;
-				ctx.lineWidth = 0.5;
+                coordinates.forEach((point, index) => {
+                    if (index === 0) {
+                        ctx.moveTo(point[0], point[1]);
+                    } else {
+                        ctx.lineTo(point[0], point[1]);
+                    }
+                });
+                ctx.closePath();
+                ctx.fill();
+                ctx.stroke();
+            }
 
-				coordinates.forEach((point, index) => {
-					if (index === 0) {
-						ctx.moveTo(point[0], point[1]);
-					} else {
-						ctx.lineTo(point[0], point[1]);
-					}
-				});
-				ctx.closePath();
-				ctx.fill();
-				ctx.stroke();
-			}
-		}
-	});
+            // Desenha o APP se existir
+            if (drawAPP) {
+                const coordinates = area.coordinates.map(transformCoordinates);
+                ctx.beginPath();
+                ctx.strokeStyle = area.color;
+                ctx.fillStyle = area.fillColor;
+                ctx.lineWidth = 0.5;
+
+                coordinates.forEach((point, index) => {
+                    if (index === 0) {
+                        ctx.moveTo(point[0], point[1]);
+                    } else {
+                        ctx.lineTo(point[0], point[1]);
+                    }
+                });
+                ctx.closePath();
+                ctx.fill();
+                ctx.stroke();
+            }
+        }
+    });
+}
+
+function updateATCUI() {
+    controlAreas.forEach(area => {
+        if (area.type === 'Airport') {
+            const atcs = getOnlineATCs(area.real_name);
+
+            area.tower = atcs.TWR.length > 0;
+            area.ground = atcs.GND.length > 0;
+            area.towerAtc = atcs.TWR.length > 0 ? atcs.TWR[0].holder : '';
+            area.groundAtc = atcs.GND.length > 0 ? atcs.GND[0].holder : '';
+            area.uptime = atcs.TWR.length > 0 ? atcs.TWR[0].uptime : (atcs.GND.length > 0 ? atcs.GND[0].uptime : '');
+            area.scale = atcs.TWR.length > 0 || atcs.GND.length > 0 ? 0 : area.originalscale;
+
+            // Ativa a TMA correspondente, se aplicável
+            if (atcs.TWR.length > 0) {
+                controlAreas.forEach(tmaArea => {
+                    if (tmaArea.type === 'polygon' && tmaArea.name === area.tma) {
+                        tmaArea.active = true;
+                    }
+                });
+            }
+
+            // Ativa a CTR correspondente, se aplicável
+            if (area.ctr && atcs.CTR.length > 0) {
+                controlAreas.forEach(ctrArea => {
+                    if (ctrArea.type === 'polygon' && ctrArea.name === area.ctr) {
+                        ctrArea.active = true;
+                    }
+                });
+            }
+        }
+    });
+
+    updateATCCount();
+    refreshUI();
 }
 
 function drawFlightPlan(points) {
@@ -418,42 +542,41 @@ function updateAllAirportsUI() {
 const icaoMenuCount = 0;
 
 function highlightCTR(ctrName) {
-	controlAreas.forEach(area => {
-		if (area.type === 'polygon' && area.name === ctrName) {
-			area.originalFillColor = area.fillColor;
-			area.fillColor = 'rgba(0, 255, 125, 0.075)';
-			draw();
-		}
-	});
+    controlAreas.forEach(area => {
+        if (area.type === 'polygon' && area.name === ctrName) {
+            area.originalFillColor = area.fillColor;
+            area.fillColor = 'rgba(0, 255, 125, 0.075)';
+            draw();
+        }
+    });
 }
 
 function resetCTRHighlight(ctrName) {
-	controlAreas.forEach(area => {
-		if (area.type === 'polygon' && area.name === ctrName) {
-			area.fillColor = area.originalFillColor;
-			draw();
-		}
-	});
+    controlAreas.forEach(area => {
+        if (area.type === 'polygon' && area.name === ctrName) {
+            area.fillColor = area.originalFillColor;
+            draw();
+        }
+    });
 }
 
-// Funções para destaque de APP
 function highlightAPP(appName) {
-	controlAreas.forEach(area => {
-		if (area.type === 'polygon' && area.name === appName) {
-			area.originalFillColor = area.fillColor;
-			area.fillColor = 'rgba(255, 122, 0, 0.1)';
-			draw();
-		}
-	});
+    controlAreas.forEach(area => {
+        if (area.type === 'polygon' && area.name === appName) {
+            area.originalFillColor = area.fillColor;
+            area.fillColor = 'rgba(255, 122, 0, 0.1)';
+            draw();
+        }
+    });
 }
 
 function resetAPPHighlight(appName) {
-	controlAreas.forEach(area => {
-		if (area.type === 'polygon' && area.name === appName) {
-			area.fillColor = area.originalFillColor;
-			draw();
-		}
-	});
+    controlAreas.forEach(area => {
+        if (area.type === 'polygon' && area.name === appName) {
+            area.fillColor = area.originalFillColor;
+            draw();
+        }
+    });
 }
 
 function createAirportUI(airport) {
@@ -482,7 +605,7 @@ function createAirportElement(airport) {
     `;
 
     if (airportUI.querySelector('.badge')) {
-		airportUI.style.backgroundColor = "rgba(32, 47, 54, 0.5)";
+		airportUI.style.backgroundColor = "rgba(40, 40, 55, 0.5)";
 		airportUI.style.color = "#ffffff";
 		
 		const icaoButton = airportUI.querySelector('.icao-code');
@@ -495,11 +618,13 @@ function createAirportElement(airport) {
 }
 
 function generateBadges(airport) {
+    const atcs = getOnlineATCs(airport.real_name);
+
     return `
-        ${airport.ctr && airport.tower ? '<div class="badge C">C</div>' : ''}
-        ${airport.app && airport.tower && !airport.ctr ? '<div class="badge A">A</div>' : ''}
-        ${!airport.ctr && !airport.app && airport.tower ? '<div class="badge T">T</div>' : ''}
-        ${airport.ground ? '<div class="badge G">G</div>' : ''}
+        ${atcs.CTR.length > 0 ? '<div class="badge C">C</div>' : ''}
+        ${atcs.APP.length > 0 ? '<div class="badge A">A</div>' : ''}
+        ${atcs.TWR.length > 0 ? '<div class="badge T">T</div>' : ''}
+        ${atcs.GND.length > 0 ? '<div class="badge G">G</div>' : ''}
     `;
 }
 
@@ -555,7 +680,8 @@ function addBadgeEventListeners(airport, airportUI, infoMenu) {
         C: { condition: airport.ctr, highlight: highlightCTR, reset: resetCTRHighlight },
         A: { condition: airport.app, highlight: highlightAPP, reset: resetAPPHighlight },
         T: { condition: airport.tower },
-        G: { condition: airport.ground }
+        G: { condition: airport.ground },
+        D: { condition: airport.delivery }
     };
 
     Object.entries(badges).forEach(([key, { condition, highlight, reset }]) => {
@@ -574,19 +700,32 @@ function addBadgeEventListeners(airport, airportUI, infoMenu) {
 }
 
 function showInfoMenu(badge, airport, menu, airportUI) {
-    const positions = { C: 'Control', A: 'Approach', T: 'Tower', G: 'Ground' };
+    const positions = { C: 'Control', A: 'Approach', T: 'Tower', G: 'Ground', D: 'Delivery' };
     const position = positions[badge.classList[1]] || 'Unknown';
-    const atcName = airport.towerAtc || airport.groundAtc || 'N/A';
-    const frequency = airport.towerfreq || airport.groundfreq || 'N/A';
+    let atcName = 'N/A';
+    let frequency = 'N/A';
+    let uptime = 'N/A';
+    const ATCs = getOnlineATCs(airport.real_name);
+    console.log(ATCs);
+
+    if (ATCs[positionMapping[position.toLowerCase()]] && ATCs[positionMapping[position.toLowerCase()]].length > 0) {
+        atcName = ATCs[positionMapping[position.toLowerCase()]][0].holder || 'N/A';
+        frequency = ATCs[positionMapping[position.toLowerCase()]][0].frequency || 'N/A';
+        uptime = ATCs[positionMapping[position.toLowerCase()]][0].uptime || 'N/A';
+    }
+
+    const baseName = atcName.split(' | ')[0];
+    const specialUser = isSpecialUser(baseName);
+    const specialTag = specialUser ? `<div class="special-tag">${specialUsers[baseName][0].Role}</div>` : '';
 
     menu.style.display = 'block';
     menu.innerHTML = `
-        <div class="title">${airport.real_name} ${position}</div>
+        <div class="title">${airport.real_name} ${position} ${specialTag}</div>
         <hr class="menu-divider">
         <div class="controller-info-section">
             <p><strong>Controller:</strong> ${atcName}</p>
             <p><strong>Frequency:</strong> ${frequency}</p>
-            <p><strong>Online:</strong> ${airport.uptime}</p>
+            <p><strong>Online:</strong> ${uptime}</p>
         </div>
     `;
     positionInfoMenu(menu, airportUI);
@@ -737,7 +876,7 @@ canvas.addEventListener('wheel', (e) => {
             const mouseY = (e.clientY - canvas.getBoundingClientRect().top - offsetY) / scale;
 
             // Ajusta a taxa de zoom dinamicamente com base na escala atual
-            const baseZoomRate = 0.0025; // Taxa de zoom base
+            const baseZoomRate = 0.005; // Taxa de zoom base
             const zoomRate = baseZoomRate * scale; // Ajusta a taxa de zoom conforme a escala aumenta
             const zoomFactor = e.deltaY * -zoomRate;
 
@@ -1178,184 +1317,131 @@ function refreshUI() {
 }
 
 function updateATCCount() {
-	const atcNumberElement = document.querySelector('.online-number');
-	if (atcNumberElement) {
-		atcNumberElement.textContent = onlineATC;
-	}
+    const atcNumberElement = document.querySelector('.online-number');
+    if (atcNumberElement) {
+        const onlineCount = Object.values(onlineATCs).reduce((count, atcs) => {
+            return count + Object.values(atcs).flat().length;
+        }, 0);
+        atcNumberElement.textContent = onlineCount;
+    }
 }
 
-function ATCOnlinefuncion(atcList) {
-	onlineATC = 0;
-
-	// Desativa todas as áreas e aeroportos ao iniciar
-	controlAreas.forEach(area => {
-		if (area.type === 'Airport') {
-			area.tower = false;
-			area.ground = false;
-			area.towerAtc = '';
-			area.groundAtc = '';
-			area.uptime = ''; // Inicializa a propriedade uptime
-			area.scale = area.originalscale;
-		} else if (area.type === 'polygon') {
-			area.active = false; // Desativa TMAs/CTRs inicialmente
-		}
-	});
-
-	if (settingsValues.showOnlineATC === false) {updateATCCount(); refreshUI(); return;}
-
-	// Processa cada objeto da lista ATC
-	atcList.forEach(atcData => {
-		const { holder, claimable, airport, position, uptime } = atcData;
-
-		if (claimable) return;
-
-		// Encontra a área correspondente ao aeroporto
-		controlAreas.forEach(area => {
-			if (area.type === 'Airport' && area.real_name === airport) {
-				area.scale = 0; // Reduz o scale ao ativar uma posição no aeroporto
-				area.uptime = uptime || 'error'; // Armazena o uptime se disponível
-
-				if (position === "tower") {
-					area.tower = true;
-					area.towerAtc = holder;
-					onlineATC += 1;
-
-					// Ativa a TMA correspondente, se aplicável
-					controlAreas.forEach(tmaArea => {
-						if (tmaArea.type === 'polygon' && tmaArea.name === area.tma) {
-							tmaArea.active = true;
-						}
-					});
-				}
-
-				if (position === "ground") {
-					area.ground = true;
-					area.groundAtc = holder;
-					onlineATC += 1;
-				}
-
-				// Ativa a CTR correspondente, se aplicável
-				if (area.ctr) {
-					controlAreas.forEach(ctrArea => {
-						if (ctrArea.type === 'polygon' && ctrArea.name === area.ctr) {
-							ctrArea.active = true;
-						}
-					});
-				}
-			}
-		});
-	});
-
-	updateATCCount();
-	refreshUI();
+function processATCData(atcList) {
+    updateOnlineATCs(atcList);
+    updateATCUI();
 }
 
 let fetchATCDataAndUpdateTimesExecuted = 0;
 
-function fetchATCDataAndUpdate() {
-    function toggleUpdateClass() {
-        const mapUpdateTime = document.getElementById('mapUpdateTime');
-        const originalColor = 'rgba(32, 32, 36, 1)';
-    
-        mapUpdateTime.style.backgroundColor = '#ff7a00';
-    
-        setTimeout(() => {
-            mapUpdateTime.style.backgroundColor = originalColor;
-        }, 150);
+function getUniqueUserId() {
+    let userId = localStorage.getItem("uniqueUserId");
+    if (!userId) {
+        userId = crypto.randomUUID();
+        localStorage.setItem("uniqueUserId", userId);
     }
-
-    // URL padrão caso a URL dinâmica falhe
-    const defaultURL = 'https://ptfs.xyz/api/controllers';
-    const dynamicURLRepository = 'https://raw.githubusercontent.com/tiaguinho2009/24SPY-Backend/main/backend';
-
-    // Busca a URL dinâmica do repositório GitHub
-    fetch(dynamicURLRepository)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`Erro ao buscar repositório: ${response.status}`);
-            }
-            return response.text();
-        })
-        .then(repositoryContent => {
-            // Extração da URL dinâmica do repositório
-            const dynamicURLMatch = repositoryContent.match(/https?:\/\/[\w.-]+\.trycloudflare\.com/g);
-            if (dynamicURLMatch && dynamicURLMatch.length > 0) {
-                const dynamicURL = dynamicURLMatch[0] + '/api/controllers';
-
-                // Tenta buscar dados do endpoint dinâmico
-                return fetch(dynamicURL)
-                    .then(response => {
-                        if (response.ok) {
-                            return response.json();
-                        } else {
-                            throw new Error(`Erro ao buscar URL dinâmica: ${response.status}`);
-                        }
-                    });
-            } else {
-                throw new Error('Nenhuma URL dinâmica encontrada no repositório.');
-            }
-        })
-        .then(data => {
-            PTFSAPI = data;
-            ATCOnlinefuncion(PTFSAPI);
-            toggleUpdateClass();
-        })
-        .catch(error => {
-            console.error('Erro ao usar a URL dinâmica, fallback para a URL padrão:', error);
-
-            // Fallback para a URL padrão
-            fetch(defaultURL)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`Erro ao buscar dados na URL padrão: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    PTFSAPI = data;
-                    ATCOnlinefuncion(PTFSAPI);
-                    toggleUpdateClass();
-                })
-                .catch(err => {
-                    showMessage('Server Error', 'Couldnt get the info from the Server, please check your internet connection.','Reload').then(() => {
-                        fetchATCDataAndUpdate();
-                    })
-                    console.error('Erro ao buscar dados na URL padrão:', err);
-                    PTFSAPI = PTFSAPIError;
-                    ATCOnlinefuncion(PTFSAPI);
-                    toggleUpdateClass();
-                });
-        });
-
-    const time = getTime();
-    document.querySelector('.mapUpdateTime .time').textContent = ` ${time}`;
-	fetchATCDataAndUpdateTimesExecuted += 1;
-	if (fetchATCDataAndUpdateTimesExecuted >= 3) {
-		//checkUpdate();
-		fetchATCDataAndUpdateTimesExecuted = 0;
-	}
+    return userId;
 }
 
-function checkUpdate() {
-	fetch('https://raw.githubusercontent.com/tiaguinho2009/24SPY-Backend/main/version')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`Erro ao buscar versão: ${response.status}`);
+const uniqueUserId = getUniqueUserId();
+const defaultURL = 'https://ptfs.xyz/api/controllers';
+const dynamicURLRepository = 'https://raw.githubusercontent.com/tiaguinho2009/24SPY-Backend/main/backend';
+let cachedDynamicURL = localStorage.getItem("cachedDynamicURL") || null;
+
+async function fetchDynamicURL() {
+    try {
+        const response = await fetch(dynamicURLRepository);
+        if (!response.ok) throw new Error(`Erro ao buscar repositório: ${response.status}`);
+        
+        const repositoryContent = await response.text();
+        const dynamicURLMatch = repositoryContent.match(/https?:\/\/[\w.-]+\.trycloudflare\.com/g);
+        
+        if (dynamicURLMatch && dynamicURLMatch.length > 0) {
+            cachedDynamicURL = dynamicURLMatch[0] + '/api/controllers';
+            localStorage.setItem("cachedDynamicURL", cachedDynamicURL);
+        } else {
+            throw new Error('Nenhuma URL dinâmica encontrada no repositório.');
+        }
+    } catch (error) {
+        console.error('Erro ao buscar URL dinâmica:', error);
+        cachedDynamicURL = null;
+    }
+}
+
+async function fetchATCData(url) {
+    try {
+        const response = url === defaultURL 
+            ? await fetch(url) 
+            : await fetch(url, { headers: { 'uniqueid': uniqueUserId } });
+
+        if (!response.ok) throw new Error(`Erro ao buscar dados: ${response.status}`);
+        return await response.json();
+    } catch (error) {
+        console.error(`Erro ao buscar dados de ${url}:`, error);
+        return null;
+    }
+}
+
+async function fetchATCDataAndUpdate() {
+    function toggleUpdateClass() {
+        const mapUpdateTime = document.getElementById('mapUpdateTime');
+        mapUpdateTime.style.backgroundColor = '#ff7a00';
+        setTimeout(() => mapUpdateTime.style.backgroundColor = 'rgba(32, 32, 36, 1)', 150);
+    }
+
+    let localCachedURL = localStorage.getItem("cachedDynamicURL");
+    let data = localCachedURL ? await fetchATCData(localCachedURL) : null;
+
+    if (!data) {
+        await fetchDynamicURL();
+        if (cachedDynamicURL) {
+            data = await fetchATCData(cachedDynamicURL);
+            if (data) {
+                localStorage.setItem("cachedDynamicURL", cachedDynamicURL);
             }
-            return response.text();
-        })
-        .then(versionContent => {
-            if (versionContent.trim() !== localInfo.version.trim()) {
-                showMessage('New Version', `The version ${versionContent} its now avaible! Enjoy the update!`, 'Update').then((response) => {
-                    if (response === 1) {
-                        location.replace(location.href)
-                    }
-                });
-            }
-        })
-        .catch(error => {
-            console.error('Erro ao buscar versão:', error);
-        });
+        }
+    }
+
+    if (!data) data = await fetchATCData(defaultURL);
+
+    if (data) {
+        PTFSAPI = data;
+        processATCData(PTFSAPI);
+        toggleUpdateClass();
+    } else {
+        if (!window.location.href.includes('DEV')) {
+            showMessage('Server Error', 'Couldn’t get the info from the server, please check your internet connection.', 'Retry')
+                .then(() => fetchATCDataAndUpdate());
+        }
+        PTFSAPI = PTFSAPIError;
+        processATCData(PTFSAPI);
+        toggleUpdateClass();
+    }
+
+    document.querySelector('.mapUpdateTime .time').textContent = ` ${getTime()}`;
+    if (!window.location.href.includes('DEV')) {
+        fetchATCDataAndUpdateTimesExecuted += 1;
+        if (fetchATCDataAndUpdateTimesExecuted >= 5) {
+            fetchATCDataAndUpdateTimesExecuted = 0;
+            checkUpdate();
+        }
+    }
+}
+
+// Função para verificar atualizações
+async function checkUpdate() {
+    try {
+        const response = await fetch('https://raw.githubusercontent.com/tiaguinho2009/24SPY-Backend/main/version');
+        if (!response.ok) throw new Error(`Erro ao buscar versão: ${response.status}`);
+        
+        const versionContent = await response.text();
+        if (versionContent.trim() !== localInfo.version.trim()) {
+            showMessage('New Version', `The version ${versionContent} is now available! Enjoy the update!`, 'Update').then(response => {
+                if (response === 1) location.replace(location.href);
+            });
+        }
+    } catch (error) {
+        console.error('Erro ao buscar versão:', error);
+    }
 }
 
 function ActiveAllATCfunction() {
@@ -1365,26 +1451,26 @@ function ActiveAllATCfunction() {
         if (area.type === 'Airport') {
             allAirports.push({
                 airport: area.real_name,
-                holder: '24SPY',
+                holder: 'Tiaguinho_2009 | Tower',
                 claimable: false,
-                position: "tower",
-                uptime: "00:00",
+                position: 'tower',
+                uptime: '00:00',
             });
 
             if (area.atcs && area.atcs.length > 1) {
                 allAirports.push({
                     airport: area.real_name,
-                    holder: '24SPY',
+                    holder: 'Tiaguinho_2009 | Ground',
                     claimable: false,
-                    position: "ground",
-                    uptime: "00:00",
+                    position: 'ground',
+                    uptime: '00:00',
                 });
             }
         }
     });
 
     PTFSAPI = allAirports;
-    ATCOnlinefuncion(PTFSAPI);
+    processATCData(PTFSAPI);
 }
 
 // Function to generate the list of ATCs in the specified format
@@ -1506,8 +1592,7 @@ function executeOnce() {
 }
 executeOnce();
 
-setInterval(fetchATCDataAndUpdate, 30000);  fetchATCDataAndUpdate();
-//ActiveAllATCfunction();
-
-// Inicializa o canvas
 resizeCanvas();
+loadFromLocalStorage();
+setInterval(fetchATCDataAndUpdate, 30000);fetchATCDataAndUpdate();
+//ActiveAllATCfunction();

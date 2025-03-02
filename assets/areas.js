@@ -694,22 +694,13 @@ const controlAreas = [
         name: "IRFD",
         real_name: "Rockford",
         type: "Airport",
-        app: "IRFD APP",
         originalscale: 0,
         scale: 0,
         coordinates: [578.83, 793.29],
         towerfreq: "124.850",
         groundfreq: "121.855",
-        tower: false,
-        ground: false,
         ctr: "IRFD CTR",
-        atc: "",
-        towerAtc: "",
-        groundATC: "",
-        atcs: [
-            "Rockford Tower",
-            "Rockford Ground"
-        ],
+        app: "IRFD APP",
         charts: [
             ["Official", "https://ptfs.xyz/charts/dark/IRFD%20Ground%20Chart.png"],
             ["AeroNav", "https://drive.google.com/file/d/1a8ZqQjxqUC99J5oSskeH6dmsBeDTRUb9/view?usp=sharing"],
@@ -804,21 +795,13 @@ const controlAreas = [
         name: "IPPH",
         real_name: "Perth",
         type: "Airport",
-        app: "IPPH APP",
         originalscale: 0,
         scale: 0,
         coordinates: [796,362],
         towerfreq: "135.250",
         groundfreq: "121.700",
-        tower: false,
-        ground: false,
         ctr: "IPPH CTR",
-        towerATC: "",
-        groundATC: "",
-        atcs: [
-            "Perth Tower",
-            "Perth Ground"
-        ],
+        app: "IPPH APP",
         charts: [
             ["Official", "https://ptfs.xyz/charts/dark/IPPH%20Ground%20Chart.png"],
             ["AeroNav", "https://drive.google.com/file/d/1Qhg6zRsIBAjeC_iidsy39FVt5UZhdi5o/view?usp=sharing"],
@@ -835,21 +818,13 @@ const controlAreas = [
         name: "IZOL",
         real_name: "Izolirani",
         type: "Airport",
-        app: "IZOL APP",
         originalscale: 0,
         scale: 0,
         coordinates: [1074,611],
         towerfreq: "125.640",
         groundfreq: "120.900",
-        tower: false,
-        ground: false,
         ctr: "IZOL CTR",
-        towerATC: "",
-        groundATC: "",
-        atcs: [
-            "Izolirani Tower",
-            "Izolirani Ground"
-        ],
+        app: "IZOL APP",
         charts: [
             ["Official", "https://ptfs.xyz/charts/dark/IZOL%20Ground%20Chart.png"],
         ],
@@ -862,21 +837,13 @@ const controlAreas = [
         name: "ITKO",
         real_name: "Tokyo",
         type: "Airport",
-        app: "ITKO APP",
         originalscale: 0,
         scale: 0,
         coordinates: [528,242],
         towerfreq: "132.300",
         groundfreq: "121.625",
-        tower: false,
-        ground: false,
         ctr: "ITKO CTR",
-        towerATC: "",
-        groundATC: "",
-        atcs: [
-            "Tokyo Tower",
-            "Tokyo Ground"
-        ],
+        app: "ITKO APP",
         charts: [
             ["Official", "https://ptfs.xyz/charts/dark/ITKO%20Ground%20Chart.png"],
             ["AeroNav", "https://drive.google.com/file/d/1iYxp9qz4f7C6o5DaMVQQufx9rInLcmJh/view?usp=sharing"],
@@ -893,21 +860,13 @@ const controlAreas = [
         name: "ILAR",
         real_name: "Larnaca",
         type: "Airport",
-        app: "ILAR APP",
         originalscale: 0,
         scale: 0,
         coordinates: [832.00, 913.00],
         towerfreq: "126.300",
         groundfreq: "119.400",
-        tower: false,
-        ground: false,
         ctr: "ILAR CTR",
-        towerATC: "",
-        groundATC: "",
-        atcs: [
-            "Larnaca Tower",
-            "Larnaca Ground"
-        ],
+        app: "ILAR APP",
         charts: [
             ["Official", "https://ptfs.xyz/charts/dark/ILAR%20Ground%20Chart.png"],
             ["TUGACHARTS", "https://drive.google.com/file/d/1ofmuravfpMXW1d4B9M43MyOGbc1RORCs/view"],
@@ -922,18 +881,12 @@ const controlAreas = [
         name: "IGRV",
         real_name: "Grindavik",
         type: "Airport",
-        app: "IGRV APP",
         originalscale: 0,
         scale: 0,
         coordinates: [162,546],
         towerfreq: "126.750",
-        tower: false,
         ctr: "IGRV CTR",
-        towerATC: "",
-        groundATC: "",
-        atcs: [
-            "Grindavik Tower",
-        ],
+        app: "IGRV APP",
         charts: [
             ["Official", "https://ptfs.xyz/charts/dark/IGRV%20Ground%20Chart.png"],
             ["AeroNav", "https://drive.google.com/file/d/1G4M1CGxjXO688x-l7WBnD8UfhiLq2yrB/view?usp=sharing"],
@@ -947,19 +900,12 @@ const controlAreas = [
         name: "IBTH",
         real_name: "Saint Barthélemy",
         type: "Airport",
-        app: "IBTH APP",
         originalscale: 0,
         scale: 0,
         coordinates: [670,529],
         towerfreq: "128.600",
-        tower: false,
         ctr: "IBTH CTR",
-        towerATC: "",
-        groundATC: "",
-        atcs: [
-            "Saint Barthélemy Tower",
-        ],
-        oceanic: true,
+        app: "IBTH APP",
         charts: [
             ["Official", "https://ptfs.xyz/charts/dark/IBTH%20Ground%20Chart.png"],
             ["AeroNav", "https://drive.google.com/file/d/1OSWgKHBnu8ch3sP68erv8_nVcAFIY7CQ/view?usp=sharing"],
@@ -975,18 +921,12 @@ const controlAreas = [
         name: "ISAU",
         real_name: "Sauthemptona",
         type: "Airport",
-        app: "ISAU APP",
         originalscale: 0,
         scale: 0,
         coordinates: [131,863],
         towerfreq: "127.820",
-        tower: false,
         ctr: "ISAU CTR",
-        towerATC: "",
-        groundATC: "",
-        atcs: [
-            "Sauthemptona Tower",
-        ],
+        app: "ISAU APP",
         charts: [
             ["Official", "https://ptfs.xyz/charts/dark/ISAU%20Ground%20Chart.png"],
             ["AeroNav", "https://drive.google.com/file/d/1m18kxQhwlVMXoY4T8FSIHtmz_ohooGbI/view?usp=sharing"],
@@ -1001,16 +941,11 @@ const controlAreas = [
         name: "IPAP",
         real_name: "Paphos",
         type: "Airport",
-        app: "IPAP APP",
         originalscale: 1,
         scale: 1,
         coordinates: [940.43, 931.13],
         towerfreq: "130.625",
-        tower: false,
-        towerATC: "",
-        atcs: [
-            "Paphos Tower",
-        ],
+        app: "IPAP APP",
         charts: [
             ["Official", "https://ptfs.xyz/charts/dark/IPAP%20Ground%20Chart.png"],
             ["AeroNav", "https://drive.google.com/file/d/1Ckwrvr93OBZxEfpSwTzc75ALkCmjqsqr/view?usp=sharing"],
@@ -1025,17 +960,11 @@ const controlAreas = [
         name: "IMLR",
         real_name: "Mellor",
         type: "Airport",
-        app: "IMLR APP",
         originalscale: 1,
         scale: 1,
         coordinates: [407.90, 729.67],
         towerfreq: "125.650",
-        tower: false,
-        towerATC: "",
-        groundATC: "",
-        atcs: [
-            "Mellor Tower",
-        ],
+        app: "IMLR APP",
         charts: [
             ["Official", "https://ptfs.xyz/charts/dark/IMLR%20Ground%20Chart.png"],
             ["AeroNav", "https://drive.google.com/file/d/1iJ-5He0OgX4FMW6Y32DRKr9rAh4hgQ4R/view"],
@@ -1050,16 +979,11 @@ const controlAreas = [
         name: "IDCS",
         real_name: "Saba",
         type: "Airport",
-        app: "IDCS APP",
         originalscale: 1,
         scale: 1,
         coordinates: [560.17, 109.67],
         towerfreq: "118.250",
-        tower: false,
-        towerATC: "",
-        atcs: [
-            "Saba Tower",
-        ],
+        app: "IDCS APP",
         charts: [
             ["Official", "https://ptfs.xyz/charts/dark/IDCS%20Ground%20Chart.png"],
         ],
@@ -1072,16 +996,11 @@ const controlAreas = [
         name: "IGAR",
         real_name: "Garry",
         type: "Airport",
-        app: "IGAR APP",
         originalscale: 1,
         scale: 1,
         coordinates: [440.93, 820.24],
         towerfreq: "124.275",
-        tower: false,
-        towerATC: "",
-        atcs: [
-            "Garry Tower",
-        ],
+        app: "IGAR APP",
         charts: [
             ["Official", "https://ptfs.xyz/charts/dark/IGAR%20Ground%20Chart.png"],
         ],
@@ -1094,16 +1013,11 @@ const controlAreas = [
         name: "IIAB",
         real_name: "McConnell",
         type: "Airport",
-        app: "IIAB APP",
         originalscale: 1,
         scale: 1,
         coordinates: [849.00, 996.00],
         towerfreq: "127.250",
-        tower: false,
-        towerATC: "",
-        atcs: [
-            "McConnell Tower",
-        ],
+        app: "IIAB APP",
         charts: [
             ["Official", "https://ptfs.xyz/charts/dark/IIAB%20Ground%20Chart.png"],
             ["AeroNav", "https://drive.google.com/file/d/1opJg195YF73dI5t-tsQ88hyoIC9eoBde/view?usp=sharing"],
@@ -1120,16 +1034,11 @@ const controlAreas = [
         name: "ISCM",
         real_name: "Scampton",
         type: "Airport",
-        app: "ISCM APP",
         originalscale: 1,
         scale: 1,
         coordinates: [988.00, 525.00],
         towerfreq: "None",
-        tower: false,
-        towerATC: "",
-        atcs: [
-            "Scampton Tower",
-        ],
+        app: "ISCM APP",
         charts: [
             ["Official", "https://ptfs.xyz/charts/dark/ISCM%20Ground%20Chart.png"],
         ],
@@ -1147,11 +1056,6 @@ const controlAreas = [
         scale: 2,
         coordinates: [493.87, 757.33],
         towerfreq: "None",
-        tower: false,
-        towerATC: "",
-        atcs: [
-            "Boltic Tower",
-        ],
         charts: [
             ["Official", "https://ptfs.xyz/charts/dark/IBLT%20Ground%20Chart.png"],
         ],
@@ -1168,11 +1072,6 @@ const controlAreas = [
         scale: 2,
         coordinates: [844.00, 408.00],
         towerfreq: "120.150",
-        tower: false,
-        towerATC: "",
-        atcs: [
-            "Lukla Tower",
-        ],
         charts: [
             ["Official", "https://ptfs.xyz/charts/dark/ILKL%20Ground%20Chart.png"],
         ],
@@ -1189,11 +1088,6 @@ const controlAreas = [
         scale: 2,
         coordinates: [589.33, 892.00],
         towerfreq: "None",
-        tower: false,
-        towerATC: "",
-        atcs: [
-            "Training Centre Tower",
-        ],
         charts: [
             ["Official", "https://ptfs.xyz/charts/dark/ITRN%20Ground%20Chart.png"],
         ],
@@ -1210,11 +1104,6 @@ const controlAreas = [
         scale: 2,
         coordinates: [1087.76, 576.64],
         towerfreq: "120.200",
-        tower: false,
-        towerATC: "",
-        atcs: [
-            "Al Najaf Tower",
-        ],
         charts: [
             ["Official", "https://ptfs.xyz/charts/dark/IJAF%20Ground%20Chart.png"],
         ],
@@ -1231,11 +1120,6 @@ const controlAreas = [
         scale: 2,
         coordinates: [788.62, 1004.13],
         towerfreq: "130.250",
-        tower: false,
-        towerATC: "",
-        atcs: [
-            "Henstridge Tower",
-        ],
         charts: [
             ["Official", "https://ptfs.xyz/charts/dark/IHEN%20Ground%20Chart.png"],
         ],
@@ -1252,11 +1136,6 @@ const controlAreas = [
         scale: 2,
         coordinates: [897.02, 973.33],
         towerfreq: "118.080",
-        tower: false,
-        towerATC: "",
-        atcs: [
-            "Barra Tower",
-        ],
         charts: [
             ["Official", "https://ptfs.xyz/charts/dark/IBAR%20Ground%20Chart.png"],
         ],
@@ -1274,12 +1153,6 @@ const controlAreas = [
         coordinates: [873.80, 714.13],
         towerfreq: "124.200",
         ctr: "ISKP CTR",
-        tower: false,
-        towerATC: "",
-        atcs: [
-            "Skopelos Tower",
-        ],
-        oceanic: true,
         charts: [
             ["Official", "https://ptfs.xyz/charts/dark/ISKP%20Ground%20Chart.png"],
             ["TUGACHARTS", "https://drive.google.com/file/d/1BEaoKLa9hvXCPPKdkc4IGa9Wc22OXr0s/view"],
@@ -1298,11 +1171,6 @@ const controlAreas = [
         scale: 2,
         coordinates: [857.51, 358.51],
         towerfreq: "None",
-        tower: false,
-        towerATC: "",
-        atcs: [
-            "Sea Haven Tower",
-        ],
         charts: [
             ["Github", "https://github.com/Treelon/ptfs-charts/blob/main/Perth/Sea%20Haven/SHV%20Ground%20Chart.svg"]
         ],
@@ -1319,11 +1187,6 @@ const controlAreas = [
         scale: 2,
         coordinates: [541.07, 712.27],
         towerfreq: "None",
-        tower: false,
-        towerATC: "",
-        atcs: [
-            "Waterloo Tower",
-        ],
         runways: [
             { number:"14W", length:1000, hdg: 140, glideslope: 3.00, coordinates: [541.27, 707.76]},
             { number:"32W", length:1000, hdg: 320, glideslope: 3.00, coordinates: [543.97, 712.56]},
@@ -1337,11 +1200,6 @@ const controlAreas = [
         scale: 2,
         coordinates: [170.76, 568.00],
         towerfreq: "None",
-        tower: false,
-        towerATC: "",
-        atcs: [
-            "Tavaro Tower",
-        ],
         charts: [
             ["Github", "https://github.com/Treelon/ptfs-charts/blob/main/Grindavik/Tavaro%20Seabase/TVO%20Ground%20Chart.svg"]
         ],
@@ -1669,33 +1527,41 @@ const specialUsers = {
     "Tiaguinho_2009": [{
         "Role": "Main Developer",
         "DiscordNick": "tiaguinho_2009",
+        "Color": "rgba(158, 29, 206, 0.075)",
     }],
     "aaronandethan123": [{
         "Role": "Contributor",
         "DiscordNick": "awdev_",
+        "Color": "rgba(158, 29, 206, 0.075)",
     }],
     "AvatarRoblox2018": [{
         "Role": "24SPY Helper",
         "DiscordNick": "noah_the_plane_guy",
+        "Color": "rgba(158, 29, 206, 0.075)",
     }],
     "GalaxyON_1": [{
         "Role": "24SPY Helper",
         "DiscordNick": "rafa_tugapt",
+        "Color": "rgba(158, 29, 206, 0.075)",
     }],
     "BEANZBURGERBEANZ": [{
         "Role": "24SPY First User",
         "DiscordNick": "echogecko89",
+        "Color": "rgba(158, 29, 206, 0.075)",
     }],
     "frozenterror13": [{
         "Role": "Chart Maker",
         "DiscordNick": "aerosd",
+        "Color": "rgba(158, 29, 206, 0.075)",
     }],
     "EzyDubbs": [{
         "Role": "Chart Maker",
         "DiscordNick": "ezydubbs",
+        "Color": "rgba(158, 29, 206, 0.075)",
     }],
     "2316Nati": [{
         "Role": "Contributor",
         "DiscordNick": "bedsdrout",
+        "Color": "rgba(158, 29, 206, 0.075)",
     }],
 };
