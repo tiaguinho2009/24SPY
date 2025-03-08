@@ -1,16 +1,25 @@
 // prevent right click menu from appearing and annoying people - awdev1
 document.addEventListener('contextmenu', function(event) {
-	event.preventDefault();
+    event.preventDefault();
 });
 const canvas = document.getElementById('map');
 const ctx = canvas.getContext('2d');
 
+let devMode = false;
+if (window.location.href.startsWith('https://tiaguinho2009.github.io')) {
+    devMode = false;
+}
+
 let offsetX = 0,
-	offsetY = 0;
+    offsetY = 0;
+
 let scale = 1;
+let lastMouseX = 0;
+let lastMouseY = 0;
 let isDragging = false;
 let startX, startY;
 let onlineATC = 0;
+let dataIsFrom = 'ATC24';
 let flightRoute = [];
 let onlineATCs = {};
 
@@ -20,46 +29,96 @@ const positionMapping = {
     approach: 'APP',
     departure: 'APP',
     director: 'APP',
+    final: 'APP',
     tower: 'TWR',
+    afis: 'TWR',
     ground: 'GND',
     delivery: 'DEL',
     atis: 'ATS',
     ats: 'ATS'
 };
 
-const positionMapping2 = {
-    CTR: 'CTR',
-    OCA: 'CTR',
-    OCC: 'CTR',
-    APP: 'APP',
-    DEP: 'APP',
-    DIR: 'APP',
-    TWR: 'TWR',
-    RDO: 'TWR',
-    GND: 'GND',
-    DEL: 'DEL',
-    ATS: 'ATS'
-}
-
 const sortedAirports = controlAreas
-	.filter(area => area.type === "Airport")
-	.map(area => area.name)
-	.sort();
+    .filter(area => area.type === "Airport")
+    .map(area => area.name)
+    .sort();
 
 const sortedWaypoints = Waypoints
-	.map(wp => wp.name)
-	.sort();
+    .map(wp => wp.name)
+    .sort();
 
-const mapImages = {
-    normal: 'PTFS-Map-Grey.png',
-    smallScale: 'PTFS-Map-1200px.png'
+function showLoading() {
+    const loading = document.getElementById('loading');
+    loading.style.display = 'flex';
+    setTimeout(() => {
+        loading.style.opacity = 1;
+    }, 10);
+}
+
+function hideLoading() {
+    const loading = document.getElementById('loading');
+    loading.style.opacity = 0;
+    setTimeout(() => {
+        loading.style.display = 'none';
+    }, 500);
+}
+
+showLoading();
+setTimeout(hideLoading, 1000);
+
+function loadImage(src) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.src = src;
+        img.onload = () => resolve(img);
+        img.onerror = reject;
+    });
+}
+
+const tiles1 = [];
+const tiles2 = [];
+const tiles3 = [];
+const tiles4 = [];
+const tilePromises = [];
+
+for (let i = 1; i <= 25; i++) {
+    tilePromises.push(loadImage(`tiles/tiles1/${i}.png`).then(img => tiles1.push(img)));
+    tilePromises.push(loadImage(`tiles/tiles2/${i}.png`).then(img => tiles2.push(img)));
+}
+
+Promise.all(tilePromises).then(() => {
+    console.log('Images loaded successfully!');
+    resizeCanvas();
+    loadFromLocalStorage();
+    setInterval(fetchATCDataAndUpdate, 30000);
+    fetchATCDataAndUpdate();
+}).catch(error => {
+    console.error('Error loading images:', error);
+});
+
+for (let i = 1; i <= 25; i++) {
+    const img1 = new Image();
+    img1.src = `tiles/tiles1/${i}.png`;
+    tiles1.push(img1);
+
+    const img2 = new Image();
+    img2.src = `tiles/tiles2/${i}.png`;
+    tiles2.push(img2);
+
+    const img3 = new Image();
+    img3.src = `tiles/tiles3/${i}.png`;
+    tiles3.push(img3);
+
+    const img4 = new Image();
+    img4.src = `tiles/tilesOP/${i}.png`;
+    tiles4.push(img4);
+
+    if (i === 25) {
+        img1.onload = () => {
+            resizeCanvas();
+        };
+    };
 };
-const mapImageNormal = new Image();
-const mapImageSmallScale = new Image();
-mapImageNormal.src = mapImages.normal;
-mapImageSmallScale.src = mapImages.smallScale;
-
-let currentMapImage = mapImageSmallScale;
 
 const messageQueue = [];
 let isMessageVisible = false;
@@ -124,12 +183,62 @@ function processQueue() {
     closeButton2.onclick = () => closeMenu(2);
 }
 
+function getTiles() {
+    if (scale >= 12) {
+        return tiles4;
+    } else if (scale >= 6) {
+        return tiles3;
+    } else if (scale >= 3) {
+        return tiles2;
+    } else {
+        return tiles1;
+    }
+}
+
+function getViewBox() {
+    const topLeftX = -offsetX / scale;
+    const topLeftY = -offsetY / scale;
+    const bottomRightX = (canvas.width - offsetX) / scale;
+    const bottomRightY = (canvas.height - offsetY) / scale;
+
+    return {
+        topLeft: { x: topLeftX, y: topLeftY },
+        bottomRight: { x: bottomRightX, y: bottomRightY }
+    };
+}
+
+function getVisibleTiles() {
+    const viewBox = getViewBox();
+    const tileSize = 240; // Tamanho de cada tile em pixels
+    const tilesPerColumn = 5; // Número de tiles por coluna
+
+    const visibleTiles = [];
+
+    for (let i = 1; i <= 25; i++) {
+        const col = Math.floor((i - 1) / tilesPerColumn);
+        const row = (i - 1) % tilesPerColumn;
+
+        const tileTopLeftX = col * tileSize;
+        const tileTopLeftY = row * tileSize;
+        const tileBottomRightX = tileTopLeftX + tileSize;
+        const tileBottomRightY = tileTopLeftY + tileSize;
+
+        const isTileVisible = !(tileBottomRightX < viewBox.topLeft.x || tileTopLeftX > viewBox.bottomRight.x ||
+                                tileBottomRightY < viewBox.topLeft.y || tileTopLeftY > viewBox.bottomRight.y);
+
+        if (isTileVisible) {
+            visibleTiles.push(i);
+        }
+    }
+
+    return visibleTiles;
+}
+
 // Configuração do tamanho do canvas
 function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight - 50;
-    draw();
-    centerMap(); // Centraliza o mapa após redimensionar o canvas
+    centerMap();
 }
 window.addEventListener('resize', resizeCanvas);
 
@@ -144,17 +253,17 @@ function centerMap() {
 
 // Função de transformação das coordenadas
 function transformCoordinates(coord) {
-	return [
-		coord[0] * scale + offsetX,
-		coord[1] * scale + offsetY
-	];
+    return [
+        coord[0] * scale + offsetX,
+        coord[1] * scale + offsetY
+    ];
 }
 
 function updateOnlineATCs(atcList) {
     onlineATCs = {};
 
     atcList.forEach(atcData => {
-        const { holder, claimable, airport, position, uptime, frequency: initialFrequency } = atcData;
+        const { holder, claimable, airport, position, code, uptime, frequency: initialFrequency } = atcData;
         if (claimable) return;
 
         let frequency = initialFrequency;
@@ -182,7 +291,7 @@ function updateOnlineATCs(atcList) {
             onlineATCs[airport] = { CTR: [], APP: [], TWR: [], GND: [], DEL: [], ATS: [] };
         }
 
-        onlineATCs[airport][mappedPosition].push({ holder, uptime, frequency });
+        onlineATCs[airport][mappedPosition].push({ holder, uptime, frequency, code });
     });
 }
 
@@ -202,22 +311,20 @@ function isSpecialUser(atcName) {
     return Object.keys(specialUsers).includes(baseName);
 }
 
-// Função de desenho
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    if (settingsValues.showBetterMap) {
-        currentMapImage = scale < 10 ? mapImageSmallScale : mapImageNormal;
-    } else {
-        currentMapImage = mapImageSmallScale;
-    }
-
-    // Calcula tamanho ajustado do mapa
-    const mapWidth = 1200 * scale;
-    const mapHeight = 1200 * scale;
-
-    // Desenha a imagem do mapa
-    ctx.drawImage(currentMapImage, offsetX, offsetY, mapWidth, mapHeight);
+    // Desenha os tiles visíveis
+    const visibleTiles = getVisibleTiles();
+    const tiles = getTiles();
+    visibleTiles.forEach(tileIndex => {
+        const tile = tiles[tileIndex - 1];
+        const col = Math.floor((tileIndex - 1) / 5);
+        const row = (tileIndex - 1) % 5;
+        const tileX = col * 240 * scale + offsetX;
+        const tileY = row * 240 * scale + offsetY;
+        ctx.drawImage(tile, tileX, tileY, 240 * scale, 240 * scale);
+    });
 
     drawControlAreas();
     drawFlightPlan(flightRoute);
@@ -270,8 +377,12 @@ function drawControlAreas() {
 
                     if (atcs.CTR.length > 0 && airport.ctr === area.name) {
                         drawCTR = true;
+                        
                     }
                     if (atcs.APP.length > 0 && airport.app === area.name) {
+                        drawAPP = true;
+                    }
+                    if (atcs.CTR.length > 0 && airport.app === area.name && dataIsFrom === 'ATC24') {
                         drawAPP = true;
                     }
                 }
@@ -357,193 +468,195 @@ function updateATCUI() {
 }
 
 function drawFlightPlan(points) {
-	if (points.length < 2) {
-		return;
-	}
+    if (points.length < 2) {
+        return;
+    }
 
-	ctx.strokeStyle = "#cc4265";
-	ctx.lineWidth = 2;
+    ctx.strokeStyle = "#cc4265";
+    ctx.lineWidth = 2;
 
-	// Fator de escala calculado a partir da referência dada
-	const referenceDistanceEuclidean = Math.sqrt((534.22 - 512.13) ** 2 + (243.11 - 225.89) ** 2);
-	const referenceDistanceNM = 1478 / 1852; // 1478 metros em NM (1 NM = 1852 metros)
-	const scaleFactor = referenceDistanceNM / referenceDistanceEuclidean;
+    // Fator de escala calculado a partir da referência dada
+    const referenceDistanceEuclidean = Math.sqrt((534.22 - 512.13) ** 2 + (243.11 - 225.89) ** 2);
+    const referenceDistanceNM = 1478 / 1852; // 1478 metros em NM (1 NM = 1852 metros)
+    const scaleFactor = referenceDistanceNM / referenceDistanceEuclidean;
 
-	const transformedPoints = points.map(point => ({
-		...point,
-		transformedCoordinates: transformCoordinates(point.coordinates),
-	}));
+    const transformedPoints = points.map(point => ({
+        ...point,
+        transformedCoordinates: transformCoordinates(point.coordinates),
+    }));
 
-	ctx.beginPath();
-	ctx.moveTo(
-		transformedPoints[0].transformedCoordinates[0],
-		transformedPoints[0].transformedCoordinates[1]
-	);
+    ctx.beginPath();
+    ctx.moveTo(
+        transformedPoints[0].transformedCoordinates[0],
+        transformedPoints[0].transformedCoordinates[1]
+    );
 
-	for (let i = 1; i < transformedPoints.length; i++) {
-		const current = transformedPoints[i - 1];
-		const next = transformedPoints[i];
+    for (let i = 1; i < transformedPoints.length; i++) {
+        const current = transformedPoints[i - 1];
+        const next = transformedPoints[i];
 
-		const currentTrans = current.transformedCoordinates;
-		const nextTrans = next.transformedCoordinates;
+        const currentTrans = current.transformedCoordinates;
+        const nextTrans = next.transformedCoordinates;
 
-		// Desenha a linha
-		ctx.lineTo(nextTrans[0], nextTrans[1]);
+        // Desenha a linha
+        ctx.lineTo(nextTrans[0], nextTrans[1]);
 
-		// Calcula o HDG
-		const dx = nextTrans[0] - currentTrans[0];
-		const dy = nextTrans[1] - currentTrans[1];
-		const hdg = Math.round((Math.atan2(dx, -dy) * (180 / Math.PI) + 360) % 360);
+        // Calcula o HDG
+        const dx = nextTrans[0] - currentTrans[0];
+        const dy = nextTrans[1] - currentTrans[1];
+        const hdg = Math.round((Math.atan2(dx, -dy) * (180 / Math.PI) + 360) % 360);
 
-		// Calcula a distância diretamente das coordenadas sem transformá-las
-		const dxRaw = next.coordinates[0] - current.coordinates[0];
-		const dyRaw = next.coordinates[1] - current.coordinates[1];
-		const distanceEuclidean = Math.sqrt(dxRaw ** 2 + dyRaw ** 2);
-		const distanceNM = (distanceEuclidean * scaleFactor).toFixed(2);
+        // Calcula a distância diretamente das coordenadas sem transformá-las
+        const dxRaw = next.coordinates[0] - current.coordinates[0];
+        const dyRaw = next.coordinates[1] - current.coordinates[1];
+        const distanceEuclidean = Math.sqrt(dxRaw ** 2 + dyRaw ** 2);
+        const distanceNM = (distanceEuclidean * scaleFactor).toFixed(2);
 
-		// Chama a função para desenhar as labels secundárias se o zoom for maior que 1
-		if (scale > 0.5) {
-			drawSecondaryLabels(currentTrans, nextTrans, hdg, distanceNM);
-		}
-	}
-	ctx.stroke();
+        // Chama a função para desenhar as labels secundárias se o zoom for maior que 1
+        if (scale > 0.5) {
+            drawSecondaryLabels(currentTrans, nextTrans, hdg, distanceNM);
+        }
+    }
+    ctx.stroke();
 
-	// Desenha os pontos transformados
-	transformedPoints.forEach((point, index) => {
-		const [x, y] = point.transformedCoordinates;
+    // Desenha os pontos transformados
+    transformedPoints.forEach((point, index) => {
+        const [x, y] = point.transformedCoordinates;
 
-		let pointColor;
-		if (index === 0) {
-			pointColor = "#00FF00"; // Verde para o primeiro ponto
-		} else if (index === transformedPoints.length - 1) {
-			pointColor = "#FF0000"; // Vermelho para o último ponto
-		} else {
-			pointColor = point.type === "VOR" ? "#66B2FF" : "#FFFF66";
-		}
+        let pointColor;
+        if (index === 0) {
+            pointColor = "#00FF00"; // Verde para o primeiro ponto
+        } else if (index === transformedPoints.length - 1) {
+            pointColor = "#FF0000"; // Vermelho para o último ponto
+        } else {
+            pointColor = point.type === "VOR" ? "#66B2FF" : "#FFFF66";
+        }
 
-		ctx.beginPath();
-		ctx.arc(x, y, 4, 0, 2 * Math.PI);
-		ctx.fillStyle = pointColor;
-		ctx.fill();
+        ctx.beginPath();
+        ctx.arc(x, y, 4, 0, 2 * Math.PI);
+        ctx.fillStyle = pointColor;
+        ctx.fill();
 
-		if ((index === 0 || index === transformedPoints.length - 1) && point.type === "Airport") {
-			return;
-		}
+        if ((index === 0 || index === transformedPoints.length - 1) && point.type === "Airport") {
+            return;
+        }
 
-		if (settingsValues.showNavaidsLabels) {
-			ctx.fillStyle = "#FFFFFF";
-			ctx.font = "14px Arial";
-			ctx.fillText(point.name, x + 5, y - 5);
-		}
-	});
+        if (settingsValues.showNavaidsLabels) {
+            ctx.fillStyle = "#FFFFFF";
+            ctx.font = "14px Arial";
+            ctx.fillText(point.name, x + 5, y - 5);
+        }
+    });
 }
 
 function drawSecondaryLabels(currentTrans, nextTrans, hdg, distanceNM) {
-	// Calcula a posição para exibir as labels (meio do segmento)
-	const midX = (currentTrans[0] + nextTrans[0]) / 2;
-	const midY = (currentTrans[1] + nextTrans[1]) / 2;
+    // Calcula a posição para exibir as labels (meio do segmento)
+    const midX = (currentTrans[0] + nextTrans[0]) / 2;
+    const midY = (currentTrans[1] + nextTrans[1]) / 2;
 
-	// Rotaciona o contexto para alinhar com o ângulo da rota
-	ctx.save();
-	ctx.translate(midX, midY);
-	let angle = Math.atan2(nextTrans[1] - currentTrans[1], nextTrans[0] - currentTrans[0]);
-	if (angle > Math.PI / 2 || angle < -Math.PI / 2) {
-		angle += Math.PI; // Inverte para evitar que fique de cabeça para baixo
-	}
-	ctx.rotate(angle);
+    // Rotaciona o contexto para alinhar com o ângulo da rota
+    ctx.save();
+    ctx.translate(midX, midY);
+    let angle = Math.atan2(nextTrans[1] - currentTrans[1], nextTrans[0] - currentTrans[0]);
+    if (angle > Math.PI / 2 || angle < -Math.PI / 2) {
+        angle += Math.PI; // Inverte para evitar que fique de cabeça para baixo
+    }
+    ctx.rotate(angle);
 
-	// Desenha o HDG
-	ctx.fillStyle = "#bbbbbb";
-	ctx.font = "12px Arial";
-	ctx.textAlign = "center";
-	ctx.fillText(`${hdg}°`, 0, -5);
+    // Desenha o HDG
+    ctx.fillStyle = "#bbbbbb";
+    ctx.font = "12px Arial";
+    ctx.textAlign = "center";
+    ctx.fillText(`${hdg}°`, 0, -5);
 
-	// Desenha a Distância em NM
-	ctx.fillStyle = "#bbbbbb";
-	ctx.font = "12px Arial";
-	ctx.textAlign = "center";
-	ctx.fillText(`${distanceNM} NM`, 0, 15);
+    // Desenha a Distância em NM
+    ctx.fillStyle = "#bbbbbb";
+    ctx.font = "12px Arial";
+    ctx.textAlign = "center";
+    ctx.fillText(`${distanceNM} NM`, 0, 15);
 
-	// Restaura o contexto
-	ctx.restore();
+    // Restaura o contexto
+    ctx.restore();
 }
 
 function drawNavaids() {
-	if (!settingsValues.showNavaids) {
-		return;
-	}
-	const navaids = [
-		...Waypoints,
-		//...CustomWaypoints
-	];
+    if (!settingsValues.showNavaids) {
+        return;
+    }
+    const navaids = [
+        ...Waypoints,
+        //...CustomWaypoints
+    ];
 
-	navaids.forEach(navaid => {
-		// Filtra apenas os tipos VOR e Waypoint
-		if (navaid.type !== "VOR" && navaid.type !== "Waypoint") {
-			return;
-		}
+    navaids.forEach(navaid => {
+        // Filtra apenas os tipos VOR e Waypoint
+        if (navaid.type !== "VOR" && navaid.type !== "Waypoint") {
+            return;
+        }
 
-		// Verifica se o navaid está na flightRoute
-		const isInFlightRoute = flightRoute.some(routePoint => routePoint.name === navaid.name);
-		if (isInFlightRoute) {
-			return; // Não desenha se estiver na rota
-		}
+        // Verifica se o navaid está na flightRoute
+        const isInFlightRoute = flightRoute.some(routePoint => routePoint.name === navaid.name);
+        if (isInFlightRoute) {
+            return; // Não desenha se estiver na rota
+        }
 
-		// Transforma as coordenadas
-		const [x, y] = transformCoordinates(navaid.coordinates);
+        // Transforma as coordenadas
+        const [x, y] = transformCoordinates(navaid.coordinates);
 
-		// Define a cor baseada no tipo
-		const color = navaid.type === "VOR" ? "#477bb3" : "#BDBD4C"; // VOR azul claro, Waypoint amarelo claro
+        // Define a cor baseada no tipo
+        const color = navaid.type === "VOR" ? "#477bb3" : "#BDBD4C"; // VOR azul claro, Waypoint amarelo claro
 
-		// Desenha a bolinha
-		ctx.beginPath();
-		ctx.arc(x, y, 4, 0, 2 * Math.PI);
-		ctx.fillStyle = color;
-		ctx.fill();
+        // Desenha a bolinha
+        ctx.beginPath();
+        ctx.arc(x, y, 4, 0, 2 * Math.PI);
+        ctx.fillStyle = color;
+        ctx.fill();
 
-		if (!settingsValues.showNavaidsLabels) {
-			return;
-		}
-		// Adiciona a label
-		ctx.fillStyle = "#bbbbbb";
-		ctx.font = "14px Arial";
-		ctx.fillText(navaid.name, x + 5, y - 5);
-	});
+        if (!settingsValues.showNavaidsLabels) {
+            return;
+        }
+        // Adiciona a label
+        ctx.fillStyle = "#bbbbbb";
+        ctx.font = "14px Arial";
+        ctx.fillText(navaid.name, x + 5, y - 5);
+    });
 }
 
-// Função para atualizar a posição do aeroporto
 function updatePosition(airportUI, airport) {
-	if (scale < airport.scale) {
-		airportUI.style.display = 'none';
-		return;
-	} else {
-		airportUI.style.display = 'block';
-	}
+    const atcs = getOnlineATCs(airport.real_name);
+    const hasATCOnline = atcs.CTR.length > 0 || atcs.APP.length > 0 || atcs.TWR.length > 0 || atcs.GND.length > 0;
 
-	const [x, y] = transformCoordinates(airport.coordinates);
-	const uiWidth = airportUI.offsetWidth;
-	const uiHeight = airportUI.offsetHeight;
+    if (scale < airport.scale && !hasATCOnline) {
+        airportUI.style.display = 'none';
+        return;
+    } else {
+        airportUI.style.display = 'block';
+    }
 
-	airportUI.style.left = `${x - uiWidth / 2}px`;
-	airportUI.style.top = `${y + uiHeight / 2}px`;
+    const [x, y] = transformCoordinates(airport.coordinates);
+    const uiWidth = airportUI.offsetWidth;
+    const uiHeight = airportUI.offsetHeight;
+
+    airportUI.style.left = `${x - uiWidth / 2}px`;
+    airportUI.style.top = `${y + uiHeight / 2}px`;
 }
 
 function updateAllAirportsUI() {
-	controlAreas.forEach(area => {
-		if (area.type === 'Airport') {
-			const airportUI = document.querySelector(`.airport-ui[id="${area.name}"]`);
-			if (airportUI) {
-				updatePosition(airportUI, area);
-			}
-		}
-	});
+    controlAreas.forEach(area => {
+        if (area.type === 'Airport') {
+            const airportUI = document.querySelector(`.airport-ui[id="${area.name}"]`);
+            if (airportUI) {
+                updatePosition(airportUI, area);
+            }
+        }
+    });
 }
 
 const icaoMenuCount = 0;
 
-function highlightCTR(ctrName) {
+function highlightCTR(airport) {
     controlAreas.forEach(area => {
-        if (area.type === 'polygon' && area.name === ctrName) {
+        if (area.type === 'polygon' && area.name === airport.ctr) {
             area.originalFillColor = area.fillColor;
             area.fillColor = 'rgba(0, 255, 125, 0.075)';
             draw();
@@ -551,18 +664,18 @@ function highlightCTR(ctrName) {
     });
 }
 
-function resetCTRHighlight(ctrName) {
+function resetCTRHighlight(airport) {
     controlAreas.forEach(area => {
-        if (area.type === 'polygon' && area.name === ctrName) {
+        if (area.type === 'polygon' && area.name === airport.ctr) {
             area.fillColor = area.originalFillColor;
             draw();
         }
     });
 }
 
-function highlightAPP(appName) {
+function highlightAPP(airport) {
     controlAreas.forEach(area => {
-        if (area.type === 'polygon' && area.name === appName) {
+        if (area.type === 'polygon' && area.name === airport.app) {
             area.originalFillColor = area.fillColor;
             area.fillColor = 'rgba(255, 122, 0, 0.1)';
             draw();
@@ -570,9 +683,9 @@ function highlightAPP(appName) {
     });
 }
 
-function resetAPPHighlight(appName) {
+function resetAPPHighlight(airport) {
     controlAreas.forEach(area => {
-        if (area.type === 'polygon' && area.name === appName) {
+        if (area.type === 'polygon' && area.name === airport.app) {
             area.fillColor = area.originalFillColor;
             draw();
         }
@@ -601,18 +714,20 @@ function createAirportElement(airport) {
     airportUI.style.zIndex = 10 + (3 - airport.originalscale);
     airportUI.innerHTML = `
         <button class="icao-code">${airport.name}</button>
-        ${generateBadges(airport)}
+        <div class="badges-container">
+            ${generateBadges(airport)}
+        </div>
     `;
 
     if (airportUI.querySelector('.badge')) {
-		airportUI.style.backgroundColor = "rgba(40, 40, 55, 0.5)";
-		airportUI.style.color = "#ffffff";
-		
-		const icaoButton = airportUI.querySelector('.icao-code');
-		if (icaoButton) {
-			icaoButton.classList.add('active');
-		}
-	}	
+        airportUI.style.backgroundColor = "rgba(40, 40, 55, 0.3)";
+        airportUI.style.color = "#ffffff";
+        
+        const icaoButton = airportUI.querySelector('.icao-code');
+        if (icaoButton) {
+            icaoButton.classList.add('active');
+        }
+    }    
 
     return airportUI;
 }
@@ -620,11 +735,17 @@ function createAirportElement(airport) {
 function generateBadges(airport) {
     const atcs = getOnlineATCs(airport.real_name);
 
+    function isPositionSpecial(position) {
+        return atcs[position].some(atc => isSpecialUser(atc.holder));
+    }
+
     return `
-        ${atcs.CTR.length > 0 ? '<div class="badge C">C</div>' : ''}
-        ${atcs.APP.length > 0 ? '<div class="badge A">A</div>' : ''}
-        ${atcs.TWR.length > 0 ? '<div class="badge T">T</div>' : ''}
-        ${atcs.GND.length > 0 ? '<div class="badge G">G</div>' : ''}
+        ${atcs.CTR.length > 0 ? `<div class="badge C ${isPositionSpecial('CTR') ? 'special' : ''}" data-type="Control">C</div>` : ''}
+        ${atcs.APP.length > 0 ? `<div class="badge A ${isPositionSpecial('APP') ? 'special' : ''}" data-type="Approach">A</div>` : ''}
+        ${atcs.TWR.length > 0 ? `<div class="badge T ${isPositionSpecial('TWR') ? 'special' : ''}" data-type="Tower">T</div>` : ''}
+        ${atcs.GND.length > 0 ? `<div class="badge G ${isPositionSpecial('GND') ? 'special' : ''}" data-type="Ground">G</div>` : ''}
+        ${atcs.DEL.length > 0 ? `<div class="badge D ${isPositionSpecial('DEL') ? 'special' : ''}" data-type="Delivery">D</div>` : ''}
+        ${atcs.ATS.length > 0 ? `<div class="badge S ${isPositionSpecial('ATS') ? 'special' : ''}" data-type="ATIS">A</div>` : ''}
     `;
 }
 
@@ -675,70 +796,192 @@ function toggleIcaoMenu(menu, airport) {
     }
 }
 
+function calculateBoundingArea(div1, div2, indication) {
+    const rect1 = div1.getBoundingClientRect();
+    const rect2 = div2.getBoundingClientRect();
+    let vertices = []
+
+    if (indication === 'top') {
+        vertices = [
+            { x: rect1.left, y: rect1.bottom },
+            { x: rect1.left, y: rect1.top },
+            { x: rect1.right, y: rect1.top },
+            { x: rect1.right, y: rect1.bottom },
+            { x: rect2.right, y: rect2.top },
+            { x: rect2.right, y: rect2.bottom },
+            { x: rect2.left, y: rect2.bottom },
+            { x: rect2.left, y: rect2.top },
+        ];
+    } else if (indication === 'bottom') {
+        vertices = [
+            { x: rect2.right, y: rect2.top },
+            { x: rect2.right, y: rect2.bottom },
+            { x: rect1.right, y: rect1.top },
+            { x: rect1.right, y: rect1.bottom },
+            { x: rect1.left, y: rect1.bottom },
+            { x: rect1.left, y: rect1.top },
+            { x: rect2.left, y: rect2.bottom },
+            { x: rect2.left, y: rect2.top }
+        ];
+    }
+    
+    return vertices;
+}
+
+function isMouseOutsideArea(event, vertices, badge) {
+    const { clientX: x, clientY: y } = event;
+
+    // Verifica se o mouse está sobre a badge
+    if (badge.classList.contains('hover')) {
+        return false;
+    }
+
+    function isPointInPolygon(point, polygon) {
+        let isInside = false;
+        for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+            const xi = polygon[i].x, yi = polygon[i].y;
+            const xj = polygon[j].x, yj = polygon[j].y;
+
+            const intersect = ((yi > point.y) !== (yj > point.y)) &&
+                (point.x < (xj - xi) * (point.y - yi) / (yj - yi) + xi);
+            if (intersect) isInside = !isInside;
+        }
+        return !isInside;
+    }
+
+    return isPointInPolygon({ x, y }, vertices);
+}
+
+function addMouseLeaveListener(div1, div2, callback) {
+    const vertices = calculateBoundingArea(div1, div2, 'top');
+
+    function onMouseMove(event) {
+        if (isMouseOutsideArea(event, vertices, div1)) {
+            callback();
+            document.removeEventListener('mousemove', onMouseMove);
+        }
+    }
+
+    document.addEventListener('mousemove', onMouseMove);
+    return onMouseMove;
+}
+
+function resetMenuAndListeners(currentMouseMoveListener) {
+    if (currentMouseMoveListener) {
+        document.removeEventListener('mousemove', currentMouseMoveListener);
+    }
+    hideInfoMenu(document.querySelector('.airport-info-menu'));
+}
+
 function addBadgeEventListeners(airport, airportUI, infoMenu) {
+    const atcs = getOnlineATCs(airport.real_name);
     const badges = {
-        C: { condition: airport.ctr, highlight: highlightCTR, reset: resetCTRHighlight },
-        A: { condition: airport.app, highlight: highlightAPP, reset: resetAPPHighlight },
-        T: { condition: airport.tower },
-        G: { condition: airport.ground },
-        D: { condition: airport.delivery }
+        C: { condition: atcs.CTR.length > 0, highlight: highlightCTR, reset: resetCTRHighlight },
+        A: { condition: atcs.APP.length > 0, highlight: highlightAPP, reset: resetAPPHighlight },
+        T: { condition: atcs.TWR.length > 0 },
+        G: { condition: atcs.GND.length > 0 },
+        D: { condition: atcs.DEL.length > 0 },
+        S: { condition: atcs.ATS.length > 0 }
     };
+
+    let currentMouseMoveListener = null;
 
     Object.entries(badges).forEach(([key, { condition, highlight, reset }]) => {
         const badge = airportUI.querySelector(`.badge.${key}`);
         if (badge && condition) {
             badge.addEventListener('mouseenter', () => {
+                if (isDragging) return;
+                badge.classList.add('hover');
+                resetMenuAndListeners(currentMouseMoveListener);
                 showInfoMenu(badge, airport, infoMenu, airportUI);
-                if (highlight) highlight(condition);
+                resetHighlights();
+                if (highlight) highlight(airport);
+                if (dataIsFrom === 'ATC24' && key === 'C') {
+                    highlightAPP(airport);
+                }
+
+                currentMouseMoveListener = addMouseLeaveListener(badge, infoMenu, () => {
+                    hideInfoMenu(infoMenu);
+                    if (reset) reset(airport);
+                    if (dataIsFrom === 'ATC24' && key === 'C') {
+                        resetAPPHighlight(airport);
+                    }
+                    resetMenuAndListeners(currentMouseMoveListener);
+                });
             });
+
             badge.addEventListener('mouseleave', () => {
-                hideInfoMenu(infoMenu);
-                if (reset) reset(condition);
+                badge.classList.remove('hover');
             });
         }
     });
 }
 
 function showInfoMenu(badge, airport, menu, airportUI) {
-    const positions = { C: 'Control', A: 'Approach', T: 'Tower', G: 'Ground', D: 'Delivery' };
+    const positions = { C: 'Control', A: 'Approach', T: 'Tower', G: 'Ground', D: 'Delivery', S: 'ATIS' };
     const position = positions[badge.classList[1]] || 'Unknown';
-    let atcName = 'N/A';
-    let frequency = 'N/A';
-    let uptime = 'N/A';
     const ATCs = getOnlineATCs(airport.real_name);
-    console.log(ATCs);
+    const atcList = ATCs[positionMapping[position.toLowerCase()]] || [];
 
-    if (ATCs[positionMapping[position.toLowerCase()]] && ATCs[positionMapping[position.toLowerCase()]].length > 0) {
-        atcName = ATCs[positionMapping[position.toLowerCase()]][0].holder || 'N/A';
-        frequency = ATCs[positionMapping[position.toLowerCase()]][0].frequency || 'N/A';
-        uptime = ATCs[positionMapping[position.toLowerCase()]][0].uptime || 'N/A';
-    }
+    let infoSections = '';
 
-    const baseName = atcName.split(' | ')[0];
-    const specialUser = isSpecialUser(baseName);
-    const specialTag = specialUser ? `<div class="special-tag">${specialUsers[baseName][0].Role}</div>` : '';
+    atcList.forEach(atc => {
+        const atcName = atc.holder || 'N/A';
+        const frequency = atc.frequency || 'N/A';
+        const uptime = atc.uptime || 'N/A';
+        const atcCode = atc.code || '';
+
+        const baseName = atcName.split(' | ')[0];
+        const specialUser = isSpecialUser(baseName);
+        const specialTag = specialUser ? `<span class="special-tag">${specialUsers[baseName].Role}</span>` : '';
+
+        infoSections += `
+            <div class="controller-info-section">
+                <p><strong>${atcCode}</strong></p>
+                <p><strong>Controller:</strong> ${atcName}${specialTag}</p>
+                <p><strong>Frequency:</strong> ${frequency}</p>
+                <p><strong>Online:</strong> ${uptime}</p>
+            </div>
+        `;
+    });
 
     menu.style.display = 'block';
     menu.innerHTML = `
-        <div class="title">${airport.real_name} ${position} ${specialTag}</div>
+        <div class="title">${airport.real_name} ${position}</div>
         <hr class="menu-divider">
-        <div class="controller-info-section">
-            <p><strong>Controller:</strong> ${atcName}</p>
-            <p><strong>Frequency:</strong> ${frequency}</p>
-            <p><strong>Online:</strong> ${uptime}</p>
+        <div class="info-sections">
+            ${infoSections}
         </div>
     `;
     positionInfoMenu(menu, airportUI);
+
+    badge.classList.add('active');
 }
 
 function positionInfoMenu(menu, airportUI) {
     const rect = airportUI.getBoundingClientRect();
-    menu.style.left = `${rect.left + window.scrollX}px`;
-    menu.style.top = `${rect.bottom + window.scrollY + 10}px`;
+    const menuWidth = menu.offsetWidth;
+    const menuHeight = menu.offsetHeight;
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+
+    let left = rect.left + window.scrollX;
+    let top = rect.bottom + window.scrollY + 10;
+
+    if (left + menuWidth > windowWidth) {
+        left = windowWidth - menuWidth - 10;
+    }
+
+    menu.style.left = `${left}px`;
+    menu.style.top = `${top}px`;
 }
 
 function hideInfoMenu(menu) {
     menu.style.display = 'none';
+
+    document.querySelectorAll('.badge.active').forEach(badge => {
+        badge.classList.remove('active');
+    });
 }
 
 function resetAllAirportsUI() {
@@ -752,92 +995,94 @@ function displayAirports() {
     resetAllAirportsUI();
     controlAreas.filter(area => area.type === 'Airport').forEach(createAirportUI);
 }
-
-// Exibe os aeroportos na inicialização
 displayAirports();
 
 let velocityX = 0, velocityY = 0;
 let friction = 0.85;
+let isZooming = false;
 const MIN_VELOCITY_THRESHOLD = 0.1;
 
+function disablePointerEvents() {
+    canvas.classList.add('disable-pointer-events');
+}
+
+function enablePointerEvents() {
+    canvas.classList.remove('disable-pointer-events');
+}
+
 canvas.addEventListener('mousedown', (e) => {
-    if (e.button !== 0) return; // Verifica se o botão pressionado é o esquerdo
+    if (e.button !== 0) return;
     isDragging = true;
     startX = e.clientX;
     startY = e.clientY;
     velocityX = 0;
     velocityY = 0;
+    disablePointerEvents();
 });
 
-canvas.addEventListener('mousemove', (e) => {
-    if (!isDragging || e.button !== 0) return; // Verifica se o botão pressionado é o esquerdo
+document.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
     const currentX = e.clientX;
     const currentY = e.clientY;
 
-    // Calcula o deslocamento
     const dx = currentX - startX;
     const dy = currentY - startY;
 
-    // Atualiza a posição do mapa
     offsetX += dx;
     offsetY += dy;
 
-    // Calcula a velocidade apenas se houver movimento significativo
     if (Math.abs(dx) > MIN_VELOCITY_THRESHOLD || Math.abs(dy) > MIN_VELOCITY_THRESHOLD) {
         velocityX = dx;
         velocityY = dy;
     } else {
-        velocityX = 0; // Considera que o rato está parado
+        velocityX = 0;
         velocityY = 0;
     }
 
-    // Atualiza o ponto inicial
     startX = currentX;
     startY = currentY;
 
-    // Redesenha o canvas
     draw();
 });
 
-canvas.addEventListener('mouseup', (e) => {
-    if (e.button !== 0) return; // Verifica se o botão pressionado é o esquerdo
+document.addEventListener('mouseup', (e) => {
+    if (e.button !== 0) return;
     isDragging = false;
+    enablePointerEvents();
 
-    // Só aplica inércia se a velocidade for significativa
     if (Math.abs(velocityX) > MIN_VELOCITY_THRESHOLD || Math.abs(velocityY) > MIN_VELOCITY_THRESHOLD) {
         applyInertia();
     }
 });
 
-canvas.addEventListener('mouseleave', (e) => {
-    if (e.button !== 0) return; // Verifica se o botão pressionado é o esquerdo
+document.addEventListener('mouseleave', (e) => {
+    if (e.button !== 0) return;
     isDragging = false;
+    enablePointerEvents();
 });
 
 function applyInertia() {
-	// Aplica a inércia até que a velocidade seja insignificante
-	if (Math.abs(velocityX) > MIN_VELOCITY_THRESHOLD || Math.abs(velocityY) > MIN_VELOCITY_THRESHOLD) {
-		offsetX += velocityX;
-		offsetY += velocityY;
+    if (Math.abs(velocityX) > MIN_VELOCITY_THRESHOLD || Math.abs(velocityY) > MIN_VELOCITY_THRESHOLD) {
+        offsetX += velocityX;
+        offsetY += velocityY;
 
-		// Aplica atrito para reduzir a velocidade gradualmente
-		velocityX *= friction;
-		velocityY *= friction;
+        velocityX *= friction;
+        velocityY *= friction;
 
-		draw();
+        draw();
 
-		// Continua a aplicar inércia
-		requestAnimationFrame(applyInertia);
-	} else {
-		// Zera as velocidades quando a inércia para
-		velocityX = 0;
-		velocityY = 0;
-	}
+        requestAnimationFrame(applyInertia);
+    } else {
+        velocityX = 0;
+        velocityY = 0;
+        enablePointerEvents();
+    }
 }
 
-let isZooming = false;
+function roundScale(value) {
+    return Math.round(value * 2) / 2;
+}
 
-// Função para animar o zoom
 function animateZoom(startScale, endScale, startX, endX, startY, endY, duration) {
     const startTime = performance.now();
 
@@ -845,7 +1090,6 @@ function animateZoom(startScale, endScale, startX, endX, startY, endY, duration)
         const elapsedTime = currentTime - startTime;
         const progress = Math.min(elapsedTime / duration, 1);
 
-        // Interpolação linear para a escala e coordenadas
         scale = startScale + (endScale - startScale) * progress;
         offsetX = startX + (endX - startX) * progress;
         offsetY = startY + (endY - startY) * progress;
@@ -856,14 +1100,13 @@ function animateZoom(startScale, endScale, startX, endX, startY, endY, duration)
             requestAnimationFrame(animationStep);
         } else {
             isZooming = false;
-			console.log(scale);
+            console.log(scale);
         }
     }
 
     requestAnimationFrame(animationStep);
 }
 
-// Evento de zoom
 canvas.addEventListener('wheel', (e) => {
     e.preventDefault();
 
@@ -871,29 +1114,23 @@ canvas.addEventListener('wheel', (e) => {
         isZooming = true;
 
         requestAnimationFrame(() => {
-            // Captura a posição do mouse relativa ao canvas
             const mouseX = (e.clientX - canvas.getBoundingClientRect().left - offsetX) / scale;
             const mouseY = (e.clientY - canvas.getBoundingClientRect().top - offsetY) / scale;
 
-            // Ajusta a taxa de zoom dinamicamente com base na escala atual
-            const baseZoomRate = 0.005; // Taxa de zoom base
-            const zoomRate = baseZoomRate * scale; // Ajusta a taxa de zoom conforme a escala aumenta
+            const baseZoomRate = 0.005;
+            const zoomRate = baseZoomRate * scale;
             const zoomFactor = e.deltaY * -zoomRate;
 
-            // Define um limite de zoom out mínimo e máximo
-            const minScale = 0.5; // Limite de zoom out
-            const maxScale = 15; // Limite de zoom in
+            const minScale = 0.5;
+            const maxScale = 20;
 
-            // Calcula a nova escala e aplica os limites
-            const newScale = Math.min(Math.max(minScale, scale + zoomFactor), maxScale);
+            let newScale = Math.min(Math.max(minScale, scale + zoomFactor), maxScale);
+            newScale = roundScale(newScale);
 
-            // Se o zoom estiver dentro dos limites, ajusta o offset; caso contrário, mantém o último offset
             if (newScale !== scale) {
-                // Calcula o novo offset para centralizar o zoom no ponto do mouse
                 const newOffsetX = mouseX * (scale - newScale) + offsetX;
                 const newOffsetY = mouseY * (scale - newScale) + offsetY;
 
-                // Anima o zoom
                 animateZoom(scale, newScale, offsetX, newOffsetX, offsetY, newOffsetY, 200);
             } else {
                 isZooming = false;
@@ -902,55 +1139,70 @@ canvas.addEventListener('wheel', (e) => {
     }
 });
 
-// Carregar as imagens e inicializar o canvas
-Promise.all([
-	new Promise((resolve) => (mapImageNormal.onload = resolve)),
-	new Promise((resolve) => (mapImageSmallScale.onload = resolve))
-]).then(resizeCanvas);
-
-let lastMouseX = 0;
-let lastMouseY = 0;
-
-// Captura a posição do mouse no canvas
 canvas.addEventListener('mousemove', (e) => {
-	lastMouseX = e.clientX;
-	lastMouseY = e.clientY;
+    lastMouseX = e.clientX;
+    lastMouseY = e.clientY;
 });
 
 function toggleSettingsMenu() {
-	const settingsMenu = document.getElementById('settingsMenu');
-	const settingsButton = document.querySelector('.settings-button');
+    const settingsMenu = document.getElementById('settingsMenu');
+    const settingsButton = document.querySelector('.settings-button');
 
-	if (settingsMenu.style.display === 'none' || settingsMenu.style.display === '') {
-		settingsMenu.style.display = 'block';
-		settingsButton.classList.add('on'); // Adiciona a classe "on" ao botão
-	} else {
-		settingsMenu.style.display = 'none';
-		settingsButton.classList.remove('on'); // Remove a classe "on" do botão
-	}
+    if (settingsMenu.style.display === 'none' || settingsMenu.style.display === '') {
+        settingsMenu.style.display = 'block';
+        settingsButton.classList.add('on'); // Adiciona a classe "on" ao botão
+    } else {
+        settingsMenu.style.display = 'none';
+        settingsButton.classList.remove('on'); // Remove a classe "on" do botão
+    }
 }
 
 function toggleChangeLogMenu() {
-	const Changelogmenu = document.getElementById('ChangelogMenu');
-	Changelogmenu.style.display = Changelogmenu.style.display === 'none' || Changelogmenu.style.display === '' ? 'flex' : 'none';
+    const Changelogmenu = document.getElementById('ChangelogMenu');
+    Changelogmenu.style.display = Changelogmenu.style.display === 'none' || Changelogmenu.style.display === '' ? 'flex' : 'none';
 }
+
+let isAnimating = false;
 
 function toggleFlpMenu() {
-	const FlpMenu = document.getElementById('FlpMenu');
-	const FlpButton = document.getElementById('FlpButton');
-	const FlpIcon = document.getElementById('FlpIcon');
+    if (isAnimating) return; // Se a animação estiver em andamento, não faz nada
 
-	// Alterna o menu entre visível e escondido
-	if (FlpMenu.style.display === 'none' || FlpMenu.style.display === '') {
-		FlpMenu.style.display = 'flex'; // Mostra o menu
-		FlpButton.classList.add('on'); // Adiciona a classe "on" ao botão
-		FlpIcon.style.filter = 'brightness(1)';
-	} else {
-		FlpMenu.style.display = 'none'; // Esconde o menu
-		FlpButton.classList.remove('on'); // Remove a classe "on" do botão
-		FlpIcon.style.filter = 'brightness(0.8)';
-	}
+    const flpMenu = document.getElementById('FlpMenu');
+    const flpButton = document.getElementById('FlpButton');
+    const flpIcon = document.getElementById('FlpIcon');
+
+    isAnimating = true; // Define a variável de bloqueio
+
+    // Alterna o menu entre visível e escondido com animação
+    if (flpMenu.classList.contains('open')) {
+        flpMenu.classList.remove('open');
+        flpMenu.classList.add('closed');
+        setTimeout(() => {
+            flpMenu.style.display = 'none';
+            isAnimating = false; // Libera a variável de bloqueio após a animação
+        }, 500); // Tempo da animação
+        flpButton.classList.remove('on'); // Remove a classe "on" do botão
+        flpIcon.style.filter = 'brightness(0.8)';
+    } else {
+        flpMenu.style.display = 'flex';
+        setTimeout(() => {
+            flpMenu.classList.remove('closed');
+            flpMenu.classList.add('open');
+            isAnimating = false; // Libera a variável de bloqueio após a animação
+        }, 10); // Pequeno atraso para garantir que a transição ocorra
+        flpButton.classList.add('on'); // Adiciona a classe "on" ao botão
+        flpIcon.style.filter = 'brightness(1)';
+    }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    const flpMenu = document.getElementById('FlpMenu');
+    if (flpMenu.style.display === 'flex') {
+        flpMenu.classList.add('open');
+    } else {
+        flpMenu.classList.add('closed');
+    }
+});
 
 function saveFlp() {
     const getValue = id => document.getElementById(id).value.trim().toUpperCase();
@@ -1013,29 +1265,29 @@ function saveFlp() {
     }
     
     function addProcedure(airport, type, name, transition, runway) {
-		if (!name) return true;
-	
-		let procedure;
-		if (type === 'APPs') {
-			// O APP não tem transition, então encontramos apenas pelo nome
-			procedure = airport[type]?.find(proc => proc.name === name && proc.rwy.includes(transition));
-		} else {
-			// Para SIDs e STARs, mantém-se a lógica original
-			procedure = airport[type]?.find(proc => proc.name === name && proc.transition === transition && proc.rwy.includes(runway));
-		}
-	
-		if (!procedure) {
-			showMessage('Flight Plan Error', `${type.toUpperCase()} "${name}" ${type === 'APPs' ? '' : `with transition "${transition}" `}not found at "${airport.name}"!`);
-			return false;
-		}
-	
-		procedure.waypoints.forEach(wp => {
-			const matchedPoint = allPoints.find(point => point.name === wp);
-			if (matchedPoint) flightPlanPoints.push(matchedPoint);
-		});
-	
-		return true;
-	}	
+        if (!name) return true;
+    
+        let procedure;
+        if (type === 'APPs') {
+            // O APP não tem transition, então encontramos apenas pelo nome
+            procedure = airport[type]?.find(proc => proc.name === name && proc.rwy.includes(transition));
+        } else {
+            // Para SIDs e STARs, mantém-se a lógica original
+            procedure = airport[type]?.find(proc => proc.name === name && proc.transition === transition && proc.rwy.includes(runway));
+        }
+    
+        if (!procedure) {
+            showMessage('Flight Plan Error', `${type.toUpperCase()} "${name}" ${type === 'APPs' ? '' : `with transition "${transition}" `}not found at "${airport.name}"!`);
+            return false;
+        }
+    
+        procedure.waypoints.forEach(wp => {
+            const matchedPoint = allPoints.find(point => point.name === wp);
+            if (matchedPoint) flightPlanPoints.push(matchedPoint);
+        });
+    
+        return true;
+    }	
     
     if (!addRunway(departureAirport, departureRwy, 'departure')) return;
     if (!addProcedure(departureAirport, 'SIDs', sid, deptrans, departureRwy)) return;
@@ -1055,22 +1307,22 @@ function saveFlp() {
 }
 
 function resetFlp() {
-	// Limpa os valores das text areas pelos seus IDs
-	document.getElementById('departure').value = '';
-	document.getElementById('departureRwy').value = '';
-	document.getElementById('arrival').value = '';
-	document.getElementById('arrivalRwy').value = '';
-	document.getElementById('waypoints').value = '';
-	document.getElementById('sid').value = '';
-	document.getElementById('deptrans').value = '';
-	document.getElementById('star').value = '';
-	document.getElementById('arrtrans').value = '';
-	document.getElementById('app').value = '';
-	
+    // Limpa os valores das text areas pelos seus IDs
+    document.getElementById('departure').value = '';
+    document.getElementById('departureRwy').value = '';
+    document.getElementById('arrival').value = '';
+    document.getElementById('arrivalRwy').value = '';
+    document.getElementById('waypoints').value = '';
+    document.getElementById('sid').value = '';
+    document.getElementById('deptrans').value = '';
+    document.getElementById('star').value = '';
+    document.getElementById('arrtrans').value = '';
+    document.getElementById('app').value = '';
+    
 
-	// Reseta a rota de voo
-	flightRoute = [];
-	draw();
+    // Reseta a rota de voo
+    flightRoute = [];
+    draw();
 }
 
 function getProcedures(airport, runway, type) {
@@ -1283,44 +1535,43 @@ document.getElementById('app').addEventListener('focus', () => {
 });
 
 function resetHighlights() {
-	controlAreas.forEach(area =>{
-		if (area.type === "polygon") {
-			if (area.name.endsWith("CTR")) {
-				area.fillColor = "rgba(0, 90, 50, 0.05)";
-			};
-			if (area.name.endsWith("APP")) {
-				area.fillColor = "rgba(255, 122, 0, 0)";
-			};
-		};
-	});
-	//hideAirportUI();
-	draw();
+    controlAreas.forEach(area =>{
+        if (area.type === "polygon") {
+            if (area.name.endsWith("CTR")) {
+                area.fillColor = "rgba(0, 90, 50, 0.05)";
+            };
+            if (area.name.endsWith("APP")) {
+                area.fillColor = "rgba(255, 122, 0, 0)";
+            };
+        };
+    });
+    draw();
 }
 
 function resetChartsMenu() {
-	const menus = document.querySelectorAll(`.icao-menu`);
-	menus.forEach(menu => {
-		menu.style.display = "none";
-	});
+    const menus = document.querySelectorAll(`.icao-menu`);
+    menus.forEach(menu => {
+        menu.style.display = "none";
+    });
 }
 
 function refreshUI() {
-	// Limpa e redesenha o canvas
-	draw();
-
-	// Remove todos os elementos da UI (exemplo de classes específicas)
-	document.querySelectorAll('.airport-ui').forEach(el => el.remove());
-
-	// Redesenha os elementos da interface do usuário
-	displayAirports();
-	resetHighlights();
+    draw();
+    document.querySelectorAll('.airport-ui').forEach(el => el.remove());
+    displayAirports();
+    resetHighlights();
 }
 
 function updateATCCount() {
     const atcNumberElement = document.querySelector('.online-number');
     if (atcNumberElement) {
         const onlineCount = Object.values(onlineATCs).reduce((count, atcs) => {
-            return count + Object.values(atcs).flat().length;
+            return count + Object.entries(atcs).reduce((subCount, [position, atcList]) => {
+                if (position !== 'ATS') {
+                    return subCount + atcList.length;
+                }
+                return subCount;
+            }, 0);
         }, 0);
         atcNumberElement.textContent = onlineCount;
     }
@@ -1332,6 +1583,7 @@ function processATCData(atcList) {
 }
 
 let fetchATCDataAndUpdateTimesExecuted = 0;
+let typeOfDataReceivedTimesExecuted = 0;
 
 function getUniqueUserId() {
     let userId = localStorage.getItem("uniqueUserId");
@@ -1382,14 +1634,21 @@ async function fetchATCData(url) {
 }
 
 async function fetchATCDataAndUpdate() {
+    let data
+    let typeOfDataReceived = '';
     function toggleUpdateClass() {
         const mapUpdateTime = document.getElementById('mapUpdateTime');
         mapUpdateTime.style.backgroundColor = '#ff7a00';
-        setTimeout(() => mapUpdateTime.style.backgroundColor = 'rgba(32, 32, 36, 1)', 150);
+        mapUpdateTime.style.color = '#ffffff'; // Muda a cor do texto para branco
     }
+    toggleUpdateClass();
 
-    let localCachedURL = localStorage.getItem("cachedDynamicURL");
-    let data = localCachedURL ? await fetchATCData(localCachedURL) : null;
+    if (devMode) {
+        data = PTFSAPIError;
+    } else {
+        let localCachedURL = localStorage.getItem("cachedDynamicURL");
+        data = localCachedURL ? await fetchATCData(localStorage.getItem("cachedDynamicURL")) : null;
+    }
 
     if (!data) {
         await fetchDynamicURL();
@@ -1397,24 +1656,42 @@ async function fetchATCDataAndUpdate() {
             data = await fetchATCData(cachedDynamicURL);
             if (data) {
                 localStorage.setItem("cachedDynamicURL", cachedDynamicURL);
+                typeOfDataReceived = 'dynamicURL';
             }
         }
     }
 
-    if (!data) data = await fetchATCData(defaultURL);
+    if (!data) {
+        data = await fetchATCData(defaultURL)
+        typeOfDataReceived = 'defaultURL';
+    };
 
     if (data) {
-        PTFSAPI = data;
-        processATCData(PTFSAPI);
-        toggleUpdateClass();
+        const newATCList = data;
+        const newATCCount = newATCList.length;
+        const currentATCCount = Object.values(onlineATCs).reduce((count, atcs) => {
+            return count + Object.values(atcs).flat().length;
+        }, 0);
+
+        if (newATCCount !== currentATCCount) {
+            PTFSAPI = newATCList;
+            processATCData(PTFSAPI);
+        } else {
+            const newATCNames = newATCList.map(atc => atc.holder).sort().join(',');
+            const currentATCNames = Object.values(onlineATCs).flatMap(atcs => Object.values(atcs).flat().map(atc => atc.holder)).sort().join(',');
+
+            if (newATCNames !== currentATCNames) {
+                PTFSAPI = newATCList;
+                processATCData(PTFSAPI);
+            }
+        }
     } else {
         if (!window.location.href.includes('DEV')) {
-            showMessage('Server Error', 'Couldn’t get the info from the server, please check your internet connection.', 'Retry')
-                .then(() => fetchATCDataAndUpdate());
+            await showMessage('Server Error', 'Couldn’t get the info from the server, please check your internet connection.', 'Retry');
+            await fetchATCDataAndUpdate();
         }
         PTFSAPI = PTFSAPIError;
         processATCData(PTFSAPI);
-        toggleUpdateClass();
     }
 
     document.querySelector('.mapUpdateTime .time').textContent = ` ${getTime()}`;
@@ -1425,8 +1702,25 @@ async function fetchATCDataAndUpdate() {
             checkUpdate();
         }
     }
+
+    const mapUpdateTime = document.getElementById('mapUpdateTime');
+    setTimeout(() => {
+        mapUpdateTime.style.backgroundColor = 'rgba(32, 32, 36, 1)';
+        mapUpdateTime.style.color = ''; // Restaura a cor do texto ao valor padrão
+    }, 150);
+    
+    if (typeOfDataReceived === 'defaultURL' && typeOfDataReceivedTimesExecuted === 0) {
+        typeOfDataReceivedTimesExecuted = 1;
+        showMessage('24SPY API Offline', 'The 24SPY API is currently offline. The data is being fetched from the ATC24 API, some website features may not work correctly.', 'Close', 'Try Again').then(response => {
+            if (response === 2) {
+                fetchATCDataAndUpdate();
+                typeOfDataReceivedTimesExecuted = 0;
+            };
+        });
+    }
 }
 
+// Função para verificar atualizações
 async function checkUpdate() {
     try {
         const response = await fetch('https://raw.githubusercontent.com/tiaguinho2009/24SPY-Backend/main/version');
@@ -1443,62 +1737,9 @@ async function checkUpdate() {
     }
 }
 
-
-function ActiveAllATCfunction() {
-    const allAirports = [];
-
-    controlAreas.forEach(area => {
-        if (area.type === 'Airport') {
-            allAirports.push({
-                airport: area.real_name,
-                holder: 'Tiaguinho_2009 | Tower',
-                claimable: false,
-                position: 'tower',
-                uptime: '00:00',
-            });
-
-            if (area.atcs && area.atcs.length > 1) {
-                allAirports.push({
-                    airport: area.real_name,
-                    holder: 'Tiaguinho_2009 | Ground',
-                    claimable: false,
-                    position: 'ground',
-                    uptime: '00:00',
-                });
-            }
-        }
-    });
-
-    PTFSAPI = allAirports;
-    processATCData(PTFSAPI);
-}
-
-// Function to generate the list of ATCs in the specified format
-function generateATCsListFromAreas() {
-	// List to collect ATCs in the desired format
-	let atcsList = [];
-
-	// Filter areas by type 'Airport' and extract their ATCs
-	controlAreas.forEach(area => {
-		if (area.type === "Airport" && area.atcs && area.atcs.length > 0) {
-			area.atcs.forEach(atc => {
-				// Add the ATC name followed by '@' on a new line
-				atcsList.push(atc);
-				atcsList.push("@");
-			});
-		}
-	});
-
-	// Juntar os ATCs em uma string
-	const formattedATCs = atcsList.join("\n");
-	return formattedATCs;
-}
-
-generateATCsListFromAreas()
-
 function saveToLocalStorage() {
-	localStorage.setItem('settingsValues', JSON.stringify(settingsValues));
-	localStorage.setItem('websiteInfo', JSON.stringify(websiteInfo));
+    localStorage.setItem('settingsValues', JSON.stringify(settingsValues));
+    localStorage.setItem('websiteInfo', JSON.stringify(websiteInfo));
 }
 
 function loadFromLocalStorage() {
@@ -1537,62 +1778,57 @@ function loadFromLocalStorage() {
 loadFromLocalStorage();
 
 function onCheckBoxChange(checkbox) {
-	settings.forEach(setting => {
-		if (setting === checkbox.id) {
-			settingsValues[setting] = checkbox.checked;
-			saveToLocalStorage()
-			draw()
-			refreshUI()
-		};
-		if (setting === "showOnlineATC") {fetchATCDataAndUpdate()};
-	});
+    settings.forEach(setting => {
+        if (setting === checkbox.id) {
+            settingsValues[setting] = checkbox.checked;
+            saveToLocalStorage()
+            draw()
+            refreshUI()
+        };
+        if (setting === "showOnlineATC") {fetchATCDataAndUpdate()};
+    });
 }
 
 function getTime() {
-	const now = new Date();
-	const hours = String(now.getHours()).padStart(2, '0');
-	const minutes = String(now.getMinutes()).padStart(2, '0');
-	const seconds = String(now.getSeconds()).padStart(2, '0');
-	const timeString = `${hours}:${minutes}:${seconds}`;
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    const timeString = `${hours}:${minutes}:${seconds}`;
 
-	return timeString;
+    return timeString;
 }
 
 function copyCoordinatesToClipboard(x, y) {
-	const coordsText = `[${x.toFixed(2)}, ${y.toFixed(2)}]`;
-	navigator.clipboard.writeText(coordsText).then(() => {
-		console.log(`Coordenadas copiadas: ${coordsText}`);
-	}).catch(err => {
-		showMessage('Clipboard Error', 'Failed to copy coordinates to clipboard.');
-		console.error('Failed to copy coordinates to clipboard.', err);
-	});
+    const coordsText = `[${x.toFixed(2)}, ${y.toFixed(2)}]`;
+    navigator.clipboard.writeText(coordsText).then(() => {
+        console.log(`Coordenadas copiadas: ${coordsText}`);
+    }).catch(err => {
+        showMessage('Clipboard Error', 'Failed to copy coordinates to clipboard.');
+        console.error('Failed to copy coordinates to clipboard.', err);
+    });
 }
 
 window.addEventListener('keydown', (e) => {
-	if (e.key === 'ç') { // Verifica se a tecla pressionada é "ç"
-		const mouseX = (lastMouseX - canvas.getBoundingClientRect().left - offsetX) / scale;
-		const mouseY = (lastMouseY - canvas.getBoundingClientRect().top - offsetY) / scale;
-		copyCoordinatesToClipboard(mouseX, mouseY);
-	}
+    if (e.key === 'ç') { // Verifica se a tecla pressionada é "ç"
+        const mouseX = (lastMouseX - canvas.getBoundingClientRect().left - offsetX) / scale;
+        const mouseY = (lastMouseY - canvas.getBoundingClientRect().top - offsetY) / scale;
+        copyCoordinatesToClipboard(mouseX, mouseY);
+    }
 });
 
 function executeOnce() {
-	const hasExecuted = localStorage.getItem('hasExecuted');
+    const hasExecuted = localStorage.getItem('hasExecuted');
 
-	if (!hasExecuted) {
-		showMessage("24SPY Discord Server", "How about joining our Discord Server, where you can receive updated news about 24SPY, make suggestions and questions and much more?", "Join", "Close").then((response) => {
-			if (response === 1) {
-				window.open("https://discord.gg/8cQAguPjkh", "_blank");
-			}
-		});
+    if (!hasExecuted) {
+        showMessage("24SPY Discord Server", "How about joining our Discord Server, where you can receive updated news about 24SPY, make suggestions and questions and much more?", "Join", "Close").then((response) => {
+            if (response === 1) {
+                window.open("https://discord.gg/8cQAguPjkh", "_blank");
+            }
+        });
 
-		// Defina a variável no localStorage para indicar que a função já foi executada
-		localStorage.setItem('hasExecuted', 'true');
-	}
+        // Defina a variável no localStorage para indicar que a função já foi executada
+        localStorage.setItem('hasExecuted', 'true');
+    }
 }
 executeOnce();
-
-resizeCanvas();
-loadFromLocalStorage();
-setInterval(fetchATCDataAndUpdate, 30000);fetchATCDataAndUpdate();
-//ActiveAllATCfunction();

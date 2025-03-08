@@ -1,4 +1,3 @@
-/* Layout de tela cheia */
 body, html {
     margin: 0;
     padding: 0;
@@ -9,7 +8,6 @@ body, html {
     overflow: hidden;
 }
 
-/* Cabeçalho da página */
 header {
     position: absolute;
     top: 0;
@@ -24,6 +22,7 @@ header {
     z-index: 100;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
     justify-content: space-between;
+    user-select: none;
 }
 
 header h1 {
@@ -145,15 +144,18 @@ header h1 {
     justify-content: center;
     background-color: rgba(32, 32, 36, 1);
     height: 35px;
-    width: 210px;
+    min-width: 100px;
+    padding: 0 15px;
     border: none;
     border-radius: 5px;
     transition: background-color ease-in-out 0.15s;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .mapUpdateTime .time {
-    margin-right: 5px;
     margin-left: 5px;
+    user-select: text;
 }
 
 header a {
@@ -426,13 +428,27 @@ header a {
     top: 80px; /* Ajuste para ficar abaixo do cabeçalho */
     left: 20px; /* Ajuste para ficar no canto superior esquerdo */
     width: 300px;
-    padding: 15px;
+    padding: 0 15px 15px 15px;
     background-color: #131316;
     border-radius: 10px;
     color: #fff;
     font-family: Arial, sans-serif;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
     z-index: 100;
+    overflow: hidden; /* Necessário para a animação */
+    transform-origin: top; /* Define a origem da transformação */
+    transition: transform 0.5s ease, opacity 0.5s ease; /* Animação suave */
+}
+
+.flp-menu.open {
+    display: flex;
+    transform: scaleY(1); /* Escala para 100% */
+    opacity: 1;
+}
+
+.flp-menu.closed {
+    transform: scaleY(0); /* Escala para 0% */
+    opacity: 0;
 }
 
 @media (max-width: 768px) {
@@ -637,16 +653,23 @@ canvas {
     height: 100%;
 }
 
+.disable-pointer-events * {
+    pointer-events: none !important;
+}
+
 .airport-ui {
     position: absolute;
-    background-color: rgba(32, 47, 54, 0);
+    background-color: rgba(40, 40, 60, 0);
     padding: 3px 0px;
-    border-radius: 3px;
+    border-radius: 5px;
     color: #7d7d85;
     font-size: 0.85em;
     text-align: center;
-    width: 50px;
     z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    user-select: none;
 }
 
 .airport-ui .icao-code {
@@ -655,7 +678,7 @@ canvas {
     color: #7d7d85;
     font-size: 1em;
     text-align: center;
-    padding: 5px;
+    padding: auto 2px;
     cursor: pointer;
     transition: color 0.1s ease-in-out;
 }
@@ -668,23 +691,36 @@ canvas {
     color: #dcdcdc;
 }
 
-.airport-ui p {
-    margin: 5px 0;
+.airport-ui .badges-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    margin: 1px 4px;
 }
 
 .airport-ui .badge {
     display: inline-block;
-    width: 20px;
-    height: 20px;
-    line-height: 20px;      /* Centraliza verticalmente o texto */
-    margin: 0px;
-    text-align: center;     /* Centraliza horizontalmente */
-    border-radius: 5px;
+    width: 18px;
+    height: 18px;
+    line-height: 18px;
+    font-size: 0.9em;
+    text-align: center;
     color: #fff;
-    cursor: pointer;        /* Mostra que é interativo */
-    pointer-events: auto;   /* Permite interações de hover */
+    cursor: pointer;
+    pointer-events: auto;
     position: relative;
-    transition: background-color 0.2s ease;
+    transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.airport-ui .badge:first-child {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.airport-ui .badge:last-child {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
 }
 
 .airport-ui .badge.C {
@@ -703,25 +739,22 @@ canvas {
     background-color: #008856;
 }
 
-.airport-ui .badge.C:hover {
-    background-color: #497dff;
+.airport-ui .badge.D {
+    background-color: #174acf;
 }
 
-.airport-ui .badge.A:hover {
-    background-color: #e66900;
+.airport-ui .badge.S {
+    background-color: #ecb549;
 }
 
-.airport-ui .badge.T:hover {
-    background-color: #9e2411;
+.airport-ui .badge.special {
+    background-color: #44b4b4;
 }
 
-.airport-ui .badge.G:hover {
-    background-color: #006f45;
-}
-
-.highlight {
-    background-color: rgba(255, 215, 0, 0.5); /* Cor de destaque para a CTR */
-    z-index: 10;
+.airport-ui .badge.active {
+    transform: scale(1.1);
+    z-index: 11;
+    box-shadow: 0 0 10px rgba(50, 50, 50, 0.999);
 }
 
 .icao-menu {
@@ -789,15 +822,20 @@ canvas {
 }
 
 .chart-button:hover {
-    background-color: rgba(50, 50, 55, 1); /* Cor mais clara ao passar o mouse */
-    color: white; /* Texto fica branco ao passar o mouse */
+    background-color: rgba(50, 50, 55, 1);
+    color: white;
+}
+
+.chart-button:active {
+    background-color: #3b6cec;
+    color: white;
 }
 
 .airport-info-menu {
-    position: absolute;
+    position: fixed;
     background-color: #131316;
     color: #fff;
-    padding: 10px;
+    padding: 10px 10px 5px 10px;
     border-radius: 5px;
     font-size: 1em;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
@@ -866,13 +904,36 @@ canvas {
     opacity: 0.3; /* Para dar um efeito de sombra */
 }
 
-/* Estilo da seção de informações do controlador */
+.special-tag {
+    color: #ffffff;
+    background-color: #3b6cec;
+    font-size: 0.9em;
+    font-weight: bold;
+    padding: 3px 10px;
+    border-radius: 5px;
+    display: inline-block;
+    margin-left: 5px;
+}
+
+.info-sections {
+    max-height: 200px;
+    overflow-y: auto;
+    scrollbar-color: #3b6cec transparent;
+    scrollbar-width: thin;
+    margin-bottom: 5px;
+}
+
 .controller-info-section {
     background-color: rgba(32,32,36,1);
     border-radius: 5px;
     padding: 10px;
     margin-top: 5px;
     text-align: left;
+    transition: background-color 0.3s ease;
+}
+
+.controller-info-section:hover {
+    background-color: rgba(40, 40, 45, 1);
 }
 
 .controller-info-section p {
@@ -941,7 +1002,7 @@ canvas {
     cursor: pointer;
     width: calc(100% - 20px);
     border-radius: 10px;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease transform 0.2s ease;
     padding: 15px;
     margin: 0 10px 10px 10px;
     align-self: flex-end;
@@ -949,7 +1010,7 @@ canvas {
 
 .message-menu .close-button:hover {
     background-color: #4b7eff;
-    transform: scale(1.0);
+    transform: scale(1.025);
 }
 
 .message-menu .content::-webkit-scrollbar {
@@ -968,6 +1029,47 @@ canvas {
     scrollbar-width: thin;
 }
 
+#loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(29, 29, 29, 0.7);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.loading-content {
+    display: flex;
+    align-items: center;
+    background-color: #131316;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+}
+
+.loading-text {
+    font-size: 1.5em;
+    color: #ffffff;
+    margin-right: 10px;
+}
+
+.loading-icon {
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
 .footer {
     position: absolute;
     bottom: 5px;
@@ -981,6 +1083,7 @@ canvas {
 .footer-link {
     color: #bdbdbd;
     text-decoration: none;
+    cursor: pointer;
 }
 
 .footer-link:hover {

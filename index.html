@@ -18,7 +18,7 @@
                <img src="assets/Icons/map-svgrepo-com.svg" class="fpl-icon" id="FlpIcon">
                Flight Plan
             </button>
-            <a class="atc-left-button">
+            <a class="atc-left-button" href="https://tiaguinho2009.github.io/24SPY/stats/">
                <img src="assets/Icons/server-minimalistic-svgrepo-com.svg" class="atc-left-icon">
                Stats
             </a>
@@ -28,7 +28,7 @@
                <span class="online-number">0</span>ATC
             </div>
             <div class="mapUpdateTime" id="mapUpdateTime">
-               Map last update:<span class="time"></span>
+               Map last update:<span class="time">Loading</span>
             </div>
             <!-- Botão da Wiki -->
             <a class="header-button2" href="https://github.com/tiaguinho2009/24SPY/wiki" target="_blank">
@@ -55,33 +55,25 @@
             </button>
          </span>
          <div class="content">
-            <h2>[DEV 0.2] - 25/02/2025</h2>
+            <h2>[DEV 0.2.1] - 08/03/2025</h2>
             <h3>Added</h3>
             <ul>
-               <li>New SIDs/STARs System! (Only works for IRFD for now...) (They are complety optional, if don't want to use it you don't need.)</li>
-               <li>New option called "Show a Higher Quality Map", when ur zoom is > 10 it will render a 14Kx14K image of the map for better view. (This already was working in the past but now u can turn it on or off so ur screen does not freezes for 5 seconds loading the image).</li>
-               <li>Now the zoom its animated (or smoother).</li>
-               <li>The Back-End server of 24SPY is Online again!!!</li>
-               <li>New function for the "Show Navaids Labels" option, before it only worked for global rendering, now it also works in FPL.</li>
-               <li>New small system that detects when a new update is released while with the website open.</li>
+               <li>New Map tiles system, this feuture will just make the website more optimized, because your computer does not have to load an 14Kpx image, instead now it only loads small tyles that u can see.</li>
+               <li>Airports UI literally remaked.</li>
+               <li>New Loading Screen. (No one cares but its a new thing)</li>
+               <li>New UI Animations.</li>
             </ul>
             <h3>Corrected</h3>
             <ul>
-               <li>Bug of zooming in and back out leaves you at a different spot than before fixed.</li>
-               <li>Bug of cursor leaving the map does not stop map moving fixed.</li>
-               <li>IGAR RWYs not working fixed.</li>
-               <li>IPPH RWYs HDGs fixed.</li>
-               <li>IZOL RWYs and HDGs fixed.</li>
-               <li>IBTH RWYs corrected.</li>
-               <li>IRFD RWYs corrected.</li>
-               <li>Some fixes Names corrected.</li>
-               <li>Code of the Flight Plans and AirportUI was rewrited. (No visual changes)</li>
-               <li>And a LOT of other bugs that i don't remember were fixed.</li>
+               <li>And again a LOT of code was rewrited because my past version of me didn't cared about organization and understandeble code.</li>
+               <li>Some bugs with zoom and map movement fixed. (Now you can move more freely)</li>
+               <li>24SPY API received some updates because of the website changes.</li>
+               <li>Now when you click on the footer, instead of being redirected to the github shows the changelog popup.</li>
+               <li>And a LOT of other bugs that i don't remember were fixed. (Again | I need to start writing down the changes i make because i have fish memory)</li>
             </ul>
             <h3>Comments</h3>
             <ul>
-               <li>This was a BIG update so pls share the website with friends and maybe join our discord server :D</li>
-               <li>A big thanks for Galaxy, for helping me with the database.</li>
+               <li>Uhh in this update we don't added new procedures because the 24SPY slave (Galaxy) its in Spain for some reason, so yeah just wait for the next one.</li>
                <li>Thanks for all the BETA Testers!</li>
                <li>Enjoy the update :D</li>
             </ul>
@@ -121,10 +113,6 @@
             <div class="map-option">
                <input type="checkbox" onchange="onCheckBoxChange(this)" id="showNavaidsLabels" checked>
                <label for="showNavaidsLabels">Show Navaids Labels</label>
-            </div>
-            <div class="map-option">
-               <input type="checkbox" onchange="onCheckBoxChange(this)" id="showBetterMap" checked>
-               <label for="showBetterMap">Show a Higher Quality Map</label>
             </div>
          </div>
       </div>
@@ -184,7 +172,7 @@
       <div class="footer">
          <a href="https://tiaguinho2009.github.io/24SPY/" target="_blank" class="footer-link">24SPY</a>
          | 
-         <a href="https://github.com/tiaguinho2009/24SPY?tab=readme-ov-file#readme" target="_blank" class="footer-link" id="version"></a>
+         <a onclick="toggleChangeLogMenu()" class="footer-link" id="version"></a>
          | 
          <a href="https://github.com/tiaguinho2009/24SPY?tab=License-1-ov-file#readme" target="_blank" class="footer-link">© Made by tiaguinho_2009</a>
       </div>     
@@ -194,6 +182,13 @@
       </div>
 
       <div id="overlay"></div>
+
+      <div id="loading">
+         <div class="loading-content">
+            <div class="loading-text">Loading</div>
+            <img src="assets/Icons/loading-spinner-svgrepo-com.svg" class="loading-icon">
+         </div>
+      </div>
       
       <script src="assets/areas.js"></script>
       <script src="assets/main.js"></script>

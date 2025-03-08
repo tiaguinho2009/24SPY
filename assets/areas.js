@@ -1,4 +1,95 @@
-let PTFSAPIError = []
+let PTFSAPIError = [
+    {
+        "holder": "willingpankakes2053",
+        "claimable": false,
+        "airport": "Rockford",
+        "position": "control",
+        "code": "IRFD_1_CTR",
+        "uptime": "00:28",
+        "onlineSince": "2025-03-03T17:47:20.127Z"
+    },
+    {
+        "holder": "Tiaguinho_2009",
+        "claimable": false,
+        "airport": "Rockford",
+        "position": "control",
+        "code": "IRFD_3_CTR",
+        "uptime": "00:28",
+        "onlineSince": "2025-03-03T17:47:20.127Z"
+    },
+    {
+        "holder": "tiaguinho_2009",
+        "claimable": false,
+        "airport": "Rockford",
+        "position": "approach",
+        "uptime": "00:28",
+        "onlineSince": "2025-03-03T17:47:20.127Z"
+    },
+    {
+        "holder": "willingpankakes2053",
+        "claimable": false,
+        "airport": "Rockford",
+        "position": "tower",
+        "uptime": "00:28",
+        "onlineSince": "2025-03-03T17:47:20.127Z"
+    },
+    {
+        "holder": "willingpankakes2053",
+        "claimable": false,
+        "airport": "Rockford",
+        "position": "ground",
+        "uptime": "00:28",
+        "onlineSince": "2025-03-03T17:47:20.127Z"
+    },
+    {
+        "holder": "willingpankakes2053",
+        "claimable": false,
+        "airport": "Rockford",
+        "position": "delivery",
+        "uptime": "00:28",
+        "onlineSince": "2025-03-03T17:47:20.127Z"
+    },
+    {
+        "holder": "willingpankakes2053",
+        "claimable": false,
+        "airport": "Rockford",
+        "position": "atis",
+        "uptime": "00:28",
+        "onlineSince": "2025-03-03T17:47:20.127Z"
+    },
+    {
+        "holder": "Charisios10 | IZOL_CTR",
+        "claimable": false,
+        "airport": "Izolirani",
+        "position": "control",
+        "uptime": "00:10",
+        "onlineSince": "2025-03-03T18:05:50.153Z"
+    },
+    {
+        "holder": "Ninjakitpard",
+        "claimable": false,
+        "airport": "Tokyo",
+        "position": "control",
+        "uptime": "00:12",
+        "onlineSince": "2025-03-03T18:03:50.122Z"
+    },
+    {
+        "holder": "Mr_richWho | IPPH_CTR",
+        "claimable": false,
+        "airport": "Paphos",
+        "position": "control",
+        "uptime": "00:50",
+        "onlineSince": "2025-03-03T17:25:50.135Z"
+    },
+    {
+        "holder": "MD_590",
+        "claimable": false,
+        "airport": "Saint Barthélemy",
+        "position": "control",
+        "uptime": "00:05",
+        "onlineSince": "2025-03-03T18:10:49.945Z"
+    }
+]
 let PTFSAPI = []
 
 const controlAreas = [
@@ -1500,7 +1591,6 @@ const settings = [
     'showOnlineATC',
     'showNavaids',
     'showNavaidsLabels',
-    'showBetterMap',
 ];
 
 const settingsValues = {
@@ -1511,11 +1601,10 @@ const settingsValues = {
     showOnlineATC: true,
     showNavaids: false,
     showNavaidsLabels: false,
-    showBetterMap: false,
 };
 
 const websiteInfo = {
-    version: "DEV 0.2",
+    version: "DEV 0.2.1 BETA",
 };
 
 const localInfo = {};
@@ -1524,44 +1613,44 @@ document.getElementById("version").textContent = `v${websiteInfo.version}`;
 
 
 const specialUsers = {
-    "Tiaguinho_2009": [{
+    "Tiaguinho_2009": {
         "Role": "Main Developer",
         "DiscordNick": "tiaguinho_2009",
-        "Color": "rgba(158, 29, 206, 0.075)",
-    }],
-    "aaronandethan123": [{
+        "Color": "rgb(159, 29, 206)",
+    },
+    "aaronandethan123": {
         "Role": "Contributor",
         "DiscordNick": "awdev_",
         "Color": "rgba(158, 29, 206, 0.075)",
-    }],
-    "AvatarRoblox2018": [{
+    },
+    "AvatarRoblox2018": {
         "Role": "24SPY Helper",
         "DiscordNick": "noah_the_plane_guy",
         "Color": "rgba(158, 29, 206, 0.075)",
-    }],
-    "GalaxyON_1": [{
+    },
+    "GalaxyON_1": {
         "Role": "24SPY Helper",
         "DiscordNick": "rafa_tugapt",
         "Color": "rgba(158, 29, 206, 0.075)",
-    }],
-    "BEANZBURGERBEANZ": [{
+    },
+    "BEANZBURGERBEANZ": {
         "Role": "24SPY First User",
         "DiscordNick": "echogecko89",
         "Color": "rgba(158, 29, 206, 0.075)",
-    }],
-    "frozenterror13": [{
+    },
+    "frozenterror13": {
         "Role": "Chart Maker",
         "DiscordNick": "aerosd",
         "Color": "rgba(158, 29, 206, 0.075)",
-    }],
-    "EzyDubbs": [{
+    },
+    "EzyDubbs": {
         "Role": "Chart Maker",
         "DiscordNick": "ezydubbs",
         "Color": "rgba(158, 29, 206, 0.075)",
-    }],
-    "2316Nati": [{
+    },
+    "2316Nati": {
         "Role": "Contributor",
         "DiscordNick": "bedsdrout",
         "Color": "rgba(158, 29, 206, 0.075)",
-    }],
+    },
 };
