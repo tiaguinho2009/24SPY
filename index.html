@@ -18,7 +18,7 @@
                <img src="assets/Icons/map-svgrepo-com.svg" class="fpl-icon" id="FlpIcon">
                Flight Plan
             </button>
-            <a class="atc-left-button">
+            <a class="atc-left-button" href="https://tiaguinho2009.github.io/24SPY/stats/">
                <img src="assets/Icons/server-minimalistic-svgrepo-com.svg" class="atc-left-icon">
                Stats
             </a>
@@ -55,25 +55,18 @@
             </button>
          </span>
          <div class="content">
-            <h2>[DEV 0.2.1] - 08/03/2025</h2>
+            <h2>[DEV 0.2.2] - 21/04/2025</h2>
             <h3>Added</h3>
             <ul>
-               <li>New Map tiles system, this feuture will just make the website more optimized, because your computer does not have to load an 14Kpx image, instead now it only loads small tyles that u can see.</li>
-               <li>Airports UI literally remaked.</li>
-               <li>New Loading Screen. (No one cares but its a new thing)</li>
-               <li>New UI Animations.</li>
+               <li>New FPL Genereator using A* algorithem.</li>
+               <li>New feuture of showing the airports ATIS, provided by 24Scope. (Thanks to Zedruc)</li>
             </ul>
             <h3>Corrected</h3>
             <ul>
-               <li>And again a LOT of code was rewrited because my past version of me didn't cared about organization and understandeble code.</li>
-               <li>Some bugs with zoom and map movement fixed. (Now you can move more freely)</li>
-               <li>24SPY API received some updates because of the website changes.</li>
-               <li>Now when you click on the footer, instead of being redirected to the github shows the changelog popup.</li>
-               <li>And a LOT of other bugs that i don't remember were fixed. (Again | I need to start writing down the changes i make because i have fish memory)</li>
-            </ul>
+               <li>"Show Online ATC" setting not working, fixed.</li>
+               <li>Website Roadmap updated.</li></ul>
             <h3>Comments</h3>
             <ul>
-               <li>Uhh in this update we don't added new procedures because the 24SPY slave (Galaxy) its in Spain for some reason, so yeah just wait for the next one.</li>
                <li>Thanks for all the BETA Testers!</li>
                <li>Enjoy the update :D</li>
             </ul>
@@ -157,8 +150,14 @@
          <div class="buttons">
             <button class="save" onclick="saveFlp()">Save</button>
             <button class="reset" onclick="resetFlp()">Reset</button>
+            <button class="generate" onclick="generateFPL()">Generate</button>
          </div>
       </div>
+      <div class="mini-slider" id="MiniSlider">
+         <label for="slider">Select Value:</label>
+         <input type="range" id="slider" name="slider" min="3" max="8" step="0.5" value="5.5" oninput="updateSliderValue(this.value)">
+         <span id="sliderValue">5</span>
+     </div>
       <div class="message-menu" id="MessageMenu">
          <div class="title">Error</div>
          <div class="content">

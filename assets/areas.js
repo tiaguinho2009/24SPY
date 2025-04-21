@@ -1,3 +1,201 @@
+let aircraftData = {
+    "Channex-5554": {
+        "altitude": 13,
+        "heading": 218,
+        "aircraftType": "Boeing 757",
+        "position": {
+            "y": 0,
+            "x": 0
+        },
+        "speed": 0,
+        "wind": "340/12",
+        "playerName": "Rail890",
+        "isOnGround": true
+    },
+    "Nitro-9124": {
+        "altitude": 2033,
+        "heading": 276,
+        "aircraftType": "A330 MRTT",
+        "position": {
+            "y": 39922,
+            "x": 17534
+        },
+        "speed": 257,
+        "wind": "340/12",
+        "playerName": "Gagsterluis",
+        "isOnGround": false
+    },
+    "Shamrock-8694": {
+        "altitude": 16,
+        "heading": 4,
+        "aircraftType": "Airbus A320",
+        "position": {
+            "y": 20217,
+            "x": -2013
+        },
+        "speed": 0,
+        "wind": "340/12",
+        "playerName": "NewPCReady",
+        "isOnGround": true
+    },
+    "Lifthansa-9625": {
+        "altitude": 22,
+        "heading": 161,
+        "aircraftType": "Airbus A350",
+        "position": {
+            "y": -2597,
+            "x": -43130
+        },
+        "speed": 0,
+        "wind": "340/12",
+        "playerName": "BxconDrop",
+        "isOnGround": true
+    },
+    "Cobra-7307": {
+        "altitude": 38,
+        "heading": 21,
+        "aircraftType": "KC-707",
+        "position": {
+            "y": -20608,
+            "x": 17163
+        },
+        "speed": 0,
+        "wind": "340/12",
+        "playerName": "The_Kids123abc",
+        "isOnGround": true
+    },
+    "AirBalistic-3679": {
+        "altitude": 15,
+        "heading": 157,
+        "aircraftType": "Boeing 757",
+        "position": {
+            "y": 20380,
+            "x": -3063
+        },
+        "speed": 0,
+        "wind": "340/12",
+        "playerName": "Szoffer",
+        "isOnGround": true
+    },
+    "Hard-5470": {
+        "altitude": 13,
+        "heading": 128,
+        "aircraftType": "Boeing 757",
+        "position": {
+            "y": -32745,
+            "x": -8736
+        },
+        "speed": 0,
+        "wind": "340/12",
+        "playerName": "airforce_pilotpaul",
+        "isOnGround": true
+    },
+    "Vixen-7048": {
+        "altitude": 21,
+        "heading": 339,
+        "aircraftType": "Extra 300s",
+        "position": {
+            "y": -4431,
+            "x": 5367
+        },
+        "speed": 11,
+        "wind": "340/12",
+        "playerName": "Willibrokaven",
+        "isOnGround": true
+    },
+    "Oatari-9614": {
+        "altitude": 48,
+        "heading": 227,
+        "aircraftType": "Airbus A350",
+        "position": {
+            "y": -19812,
+            "x": 17911
+        },
+        "speed": 0,
+        "wind": "340/12",
+        "playerName": "BratsbergRPCommunity",
+        "isOnGround": true
+    },
+    "KLN-4975": {
+        "altitude": 9,
+        "heading": 322,
+        "aircraftType": "ATR72",
+        "position": {
+            "y": -32351,
+            "x": -7717
+        },
+        "speed": 35,
+        "wind": "340/12",
+        "playerName": "Thelenged_12345",
+        "isOnGround": true
+    },
+    "Reunited-7944": {
+        "altitude": 1582,
+        "heading": 240,
+        "aircraftType": "Boeing 757",
+        "position": {
+            "y": 33537,
+            "x": 10309
+        },
+        "speed": 213,
+        "wind": "340/12",
+        "playerName": "XD_MAXimumsalami",
+        "isOnGround": false
+    },
+    "Apollo-2332": {
+        "altitude": 177,
+        "heading": 126,
+        "aircraftType": "Eurofighter Typhoon",
+        "position": {
+            "y": -6365,
+            "x": 34210
+        },
+        "speed": 153,
+        "wind": "340/12",
+        "playerName": "holldoge",
+        "isOnGround": false
+    },
+    "Tedex-5564": {
+        "altitude": 9,
+        "heading": 142,
+        "aircraftType": "ATR72F",
+        "position": {
+            "y": -32033,
+            "x": -7830
+        },
+        "speed": -10,
+        "wind": "340/12",
+        "playerName": "NickyPlayz2011",
+        "isOnGround": true
+    },
+    "Kestral-9698": {
+        "altitude": 183,
+        "heading": 317,
+        "aircraftType": "Eurofighter Typhoon",
+        "position": {
+            "y": -4784,
+            "x": 35746
+        },
+        "speed": 168,
+        "wind": "340/12",
+        "playerName": "tomrp1231",
+        "isOnGround": false
+    },
+    "Speedbird-8965": {
+        "altitude": 727,
+        "heading": 207,
+        "aircraftType": "Airbus A320",
+        "position": {
+            "y": -37874,
+            "x": -4376
+        },
+        "speed": 189,
+        "wind": "340/12",
+        "playerName": "Olivier100211",
+        "isOnGround": false
+    }
+}
+
 let PTFSAPIError = [
     {
         "holder": "willingpankakes2053",
@@ -88,7 +286,23 @@ let PTFSAPIError = [
         "position": "control",
         "uptime": "00:05",
         "onlineSince": "2025-03-03T18:10:49.945Z"
-    }
+    },
+    {
+        "holder": "zedrucc",
+        "claimable": false,
+        "airport": "Perth",
+        "position": "control",
+        "uptime": "00:00",
+        "onlineSince": "2025-03-03T17:25:50.135Z"
+    },
+    {
+        "holder": "ArchUserBTW_RBLX",
+        "claimable": false,
+        "airport": "Perth",
+        "position": "control",
+        "uptime": "00:00",
+        "onlineSince": "2025-03-03T17:25:50.135Z"
+    },
 ]
 let PTFSAPI = []
 
@@ -1604,53 +1818,118 @@ const settingsValues = {
 };
 
 const websiteInfo = {
-    version: "DEV 0.2.1",
+    version: "DEV 0.2.2",
 };
 
 const localInfo = {};
 
 document.getElementById("version").textContent = `v${websiteInfo.version}`;
 
+const ATIScodeTable = {
+    "A": "ALPHA",
+    "B": "BRAVO",
+    "C": "CHARLIE",
+    "D": "DELTA",
+    "E": "ECHO",
+    "F": "FOXTROT",
+    "G": "GOLF",
+    "H": "HOTEL",
+    "I": "INDIA",
+    "J": "JULIET",
+    "K": "KILO",
+    "L": "LIMA",
+    "M": "MIKE",
+    "N": "NOVEMBER",
+    "O": "OSCAR",
+    "P": "PAPA",
+    "Q": "QUEBEC",
+    "R": "ROMEO",
+    "S": "SIERRA",
+    "T": "TANGO",
+    "U": "UNIFORM",
+    "V": "VICTOR",
+    "W": "WHISKEY",
+    "X": "XRAY",
+    "Y": "YANKEE",
+    "Z": "ZULU",
+}
+
+const airportsTable = [
+    {icaoCode: 'IRFD', name: 'Rockford', atc24postion: "control"},
+    {icaoCode: 'IPPH', name: 'Perth', atc24postion: "control"},
+    {icaoCode: 'IZOL', name: 'Izolirani', atc24postion: "control"},
+    {icaoCode: 'ITKO', name: 'Tokyo', atc24postion: "control"},
+    {icaoCode: 'ILAR', name: 'Larnaca', atc24postion: "control"},
+    {icaoCode: 'IGRV', name: 'Grindavik', atc24postion: "control"},
+    {icaoCode: 'IBTH', name: 'Saint Barthélemy', atc24postion: "control"},
+    {icaoCode: 'ISAU', name: 'Sauthemptona', atc24postion: "control"},
+    {icaoCode: 'IPAP', name: 'Paphos', atc24postion: "approach"},
+    {icaoCode: 'IMLR', name: 'Mellor', atc24postion: "approach"},
+    {icaoCode: 'IDCS', name: 'Saba', atc24postion: "approach"},
+    {icaoCode: 'IGAR', name: 'Garry', atc24postion: "approach"},
+    {icaoCode: 'IIAB', name: 'McConnell', atc24postion: "approach"},
+    {icaoCode: 'ISCM', name: 'Scampton', atc24postion: "approach"},
+    {icaoCode: 'IBLT', name: 'Boltic'},
+    {icaoCode: 'ILKL', name: 'Lukla'},
+    {icaoCode: 'ITRN', name: 'Training Centre'},
+    {icaoCode: 'IJAF', name: 'Al Najaf'},
+    {icaoCode: 'IHEN', name: 'Henstridge'},
+    {icaoCode: 'IBAR', name: 'Barra'},
+    {icaoCode: 'ISKP', name: 'Skopelos', atc24postion: "control"},
+    {icaoCode: 'SHV', name: 'Sea Haven'},
+    {icaoCode: 'OWO', name: 'Waterloo'},
+    {icaoCode: 'TVO', name: 'Tavaro Seabase'},
+]
 
 const specialUsers = {
     "Tiaguinho_2009": {
         "Role": "Main Developer",
         "DiscordNick": "tiaguinho_2009",
-        "Color": "rgb(159, 29, 206)",
+        "TagColor": "#3b6cec"
     },
     "aaronandethan123": {
         "Role": "Contributor",
         "DiscordNick": "awdev_",
-        "Color": "rgba(158, 29, 206, 0.075)",
+        "TagColor": "#3b6cec"
     },
     "AvatarRoblox2018": {
         "Role": "24SPY Helper",
         "DiscordNick": "noah_the_plane_guy",
-        "Color": "rgba(158, 29, 206, 0.075)",
+        "TagColor": "#3b6cec"
     },
     "GalaxyON_1": {
         "Role": "24SPY Helper",
         "DiscordNick": "rafa_tugapt",
-        "Color": "rgba(158, 29, 206, 0.075)",
+        "TagColor": "#3b6cec"
     },
     "BEANZBURGERBEANZ": {
         "Role": "24SPY First User",
         "DiscordNick": "echogecko89",
-        "Color": "rgba(158, 29, 206, 0.075)",
+        "TagColor": "#3b6cec"
     },
     "frozenterror13": {
         "Role": "Chart Maker",
         "DiscordNick": "aerosd",
-        "Color": "rgba(158, 29, 206, 0.075)",
+        "TagColor": "#3b6cec"
     },
     "EzyDubbs": {
         "Role": "Chart Maker",
         "DiscordNick": "ezydubbs",
-        "Color": "rgba(158, 29, 206, 0.075)",
+        "TagColor": "#3b6cec"
     },
     "2316Nati": {
         "Role": "Contributor",
         "DiscordNick": "bedsdrout",
-        "Color": "rgba(158, 29, 206, 0.075)",
+        "TagColor": "#3b6cec"
+    },
+    "ArchUserBTW_RBLX": {
+        "Role": "Carboxylic Acid",
+        "DiscordNick": "formicacidgd",
+        "TagColor": "#70d44c"
+    },
+    "zedrucc": {
+        "Role": "24Scope",
+        "DiscordNick": "zedruc",
+        "TagColor": "#3b6cec"
     },
 };

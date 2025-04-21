@@ -115,6 +115,15 @@ header h1 {
     transition: filter 0.2s ease-in-out;
 }
 
+.atc-left-button:hover {
+    background-color: #323237; 
+}
+
+.atc-left-button:active {
+    background-color: #3b6cec;
+    color: #ffffff;
+}
+
 .atc-online {
     font-size: 15px;
     color: rgb(255, 255, 255);
@@ -537,6 +546,7 @@ textarea:focus, textarea:hover {
     justify-content: space-between;
     width: 100%;
     margin-top: 10px;
+    gap: 10px;
 }
 
 .buttons button {
@@ -583,6 +593,75 @@ textarea:focus, textarea:hover {
 
 .buttons .reset:active {
     background-color: #bd2130;
+}
+
+.mini-slider {
+    display: none;
+    position: absolute;
+    background-color: #131316; /* Cor de fundo escura */
+    color: #ffffff; /* Cor do texto */
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    z-index: 101;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    opacity: 0;
+}
+
+.mini-slider.open {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.mini-slider label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 1rem;
+    color: #bdbdbd; /* Cor do texto */
+}
+
+.mini-slider input[type="range"] {
+    width: 100%;
+    -webkit-appearance: none;
+    appearance: none;
+    background: linear-gradient(to right, #3b6cec 0%, #3b6cec 50%, #202024 50%, #202024 100%);
+    height: 5px;
+    border-radius: 5px;
+    outline: none;
+    transition: background 0.3s ease;
+}
+
+.mini-slider input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    background: #ffffff;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.mini-slider input[type="range"]::-webkit-slider-thumb:hover {
+    background: #4b7eff;
+}
+
+.mini-slider input[type="range"]::-moz-range-thumb {
+    width: 15px;
+    height: 15px;
+    background: #ffffff;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.mini-slider span {
+    display: block;
+    margin-top: 5px;
+    text-align: center;
+    font-size: 1.2rem;
+    color: #3b6cec; /* Cor do valor */
 }
 
 /* Estilo para o container da lista */
@@ -744,7 +823,7 @@ canvas {
 }
 
 .airport-ui .badge.S {
-    background-color: #ecb549;
+    background-color: #2647ad;
 }
 
 .airport-ui .badge.special {
@@ -940,6 +1019,86 @@ canvas {
     margin: 4px 0;
     color: #ddd;
     font-size: 0.9em;
+}
+
+.atis-info-section {
+    background-color: rgba(32, 32, 36, 1);
+    border-radius: 5px;
+    padding: 10px;
+    margin-top: 5px;
+    text-align: left;
+    overflow: hidden;
+    transition: background-color 0.3s ease;
+}
+
+.atis-info-section:hover {
+    background-color: rgba(40, 40, 45, 1);
+}
+
+.atis-header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9em;
+    color: #bdbdbd;
+}
+
+.atis-ident {
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.atis-uptime {
+    font-size: 0.9em;
+    color: #bdbdbd;
+}
+
+.atis-tooltip {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.atis-icon {
+    background-color: #3b6cec;
+    color: #fff;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 0.8em;
+}
+
+.atis-info-section .separator {
+    color: #3b6cec;
+}
+
+.atis-tooltip-text {
+    visibility: hidden;
+    width: 200px;
+    background-color: #131316;
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+    padding: 5px;
+    position: absolute;
+    z-index: 10000;
+    bottom: -200%; /* Position above the icon */
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.atis-tooltip:hover .atis-tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
+.atis-text {
+    margin-top: 5px;
+    font-size: 0.85em;
+    color: #ddd;
+    line-height: 1.2;
 }
 
 #overlay {

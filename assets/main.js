@@ -6,9 +6,7 @@ const canvas = document.getElementById('map');
 const ctx = canvas.getContext('2d');
 
 let devMode = false;
-if (window.location.href.startsWith('https://tiaguinho2009.github.io')) {
-    devMode = false;
-}
+if (window.location.href.startsWith('https://tiaguinho2009.github.io')) devMode = false;
 
 let offsetX = 0,
     offsetY = 0;
@@ -22,6 +20,7 @@ let onlineATC = 0;
 let dataIsFrom = 'ATC24';
 let flightRoute = [];
 let onlineATCs = {};
+let fplgeneratorrange = 5.5;
 
 const positionMapping = {
     center: 'CTR',
@@ -259,12 +258,64 @@ function transformCoordinates(coord) {
     ];
 }
 
+function transformAtisInfoToText(atisInfo) {
+    const {
+        airport,
+        position,
+        uptime,
+        onlineSince,
+        ident,
+        pressure,
+        arwy,
+        drwy,
+        pdc
+    } = atisInfo;
+
+    if (position !== "atis") {
+        console.error("Invalid position for ATIS information.");
+        return "";
+    }
+
+    const airportEntry = airportsTable.find(entry => entry.icaoCode === airport);
+    const airportName = airportEntry ? airportEntry.name.toUpperCase() : airport.toUpperCase();
+
+    const informationIdent = ATIScodeTable[ident.toUpperCase()] || ident.toUpperCase();
+    const departureRunways = drwy > 0 ? drwy.join(", ") : "UNKNOWN";
+    const arrivalRunways = arwy > 0 ? arwy.join(", ") : "UNKNOWN";
+    const visibility = "VISIBILITY 10 KILOMETERS OR MORE";
+    const qnh = pressure ? `QNH${pressure}` : "UNKNOWN";
+    const datalinkClearances = pdc ? "DATALINK CLEARANCES ARE AVAILABLE .." : "";
+    const date = new Date(onlineSince);
+    const hours = String(date.getUTCHours()).padStart(2, '0');
+    const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+    const time = onlineSince ? `${hours}${minutes}Z` : "UNKNOWN";
+
+    const text = `${airportName} INFORMATION ${informationIdent} .. TIME ${time} .. DEPARTURE RUNWAY ${departureRunways} .. ARRIVAL RUNWAY ${arrivalRunways} .. ${visibility} .. ${qnh} .. ${datalinkClearances} ACKNOWLEDGE RECIEPT OF INFORMATION ${informationIdent} ON FIRST CONTACT`.trim();
+    return text
+}
+
 function updateOnlineATCs(atcList) {
     onlineATCs = {};
 
     atcList.forEach(atcData => {
-        const { holder, claimable, airport, position, code, uptime, frequency: initialFrequency } = atcData;
+        const { holder, claimable, airport, position, code, uptime, frequency: initialFrequency, ...otherInfo } = atcData;
+
         if (claimable) return;
+
+        if (position === "atis") {
+            const atisInfo = { airport, position, uptime, ...otherInfo };
+            const text = transformAtisInfoToText(atisInfo);
+            if (!onlineATCs[airport]) {
+                onlineATCs[airport] = { CTR: [], APP: [], TWR: [], GND: [], DEL: [], ATS: [] };
+            }
+            onlineATCs[airport].ATS.push({
+                uptime: atisInfo.uptime,
+                ident: atisInfo.ident,
+                pressure: atisInfo.pressure,
+                text
+            });
+            return;
+        }
 
         let frequency = initialFrequency;
 
@@ -307,9 +358,40 @@ function getOnlineATCs(airport) {
 }
 
 function isSpecialUser(atcName) {
+    if (!atcName) return false;
     const baseName = atcName.split(' | ')[0];
     return Object.keys(specialUsers).includes(baseName);
 }
+
+let aircraftSVGImage;
+
+function loadSVG(url) {
+    return fetch(url)
+        .then(response => response.text())
+        .then(svgText => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(svgText, 'image/svg+xml');
+            const svgElement = doc.documentElement;
+
+            // Cria um novo elemento de imagem para o SVG
+            const img = new Image();
+            const svgData = new XMLSerializer().serializeToString(svgElement);
+            const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+            const url = URL.createObjectURL(svgBlob);
+
+            img.onload = () => {
+                aircraftSVGImage = img;
+                URL.revokeObjectURL(url);
+                draw(); // Redesenha o canvas após carregar o SVG
+            };
+
+            img.src = url;
+        });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    //loadSVG('assets/Icons/plane-svgrepo-com.svg');
+});
 
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -331,6 +413,22 @@ function draw() {
     resetChartsMenu();
     drawNavaids();
     updateAllAirportsUI();
+    //drawAircraft();
+}
+
+function drawAircraft() {
+    if (!aircraftSVGImage) return;
+
+    Object.values(aircraftData).forEach(aircraft => {
+        const { position, heading, isOnGround } = aircraft;
+        const [x, y] = transformCoordinates([Math.sqrt(position.x ** 2) / 40, Math.sqrt(position.y ** 2) / 40]);
+
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate((heading * Math.PI) / 180);
+        ctx.drawImage(aircraftSVGImage, -15, -15, 30, 30); // Ajuste o tamanho conforme necessário
+        ctx.restore();
+    });
 }
 
 function drawControlAreas() {
@@ -467,6 +565,16 @@ function updateATCUI() {
     refreshUI();
 }
 
+function calculateDistance(point1, point2) {
+    const referenceDistanceEuclidean = Math.sqrt((534.22 - 512.13) ** 2 + (243.11 - 225.89) ** 2);
+    const referenceDistanceNM = 1478 / 1852; // 1478 meters in NM (1 NM = 1852 meters)
+    const scaleFactor = referenceDistanceNM / referenceDistanceEuclidean;
+
+    const distanceEuclidean = Math.sqrt((point1.coordinates[0] - point2.coordinates[0]) ** 2 + (point1.coordinates[1] - point2.coordinates[1]) ** 2);
+    const distanceNM = (distanceEuclidean * scaleFactor);
+    return distanceNM;
+}
+
 function drawFlightPlan(points) {
     if (points.length < 2) {
         return;
@@ -506,11 +614,7 @@ function drawFlightPlan(points) {
         const dy = nextTrans[1] - currentTrans[1];
         const hdg = Math.round((Math.atan2(dx, -dy) * (180 / Math.PI) + 360) % 360);
 
-        // Calcula a distância diretamente das coordenadas sem transformá-las
-        const dxRaw = next.coordinates[0] - current.coordinates[0];
-        const dyRaw = next.coordinates[1] - current.coordinates[1];
-        const distanceEuclidean = Math.sqrt(dxRaw ** 2 + dyRaw ** 2);
-        const distanceNM = (distanceEuclidean * scaleFactor).toFixed(2);
+        const distanceNM = calculateDistance(current, next).toFixed(2);
 
         // Chama a função para desenhar as labels secundárias se o zoom for maior que 1
         if (scale > 0.5) {
@@ -823,6 +927,17 @@ function calculateBoundingArea(div1, div2, indication) {
             { x: rect2.left, y: rect2.bottom },
             { x: rect2.left, y: rect2.top }
         ];
+    } else if (indication === 'right') {
+        vertices = [
+            { x: rect1.left, y: rect1.top },
+            { x: rect1.right, y: rect1.top },
+            { x: rect2.left, y: rect2.top },
+            { x: rect2.right, y: rect2.top },
+            { x: rect2.right, y: rect2.bottom },
+            { x: rect2.left, y: rect2.bottom },
+            { x: rect1.right, y: rect1.bottom },
+            { x: rect1.left, y: rect1.bottom },
+        ];
     }
     
     return vertices;
@@ -925,25 +1040,50 @@ function showInfoMenu(badge, airport, menu, airportUI) {
 
     let infoSections = '';
 
-    atcList.forEach(atc => {
-        const atcName = atc.holder || 'N/A';
-        const frequency = atc.frequency || 'N/A';
-        const uptime = atc.uptime || 'N/A';
-        const atcCode = atc.code || '';
+    if (position === 'ATIS') {
+        menu.style.maxWidth = '400px'; // Limit the menu width for ATIS
+        atcList.forEach(atc => {
+            const { ident, uptime, text } = atc;
 
-        const baseName = atcName.split(' | ')[0];
-        const specialUser = isSpecialUser(baseName);
-        const specialTag = specialUser ? `<span class="special-tag">${specialUsers[baseName].Role}</span>` : '';
+            infoSections += `
+                <div class="atis-info-section">
+                    <div class="atis-header" style="text-align: right;">
+                        <span class="atis-ident">Info ${ident}</span>
+                        <div class="separator">|</div>
+                        <span class="atis-uptime">Time Online: ${uptime}</span>
+                        <div class="separator">|</div>
+                        <span class="atis-tooltip">
+                            <span class="atis-icon">ℹ</span>
+                            <span class="atis-tooltip-text">ATIS Info provided by 24Scope</span>
+                        </span>
+                    </div>
+                    <div class="atis-text">${text}</div>
+                </div>
+            `;
+        });
+    } else {
+        atcList.forEach(atc => {
+            const atcName = atc.holder || 'N/A';
+            const frequency = atc.frequency || 'N/A';
+            const uptime = atc.uptime || 'N/A';
+            const atcCode = atc.code || '';
 
-        infoSections += `
-            <div class="controller-info-section">
-                <p><strong>${atcCode}</strong></p>
-                <p><strong>Controller:</strong> ${atcName}${specialTag}</p>
-                <p><strong>Frequency:</strong> ${frequency}</p>
-                <p><strong>Online:</strong> ${uptime}</p>
-            </div>
-        `;
-    });
+            const baseName = atcName.split(' | ')[0];
+            const specialUser = isSpecialUser(baseName);
+            const specialTag = specialUser 
+                ? `<span class="special-tag" style="background-color: ${specialUsers[baseName].TagColor};">${specialUsers[baseName].Role}</span>` 
+                : '';
+
+            infoSections += `
+                <div class="controller-info-section">
+                    <p><strong>${atcCode}</strong></p>
+                    <p><strong>Controller:</strong> ${atcName}${specialTag}</p>
+                    <p><strong>Frequency:</strong> ${frequency}</p>
+                    <p><strong>Online:</strong> ${uptime}</p>
+                </div>
+            `;
+        });
+    }
 
     menu.style.display = 'block';
     menu.innerHTML = `
@@ -1195,6 +1335,38 @@ function toggleFlpMenu() {
     }
 }
 
+function toggleMiniSlider(value) {
+    const miniSlider = document.getElementById('MiniSlider');
+    if (!value) {
+        miniSlider.classList.remove('open');
+        miniSlider.style.display = 'none';
+    } else {
+        miniSlider.style.display = 'block';
+        miniSlider.classList.add('open');
+    }
+}
+
+function updateSliderValue(value) {
+    document.getElementById('sliderValue').textContent = value;
+    if (fplgeneratorrange !== value) {
+        fplgeneratorrange = value;
+        generateFPL();
+    }
+
+    const slider = document.getElementById('slider');
+    const percentage = (value - slider.min) / (slider.max - slider.min) * 100;
+    slider.style.background = `linear-gradient(to right, #3b6cec ${percentage}%, #202024 ${percentage}%)`;
+    document.getElementById('sliderValue').textContent = parseFloat(value).toFixed(1);
+}
+updateSliderValue(fplgeneratorrange);
+
+function calculateMiniSliderPosition(button) {
+    const rect = button.getBoundingClientRect();
+    const miniSlider = document.getElementById('MiniSlider');
+    miniSlider.style.left = `${rect.right + window.scrollX + 20}px`;
+    miniSlider.style.top = `${rect.top + window.scrollY}px`;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const flpMenu = document.getElementById('FlpMenu');
     if (flpMenu.style.display === 'flex') {
@@ -1202,7 +1374,197 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         flpMenu.classList.add('closed');
     }
+    //
+    const generateButton = document.querySelector('.generate');
+    generateButton.addEventListener('mouseenter', () => {
+        const departureAirport = document.getElementById('departure').value.trim().toUpperCase();
+        const depairport = controlAreas.find(area => area.name === departureAirport && area.type === "Airport");
+        const arrivalAirport = document.getElementById('arrival').value.trim().toUpperCase();
+        const arrairport = controlAreas.find(area => area.name === arrivalAirport && area.type === "Airport");
+        if (depairport && arrairport) {
+            calculateMiniSliderPosition(generateButton);
+            toggleMiniSlider(true);
+        }
+    });
+
+    generateButton.addEventListener('mouseleave', (event) => {
+        const miniSlider = document.getElementById('MiniSlider');
+        const vertices = calculateBoundingArea(generateButton, miniSlider, 'right');
+        if (isMouseOutsideArea(event, vertices, generateButton)) {
+            toggleMiniSlider(false);
+        }
+    });
+
+    document.addEventListener('mousemove', (event) => {
+        const miniSlider = document.getElementById('MiniSlider');
+        const generateButton = document.querySelector('.generate');
+        const vertices = calculateBoundingArea(generateButton, miniSlider, 'right');
+        if (isMouseOutsideArea(event, vertices, generateButton)) {
+            toggleMiniSlider(false);
+        }
+    });
 });
+
+function generateFPL() {
+    const getValue = id => document.getElementById(id).value.trim().toUpperCase();
+    const [departure, departureRwy, arrival, arrivalRwy, waypoints, sid, deptrans, star, arrtrans, app] = 
+        ['departure', 'departureRwy', 'arrival', 'arrivalRwy', 'waypoints', 'sid', 'deptrans', 'star', 'arrtrans', 'app'].map(getValue);
+    const allPoints = [...controlAreas.filter(a => a.type === "Airport" && (a.name === departure || a.name === arrival)), ...Waypoints];
+
+    const departureAirport = allPoints.find(point => point.name === departure && point.type === "Airport");
+    const arrivalAirport = allPoints.find(point => point.name === arrival && point.type === "Airport");
+
+    if (!departureAirport || !arrivalAirport) {
+        showMessage('Flight Plan Error', `Airport not found!`);
+        return;
+    }
+
+    function getNeighbors(point, range) {
+        return allPoints.filter(p => calculateDistance(point, p) <= range && p !== point);
+    }
+
+    function getPath(start, goal) {
+        const startNode = { point: start, g: 0, h: calculateDistance(start, goal), f: 0, parent: null };
+        startNode.f = startNode.g + startNode.h;
+        const openList = new MinHeap((a, b) => a.f - b.f);
+        openList.push(startNode);
+        const closedList = new Set();
+        const openSet = new Map();
+        openSet.set(startNode.point, startNode);
+    
+        while (!openList.isEmpty()) {
+            const currentNode = openList.pop();
+            openSet.delete(currentNode.point);
+            closedList.add(currentNode.point);
+    
+            if (currentNode.point === goal) {
+                const path = [];
+                let current = currentNode;
+                while (current) {
+                    path.push(current.point);
+                    current = current.parent;
+                }
+                return path.reverse();
+            }
+    
+            const neighbors = getNeighbors(currentNode.point, fplgeneratorrange);
+            for (const neighbor of neighbors) {
+                if (closedList.has(neighbor)) {
+                    continue;
+                }
+    
+                const g = currentNode.g + calculateDistance(currentNode.point, neighbor);
+                const h = calculateDistance(neighbor, goal);
+                const f = g + h;
+    
+                if (openSet.has(neighbor)) {
+                    const openNode = openSet.get(neighbor);
+                    if (g < openNode.g) {
+                        openNode.g = g;
+                        openNode.f = f;
+                        openNode.parent = currentNode;
+                        openList.update(openNode);
+                    }
+                } else {
+                    const neighborNode = { point: neighbor, g, h, f, parent: currentNode };
+                    openList.push(neighborNode);
+                    openSet.set(neighbor, neighborNode);
+                }
+            }
+        }
+    
+        return null;
+    }
+    
+    // MinHeap implementation for the open list
+    class MinHeap {
+        constructor(compare) {
+            this.compare = compare;
+            this.heap = [];
+        }
+    
+        push(node) {
+            this.heap.push(node);
+            this.bubbleUp(this.heap.length - 1);
+        }
+    
+        pop() {
+            if (this.heap.length === 1) return this.heap.pop();
+            const top = this.heap[0];
+            this.heap[0] = this.heap.pop();
+            this.bubbleDown(0);
+            return top;
+        }
+    
+        find(predicate) {
+            return this.heap.find(predicate);
+        }
+    
+        update(node) {
+            const index = this.heap.indexOf(node);
+            if (index !== -1) {
+                this.bubbleUp(index);
+                this.bubbleDown(index);
+            }
+        }
+    
+        isEmpty() {
+            return this.heap.length === 0;
+        }
+    
+        bubbleUp(index) {
+            while (index > 0) {
+                const parentIndex = Math.floor((index - 1) / 2);
+                if (this.compare(this.heap[index], this.heap[parentIndex]) < 0) {
+                    [this.heap[index], this.heap[parentIndex]] = [this.heap[parentIndex], this.heap[index]];
+                    index = parentIndex;
+                } else {
+                    break;
+                }
+            }
+        }
+    
+        bubbleDown(index) {
+            const length = this.heap.length;
+            while (true) {
+                const leftChildIndex = 2 * index + 1;
+                const rightChildIndex = 2 * index + 2;
+                let smallest = index;
+    
+                if (leftChildIndex < length && this.compare(this.heap[leftChildIndex], this.heap[smallest]) < 0) {
+                    smallest = leftChildIndex;
+                }
+    
+                if (rightChildIndex < length && this.compare(this.heap[rightChildIndex], this.heap[smallest]) < 0) {
+                    smallest = rightChildIndex;
+                }
+    
+                if (smallest !== index) {
+                    [this.heap[index], this.heap[smallest]] = [this.heap[smallest], this.heap[index]];
+                    index = smallest;
+                } else {
+                    break;
+                }
+            }
+        }
+    }
+
+    const path = getPath(departureAirport, arrivalAirport);
+    if (!path) {
+        //showMessage('Flight Plan Error', `No path found between ${departure} and ${arrival}!`);
+        flightRoute = [];
+        draw();
+        return;
+    }
+
+    const filteredPath = path.filter(point => point.type !== "Airport");
+
+    flightRoute = path;
+    draw();
+
+    const waypointsInput = document.getElementById('waypoints');
+    waypointsInput.value = filteredPath.map(point => point.name).join(' ');
+}
 
 function saveFlp() {
     const getValue = id => document.getElementById(id).value.trim().toUpperCase();
@@ -1596,28 +1958,7 @@ function getUniqueUserId() {
 
 const uniqueUserId = getUniqueUserId();
 const defaultURL = 'https://ptfs.xyz/api/controllers';
-const dynamicURLRepository = 'https://raw.githubusercontent.com/tiaguinho2009/24SPY-Backend/main/backend';
-let cachedDynamicURL = localStorage.getItem("cachedDynamicURL") || null;
-
-async function fetchDynamicURL() {
-    try {
-        const response = await fetch(dynamicURLRepository);
-        if (!response.ok) throw new Error(`Erro ao buscar repositório: ${response.status}`);
-        
-        const repositoryContent = await response.text();
-        const dynamicURLMatch = repositoryContent.match(/https?:\/\/[\w.-]+\.trycloudflare\.com/g);
-        
-        if (dynamicURLMatch && dynamicURLMatch.length > 0) {
-            cachedDynamicURL = dynamicURLMatch[0] + '/api/controllers';
-            localStorage.setItem("cachedDynamicURL", cachedDynamicURL);
-        } else {
-            throw new Error('Nenhuma URL dinâmica encontrada no repositório.');
-        }
-    } catch (error) {
-        console.error('Erro ao buscar URL dinâmica:', error);
-        cachedDynamicURL = null;
-    }
-}
+const API_URL = 'https://spy.123456321.xyz/api/controllers';
 
 async function fetchATCData(url) {
     try {
@@ -1634,37 +1975,38 @@ async function fetchATCData(url) {
 }
 
 async function fetchATCDataAndUpdate() {
-    let data
+    let data;
     let typeOfDataReceived = '';
     function toggleUpdateClass() {
         const mapUpdateTime = document.getElementById('mapUpdateTime');
         mapUpdateTime.style.backgroundColor = '#ff7a00';
-        mapUpdateTime.style.color = '#ffffff'; // Muda a cor do texto para branco
+        mapUpdateTime.style.color = '#ffffff'; // Change text color to white
     }
     toggleUpdateClass();
 
     if (devMode) {
         data = PTFSAPIError;
     } else {
-        let localCachedURL = localStorage.getItem("cachedDynamicURL");
-        data = localCachedURL ? await fetchATCData(localStorage.getItem("cachedDynamicURL")) : null;
+        data = await fetchATCData(API_URL);
+    }
+
+    if (!settingsValues.showOnlineATC) {
+        onlineATCs = {};
+        processATCData([]);
+
+        const mapUpdateTime = document.getElementById('mapUpdateTime');
+        setTimeout(() => {
+            mapUpdateTime.style.backgroundColor = 'rgba(32, 32, 36, 1)';
+            mapUpdateTime.style.color = ''; // Restore default text color
+        }, 150);
+
+        return;
     }
 
     if (!data) {
-        await fetchDynamicURL();
-        if (cachedDynamicURL) {
-            data = await fetchATCData(cachedDynamicURL);
-            if (data) {
-                localStorage.setItem("cachedDynamicURL", cachedDynamicURL);
-                typeOfDataReceived = 'dynamicURL';
-            }
-        }
-    }
-
-    if (!data) {
-        data = await fetchATCData(defaultURL)
+        data = await fetchATCData(defaultURL);
         typeOfDataReceived = 'defaultURL';
-    };
+    }
 
     if (data) {
         const newATCList = data;
@@ -1690,7 +2032,7 @@ async function fetchATCDataAndUpdate() {
             await showMessage('Server Error', 'Couldn’t get the info from the server, please check your internet connection.', 'Retry');
             await fetchATCDataAndUpdate();
         }
-        PTFSAPI = PTFSAPIError;
+        PTFSAPI = null;
         processATCData(PTFSAPI);
     }
 
@@ -1706,16 +2048,16 @@ async function fetchATCDataAndUpdate() {
     const mapUpdateTime = document.getElementById('mapUpdateTime');
     setTimeout(() => {
         mapUpdateTime.style.backgroundColor = 'rgba(32, 32, 36, 1)';
-        mapUpdateTime.style.color = ''; // Restaura a cor do texto ao valor padrão
+        mapUpdateTime.style.color = ''; // Restore default text color
     }, 150);
-    
+
     if (typeOfDataReceived === 'defaultURL' && typeOfDataReceivedTimesExecuted === 0) {
         typeOfDataReceivedTimesExecuted = 1;
         showMessage('24SPY API Offline', 'The 24SPY API is currently offline. The data is being fetched from the ATC24 API, some website features may not work correctly.', 'Close', 'Try Again').then(response => {
             if (response === 2) {
                 fetchATCDataAndUpdate();
                 typeOfDataReceivedTimesExecuted = 0;
-            };
+            }
         });
     }
 }
