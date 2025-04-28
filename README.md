@@ -30,15 +30,7 @@
 
 For new users or anyone with questions on how to display online ATCs from ATC24 on the website, refer to the [Wiki](https://github.com/tiaguinho2009/24SPY/wiki) for guidance.
 
-## [DEV 0.2.2] - 21/04/2025
-### Added
-- New FPL Genereator using A* algorithem.
-- New feuture of showing the airports ATIS, provided by 24Scope. (Thanks to Zedruc)
+## [DEV 0.2.2-1] - 28/04/2025 
 
 ### Corrected
-- "Show Online ATC" setting not working, fixed.
-- Website Roadmap updated.
-
-### Comments
-- Thanks for all the BETA Testers!
-- Enjoy the update :D
+- Fix ATIS active runways not showing correctly.

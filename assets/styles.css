@@ -115,15 +115,6 @@ header h1 {
     transition: filter 0.2s ease-in-out;
 }
 
-.atc-left-button:hover {
-    background-color: #323237; 
-}
-
-.atc-left-button:active {
-    background-color: #3b6cec;
-    color: #ffffff;
-}
-
 .atc-online {
     font-size: 15px;
     color: rgb(255, 255, 255);

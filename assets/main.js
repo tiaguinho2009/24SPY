@@ -280,10 +280,10 @@ function transformAtisInfoToText(atisInfo) {
     const airportName = airportEntry ? airportEntry.name.toUpperCase() : airport.toUpperCase();
 
     const informationIdent = ATIScodeTable[ident.toUpperCase()] || ident.toUpperCase();
-    const departureRunways = drwy > 0 ? drwy.join(", ") : "UNKNOWN";
-    const arrivalRunways = arwy > 0 ? arwy.join(", ") : "UNKNOWN";
+    const departureRunways = Array.isArray(drwy) && drwy.length > 0 ? drwy.join(", ") : "UNKNOWN";
+    const arrivalRunways = Array.isArray(arwy) && arwy.length > 0 ? arwy.join(", ") : "UNKNOWN";
     const visibility = "VISIBILITY 10 KILOMETERS OR MORE";
-    const qnh = pressure ? `QNH${pressure}` : "UNKNOWN";
+    const qnh = pressure ? `QNH ${pressure}` : "UNKNOWN";
     const datalinkClearances = pdc ? "DATALINK CLEARANCES ARE AVAILABLE .." : "";
     const date = new Date(onlineSince);
     const hours = String(date.getUTCHours()).padStart(2, '0');
