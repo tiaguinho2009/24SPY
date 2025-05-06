@@ -793,6 +793,10 @@ canvas {
     border-bottom-right-radius: 5px;
 }
 
+.airport-ui .badge.O {
+    background-color: #193381;
+}
+
 .airport-ui .badge.C {
     background-color: #3b6cec;
 }
@@ -836,7 +840,21 @@ canvas {
     font-size: 1em;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
     display: none;
-    z-index: 20; 
+    z-index: 20;
+    transform-origin: bottom; /* Define a origem da animação */
+    transform: scaleY(0); /* Inicialmente fechado */
+    opacity: 0; /* Invisível inicialmente */
+    transition: transform 0.3s ease, opacity 0.3s ease; /* Animação suave */
+}
+
+.icao-menu.open {
+    transform: scaleY(1); /* Escala para 100% */
+    opacity: 1; /* Totalmente visível */
+}
+
+.icao-menu.closed {
+    transform: scaleY(0); /* Escala para 0% */
+    opacity: 0; /* Invisível */
 }
 
 .icao-menu .title {
@@ -899,6 +917,33 @@ canvas {
 .chart-button:active {
     background-color: #3b6cec;
     color: white;
+}
+
+.chart-button.special {
+    background-color: #3b6cec;
+    color: rgb(223, 223, 223);
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Centraliza o texto */
+    position: relative; /* Necessário para posicionar o ícone */
+}
+
+.chart-button.special:hover {
+    background-color: #4b7eff;
+    color: white;
+}
+
+.chart-button.special .radar-icon {
+    position: absolute;
+    right: 10px; /* Posiciona o ícone à direita */
+    width: 20px; /* Ajusta o tamanho do ícone */
+    height: 20px;
+    filter: brightness(1); /* Ajusta o brilho do ícone */
+    transition: filter 0.3s ease;
+}
+
+.chart-button.special:hover .radar-icon {
+    filter: brightness(1.2); /* Aumenta o brilho ao passar o mouse */
 }
 
 .airport-info-menu {
@@ -1048,6 +1093,13 @@ canvas {
 .atis-tooltip {
     position: relative;
     display: inline-block;
+    cursor: pointer;
+}
+
+.atis-chart {
+    font-size: 0.9em;
+    color: white;
+    text-decoration: underline;
     cursor: pointer;
 }
 

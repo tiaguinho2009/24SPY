@@ -198,112 +198,169 @@ let aircraftData = {
 
 let PTFSAPIError = [
     {
-        "holder": "willingpankakes2053",
+      "holder": "Finnf_j | 4DK",
+      "claimable": false,
+      "airport": "Rockford",
+      "position": "control",
+      "uptime": "00:32"
+    },
+    {
+      "holder": "XxECmaxX | ,",
+      "claimable": false,
+      "airport": "Rockford",
+      "position": "ground",
+      "uptime": "00:32"
+    },
+    {
+      "holder": "foxcuber0 | 8932",
+      "claimable": false,
+      "airport": "Izolirani",
+      "position": "control",
+      "uptime": "05:34"
+    },
+    {
+      "holder": "hisses77",
+      "claimable": false,
+      "airport": "Tokyo",
+      "position": "control",
+      "uptime": "02:17"
+    },
+    {
+      "holder": "hx3sh_o | EGCC",
+      "claimable": false,
+      "airport": "Larnaca",
+      "position": "control",
+      "uptime": "02:04"
+    },
+    {
+      "holder": "donncha404",
+      "claimable": false,
+      "airport": "Mellor",
+      "position": "approach",
+      "uptime": "00:14"
+    },
+    {
+      "holder": "donpollohaktuah | LSZH",
+      "claimable": false,
+      "airport": "Perth",
+      "position": "control",
+      "uptime": "00:44"
+    },
+    {
+      "holder": "ChefAviation",
+      "claimable": false,
+      "airport": "Saint Barthélemy",
+      "position": "control",
+      "uptime": "00:00"
+    },
+    {
+        "holder": "ChefAviation",
         "claimable": false,
-        "airport": "Rockford",
+        "airport": "Skopelos",
         "position": "control",
-        "code": "IRFD_1_CTR",
-        "uptime": "00:28",
-        "onlineSince": "2025-03-03T17:47:20.127Z"
+        "uptime": "00:00"
+      },
+    {
+      "airport": "Rockford",
+      "position": "atis",
+      "uptime": "01:19",
+      "onlineSince": 1746555277151,
+      "ident": "K",
+      "pressure": "1015",
+      "arwy": [
+        "25R",
+        "25C"
+      ],
+      "drwy": [
+        "25R",
+        "25L"
+      ],
+      "pdc": true,
+      "chartPack": {
+        "url": "https://drive.google.com/file/d/12rwTgSjcOXxvZ6z8o8y5GRV1lNnt-h4D/view",
+        "author": "FormicAcid"
+      }
     },
     {
-        "holder": "Tiaguinho_2009",
-        "claimable": false,
-        "airport": "Rockford",
-        "position": "control",
-        "code": "IRFD_3_CTR",
-        "uptime": "00:28",
-        "onlineSince": "2025-03-03T17:47:20.127Z"
+      "airport": "Tokyo",
+      "position": "atis",
+      "uptime": "04:06",
+      "onlineSince": 1746545239288,
+      "ident": "B",
+      "pressure": 1013,
+      "arwy": [
+        "13",
+        "20"
+      ],
+      "drwy": [
+        "13",
+        "20"
+      ],
+      "pdc": false,
+      "chartPack": {
+        "url": "https://github.com/Treelon/ptfs-charts/tree/main/Orenji/Tokyo",
+        "author": "Official"
+      }
     },
     {
-        "holder": "tiaguinho_2009",
-        "claimable": false,
-        "airport": "Rockford",
-        "position": "approach",
-        "uptime": "00:28",
-        "onlineSince": "2025-03-03T17:47:20.127Z"
+      "airport": "Larnaca",
+      "position": "atis",
+      "uptime": "01:41",
+      "onlineSince": 1746553969707,
+      "ident": "B",
+      "pressure": "1024",
+      "arwy": [
+        "06"
+      ],
+      "drwy": [
+        "06"
+      ],
+      "pdc": false,
+      "chartPack": {
+        "url": "https://github.com/Treelon/ptfs-charts/tree/main/Cyprus/Larnaca",
+        "author": "Official"
+      }
     },
     {
-        "holder": "willingpankakes2053",
-        "claimable": false,
-        "airport": "Rockford",
-        "position": "tower",
-        "uptime": "00:28",
-        "onlineSince": "2025-03-03T17:47:20.127Z"
-    },
-    {
-        "holder": "willingpankakes2053",
-        "claimable": false,
-        "airport": "Rockford",
-        "position": "ground",
-        "uptime": "00:28",
-        "onlineSince": "2025-03-03T17:47:20.127Z"
-    },
-    {
-        "holder": "willingpankakes2053",
-        "claimable": false,
-        "airport": "Rockford",
-        "position": "delivery",
-        "uptime": "00:28",
-        "onlineSince": "2025-03-03T17:47:20.127Z"
-    },
-    {
-        "holder": "willingpankakes2053",
-        "claimable": false,
-        "airport": "Rockford",
-        "position": "atis",
-        "uptime": "00:28",
-        "onlineSince": "2025-03-03T17:47:20.127Z"
-    },
-    {
-        "holder": "Charisios10 | IZOL_CTR",
-        "claimable": false,
-        "airport": "Izolirani",
-        "position": "control",
-        "uptime": "00:10",
-        "onlineSince": "2025-03-03T18:05:50.153Z"
-    },
-    {
-        "holder": "Ninjakitpard",
-        "claimable": false,
-        "airport": "Tokyo",
-        "position": "control",
-        "uptime": "00:12",
-        "onlineSince": "2025-03-03T18:03:50.122Z"
-    },
-    {
-        "holder": "Mr_richWho | IPPH_CTR",
-        "claimable": false,
-        "airport": "Paphos",
-        "position": "control",
-        "uptime": "00:50",
-        "onlineSince": "2025-03-03T17:25:50.135Z"
-    },
-    {
-        "holder": "MD_590",
-        "claimable": false,
         "airport": "Saint Barthélemy",
-        "position": "control",
-        "uptime": "00:05",
-        "onlineSince": "2025-03-03T18:10:49.945Z"
+        "position": "atis",
+        "uptime": "01:41",
+        "onlineSince": 1746553969707,
+        "ident": "B",
+        "pressure": "1024",
+        "arwy": [
+          "06"
+        ],
+        "drwy": [
+          "06"
+        ],
+        "pdc": false,
+        "chartPack": {
+          "url": "https://github.com/Treelon/ptfs-charts/tree/main/Cyprus/Larnaca",
+          "author": "Official"
+        }
     },
     {
-        "holder": "zedrucc",
-        "claimable": false,
-        "airport": "Perth",
-        "position": "control",
-        "uptime": "00:00",
-        "onlineSince": "2025-03-03T17:25:50.135Z"
+        "airport": "Skopelos",
+        "position": "atis",
+        "uptime": "01:41",
+        "onlineSince": 1746553969707,
+        "ident": "B",
+        "pressure": "1024",
+        "arwy": [
+          "06"
+        ],
+        "drwy": [
+          "06"
+        ],
+        "pdc": false,
+        "chartPack": {
+          "url": "https://github.com/Treelon/ptfs-charts/tree/main/Cyprus/Larnaca",
+          "author": "Official"
+        },
+        "oceanic": true
     },
-    {
-        "holder": "ArchUserBTW_RBLX",
-        "claimable": false,
-        "airport": "Perth",
-        "position": "control",
-        "uptime": "00:00",
-        "onlineSince": "2025-03-03T17:25:50.135Z"
-    },
-]
+  ]
 let PTFSAPI = []
 
 const controlAreas = [
@@ -312,26 +369,22 @@ const controlAreas = [
         name: "IRFD TMA",
         type: "polyline",
         coordinates: [
-            [513,665],
-            [513,630],
-            [570,644],
-            [570,614],
-            [615,626.2],
-            [615,655],
-            [718,692],
-            [737,727],
-            [755,790],
-            [760,817],
-            [769,868],
-            [644,927],
-            [644,957],
-            [479,959],
-            [479,792],
-            [480,770],
-            [465,765],
-            [480,740],
-            [490,740],
-            [513,665],
+            [636.4, 925.5],
+            [763.1, 864.8],
+            [754, 813.8],
+            [749.2, 786.9],
+            [730.6, 724],
+            [708.3, 685.2],
+            [683.2, 642],
+            [492.9, 590.9],
+            [492.9, 694.9],
+            [475.4, 739.9],
+            [466.8, 739.9],
+            [456.8, 761.5],
+            [479.9, 770],
+            [479.9, 957],
+            [636.3, 957],
+            [636.3, 925.5]
         ],
         color: "rgba(45,45,45,1)",
         active: true
@@ -340,19 +393,18 @@ const controlAreas = [
         name: "ITKO TMA",
         type: "polyline",
         coordinates: [
-            [675,230],
-            [675,310],
-            [610,375],
-            [433,375],
-            [407,355],
-            [370,240],
-            [370,120],
-            [475,120],
-            [510,140],
-            [545,140],
-            [590,175],
-            [635.3,175],
-            [675,230]
+            [386.4, 120],
+            [475, 120],
+            [509.9, 140],
+            [545, 140],
+            [590, 175],
+            [635.3, 175],
+            [674.8, 214],
+            [674.8, 290.3],
+            [637.1, 317.4],
+            [561.3, 334.9],
+            [386.4, 306.9],
+            [386.4, 120]
         ],
         color: "rgba(45,45,45,1)",
         active: true
@@ -361,16 +413,16 @@ const controlAreas = [
         name: "IDCS TMA",
         type: "polyline",
         coordinates: [
-            [475,120],
-            [510,140],
-            [545,140],
-            [590,175],
-            [635.3,175],
-            [610,140],
-            [645,120],
-            [645,50],
-            [475,50],
-            [475,120]
+            [475, 120],
+            [509.9, 140],
+            [545, 140],
+            [590, 175],
+            [635.3, 175],
+            [600.5, 140],
+            [645, 120],
+            [645, 50],
+            [475, 50],
+            [475, 120]
         ],
         color: "rgba(45,45,45,1)",
         active: true
@@ -379,18 +431,18 @@ const controlAreas = [
         name: "IMLR TMA",
         type: "polyline",
         coordinates: [
-            [320.5,858.5],
-            [390,790],
-            [465,765],
-            [480,740],
-            [490,740],
-            [513,665],
-            [513,630],
-            [475,588.4],
-            [366,559],
-            [282,626],
-            [282,822],
-            [320.5,858.5]
+            [492.9, 590.9],
+            [492.9, 694.9],
+            [475.4, 739.9],
+            [466.8, 739.9],
+            [456.8, 761.5],
+            [376.8, 802.8],
+            [325.3, 853.6],
+            [289.7, 820],
+            [289.7, 778.8],
+            [289.7, 623.3],
+            [372, 558.6],
+            [492.9, 590.9]
         ],
         color: "rgba(45,45,45,1)",
         active: true
@@ -399,16 +451,14 @@ const controlAreas = [
         name: "IGAR TMA",
         type: "polyline",
         coordinates: [
-            [479,927],
-            [479,792],
-            [480,770],
-            [465,765],
-            [390,790],
-            [362,817],
-            [320.5,858.5],
-            [362,898],
-            [362,927],
-            [479,927]
+            [456.8, 761.5],
+            [376.8, 802.8],
+            [325.3, 853.6],
+            [371.1, 897.2],
+            [371.1, 936.6],
+            [479.9, 936.6],
+            [479.9, 770],
+            [456.8, 761.5]
         ],
         color: "rgba(45,45,45,1)",
         active: true
@@ -417,17 +467,18 @@ const controlAreas = [
         name: "ILAR TMA",
         type: "polyline",
         coordinates: [
-            [644,927],
-            [769,868],
-            [760,817],
-            [925,773],
-            [925,840],
-            [900,890],
-            [900,920],
-            [750,975],
-            [680,975],
-            [644,1000],
-            [644,927]
+            [636.4, 1005.4],
+            [680, 974.9],
+            [750, 974.9],
+            [850, 938.3],
+            [900, 919.9],
+            [900, 890],
+            [925, 840],
+            [925, 767.6],
+            [754, 813.8],
+            [763.1, 864.8],
+            [636.4, 925.5],
+            [636.4, 1005.4]
         ],
         color: "rgba(45,45,45,1)",
         active: true
@@ -436,25 +487,23 @@ const controlAreas = [
         name: "IPAP TMA",
         type: "polyline",
         coordinates: [
-            [925,773],
-            [978,759],
-            [1021,796],
-            [1021,845],
-            [1055,880],
-            [1055,990],
-            [1021,1025],
-            [1021,1100],
-            [915,1100],
-            [915,1030],
-            [930,1000],
-            [930,960],
-            [900,960],
-            [850,950],
-            [850,938.4],
-            [900,920],
-            [900,890],
-            [925,840],
-            [925,773]
+            [850, 938.3],
+            [900, 919.9],
+            [900, 890],
+            [925, 840],
+            [974.9, 840],
+            [974.9, 886],
+            [1035.6, 886],
+            [1035.6, 944],
+            [1022.4, 1010.6],
+            [989.5, 1078.5],
+            [914.8, 1078.5],
+            [914.9, 1030],
+            [930, 1000],
+            [930, 960],
+            [900, 960],
+            [850, 950],
+            [850, 938.3]
         ],
         color: "rgba(45,45,45,1)",
         active: true
@@ -463,19 +512,20 @@ const controlAreas = [
         name: "IIAB TMA",
         type: "polyline",
         coordinates: [
-            [915,1100],
-            [915,1030],
-            [930,1000],
-            [930,960],
-            [900,960],
-            [850,950],
-            [850,938.4],
-            [750,975],
-            [680,975],
-            [644,1000],
-            [644,1040],
-            [750,1100],
-            [915,1100]
+            [636.3, 1005.4],
+            [636.3, 1037.1],
+            [750.2, 1078.5],
+            [825, 1078.5],
+            [914.8, 1078.5],
+            [914.9, 1030],
+            [930, 1000],
+            [930, 960],
+            [900, 960],
+            [850, 950],
+            [850, 938.3],
+            [750, 974.9],
+            [680, 974.9],
+            [636.3, 1005.4],
         ],
         color: "rgba(45,45,45,1)",
         active: true
@@ -484,16 +534,16 @@ const controlAreas = [
         name: "IPPH TMA",
         type: "polyline",
         coordinates: [
-            [714,250],
-            [800,250],
-            [900,300],
-            [930,360],
-            [920,410],
-            [856,500],
-            [797,529],
-            [764,432],
-            [714,410],
-            [714,250]
+            [702.9, 295.6],
+            [778.1, 295.6],
+            [880, 306.4],
+            [927.3, 353.2],
+            [927.3, 400.6],
+            [856.1, 499.8],
+            [797.6, 528.9],
+            [764.2, 432.3],
+            [702.9, 400.4],
+            [702.9, 295.6]
         ],
         color: "rgba(45,45,45,1)",
         active: true
@@ -502,25 +552,25 @@ const controlAreas = [
         name: "IZOL TMA",
         type: "polyline",
         coordinates: [
-            [910,575],
-            [909,626],
-            [986,633],
-            [982,660],
-            [980,690],
-            [1015,730],
-            [1100,730],
-            [1155,710],
-            [1200,665],
-            [1200,570],
-            [1180,525],
-            [1145,500],
-            [1075,500],
-            [1034,440],
-            [996.5,464.5],
-            [1040,530],
-            [1005,560],
-            [995,585],
-            [910,575]
+            [887.3, 623.3],
+            [970.8, 631.7],
+            [966.8, 658.6],
+            [966.8, 678.5],
+            [1016.1, 740.9],
+            [1100.3, 740.9],
+            [1154.3, 709.7],
+            [1200, 664],
+            [1200, 569.9],
+            [1181.6, 493.9],
+            [1145, 487.8],
+            [1066.6, 487.8],
+            [1033.9, 439.9],
+            [996.7, 464.8],
+            [1040, 530],
+            [1005, 560],
+            [995, 585],
+            [907.3, 574.7],
+            [887.3, 623.3]
         ],
         color: "rgba(45,45,45,1)",
         active: true
@@ -529,14 +579,14 @@ const controlAreas = [
         name: "ISCM TMA",
         type: "polyline",
         coordinates: [
-            [996.5,464.5],
-            [1040,530],
-            [1005,560],
-            [995,585],
-            [910,575],
-            [910,500],
-            [943,500],
-            [996.5,464.5]
+            [996.7, 464.8],
+            [943.9, 500],
+            [938.1, 500],
+            [907.3, 574.7],
+            [994.9, 585],
+            [1005, 560],
+            [1040, 530],
+            [996.7, 464.8]
         ],
         color: "rgba(45,45,45,1)",
         active: true
@@ -545,15 +595,15 @@ const controlAreas = [
         name: "IGRV TMA",
         type: "polyline",
         coordinates: [
-            [90,650],
-            [220,650],
-            [282,626],
-            [303,609.2],
-            [303,490],
-            [210,420],
-            [50,500],
-            [90,580],
-            [90,650]
+            [289.6, 623.3],
+            [229.5, 627.9],
+            [38.4, 627.9],
+            [38.4, 595.6],
+            [32.4, 518.8],
+            [86.7, 468.8],
+            [203.8, 448.7],
+            [282.4, 488.1],
+            [289.6, 623.3]
         ],
         color: "rgba(45,45,45,1)",
         active: true
@@ -562,14 +612,14 @@ const controlAreas = [
         name: "ISAU TMA",
         type: "polyline",
         coordinates: [
-            [40,980],
-            [205,980],
-            [320.5,858.5],
-            [282,822],
-            [282,786],
-            [187,750],
-            [40,750],
-            [40,980]
+            [325.3, 853.6],
+            [232.6, 945.1],
+            [31.3, 945.1],
+            [31.3, 737],
+            [178.4, 737],
+            [289.7, 778.8],
+            [289.7, 820],
+            [325.3, 853.6]
         ],
         color: "rgba(45,45,45,1)",
         active: true
@@ -578,14 +628,14 @@ const controlAreas = [
         name: "IBTH TMA",
         type: "polyline",
         coordinates: [
-            [570,614],
-            [692,647],
-            [765,647],
-            [797,529],
-            [764,432],
-            [630,432],
-            [570,490],
-            [570,614]
+            [588.3, 432.3],
+            [764.2, 432.3],
+            [797.6, 528.9],
+            [727.8, 641.9],
+            [683.2, 642],
+            [492.9, 590.9],
+            [492.9, 469],
+            [588.3, 432.3]
         ],
         color: "rgba(45,45,45,1)",
         active: true
@@ -595,21 +645,20 @@ const controlAreas = [
         name: "IRFD FIR",
         type: "polyline",
         coordinates: [
-            [644, 1200],
-            [644, 927],
-            [769, 868],
-            [760, 817],
-            [755, 790],
-            [737, 727],
-            [718, 692],
-            [692, 647],
-            [366, 559],
-            [282, 626],
-            [282, 686],
-            [282, 822],
-            [362, 898],
-            [362, 1200],
-            [644, 1200]
+            [636.4, 1200],
+            [636.4, 925.5],
+            [763.1, 864.8],
+            [754, 813.8],
+            [749.2, 786.9],
+            [730.6, 724],
+            [708.3, 685.2],
+            [683.2, 642],
+            [372, 558.6],
+            [289.7, 623.3],
+            [289.7, 820],
+            [371.1, 897.2],
+            [371.1, 1200],
+            [636.4, 1200]
         ],
         color: "rgba(45,45,45,1)",
         active: true
@@ -618,18 +667,18 @@ const controlAreas = [
         name: "ISKP FIR",
         type: "polyline",
         coordinates: [
-            [760, 817],
-            [755, 790],
-            [737, 727],
-            [718, 692],
-            [836, 651],
-            [909, 626],
-            [986, 633],
-            [982, 660],
-            [960, 683],
-            [964, 747],
-            [978, 759],
-            [760, 817]
+            [754, 813.8],
+            [749.2, 786.9],
+            [730.6, 724],
+            [708.3, 685.2],
+            [839.2, 640.4],
+            [887.3, 623.3],
+            [970.8, 631.7],
+            [966.8, 658.6],
+            [944.8, 681.8],
+            [949, 745.7],
+            [962.9, 757.5],
+            [754, 813.8]
         ],
         color: "rgba(45,45,45,1)",
         active: true
@@ -638,14 +687,15 @@ const controlAreas = [
         name: "ISAU FIR",
         type: "polyline",
         coordinates: [
-            [362, 1200],
+            [0, 712.4],
+            [153, 727.5],
+            [289.7, 778.8],
+            [289.7, 623.3],
+            [289.7, 820],
+            [371.1, 897.2],
+            [371.1, 1200],
             [0, 1200],
-            [0, 718],
-            [134, 730],
-            [282, 786],
-            [282, 822],
-            [362, 898],
-            [362, 1200]
+            [0, 712.4]
         ],
         color: "rgba(45,45,45,1)",
         active: true
@@ -654,15 +704,15 @@ const controlAreas = [
         name: "ILAR FIR",
         type: "polyline",
         coordinates: [
-            [760, 817],
-            [978, 759],
-            [1021, 796],
-            [1200, 832],
+            [636.4, 1200],
+            [636.4, 925.5],
+            [763.1, 864.8],
+            [754, 813.8],
+            [962.9, 757.5],
+            [1005.9, 794.5],
+            [1200, 831.9],
             [1200, 1200],
-            [644, 1200],
-            [644, 927],
-            [769, 868],
-            [760, 817]
+            [636.4, 1200]
         ],
         color: "rgba(45,45,45,1)",
         active: true
@@ -671,15 +721,15 @@ const controlAreas = [
         name: "IGRV FIR",
         type: "polyline",
         coordinates: [
-            [0,718],
-            [134,730],
-            [282,786],
-            [282,626],
-            [366,559],
-            [415,450],
-            [274,0],
-            [0,0],
-            [0,718]
+            [0, 712.4],
+            [153, 727.5],
+            [289.7, 778.8],
+            [289.7, 623.3],
+            [372, 558.6],
+            [413.6, 445.5],
+            [274, 0],
+            [0, 0],
+            [0, 712.4]
         ],
         color: "rgba(45,45,45,1)",
         active: true
@@ -688,11 +738,12 @@ const controlAreas = [
         name: "ITKO FIR",
         type: "polyline",
         coordinates: [
-            [415,450],
-            [433,410],
-            [714,410],
-            [714,0],
-            [274,0]
+            [702.9, 0],
+            [702.9, 400.4],
+            [430.2, 400.4],
+            [413.6, 445.5],
+            [274, 0],
+            [702.9, 0]
         ],
         color: "rgba(45,45,45,1)",
         active: true
@@ -701,17 +752,17 @@ const controlAreas = [
         name: "IPPH FIR",
         type: "polyline",
         coordinates: [
-            [714,0],
-            [714,410],
-            [764,432],
-            [797,529],
-            [856,500],
-            [943,500],
-            [1034,440],
-            [1120,402],
-            [1200,403],
-            [1200,0],
-            [714,0]
+            [1200, 403],
+            [1119.3, 402],
+            [1034, 440],
+            [943.9, 500],
+            [856.2, 499.8],
+            [797.6, 528.9],
+            [764.2, 432.3],
+            [702.9, 400.4],
+            [702.9, 0],
+            [1200, 0],
+            [1200, 403]
         ],
         color: "rgba(45,45,45,1)",
         active: true
@@ -720,23 +771,23 @@ const controlAreas = [
         name: "IZOL FIR",
         type: "polyline",
         coordinates: [
-            [797,529],
-            [856,578],
-            [836,651],
-            [909, 626],
-            [986, 633],
-            [982, 660],
-            [960, 683],
-            [964, 747],
-            [978, 759],
-            [1021,796],
-            [1200,832],
-            [1200,403],
-            [1120,402],
-            [1034,440],
-            [943,500],
-            [856,500],
-            [797,529]
+            [1200, 403],
+            [1119.3, 402],
+            [1034, 440],
+            [943.9, 500],
+            [856.2, 499.8],
+            [797.6, 528.9],
+            [856.1, 578.2],
+            [839.2, 640.4],
+            [887.3, 623.3],
+            [970.8, 631.7],
+            [966.8, 658.6],
+            [944.8, 681.8],
+            [949, 745.7],
+            [962.9, 757.5],
+            [1005.9, 794.5],
+            [1200, 831.9],
+            [1200, 403]
         ],
         color: "rgba(45,45,45,1)",
         active: true
@@ -745,20 +796,61 @@ const controlAreas = [
         name: "IBTH FIR",
         type: "polyline",
         coordinates: [
-            [433,410],
-            [415,450],
-            [366,559],
-            [692,647],
-            [718,692],
-            [836,651],
-            [856,578],
-            [797,529],
-            [764,432],
-            [714,410],
-            [433,410]
+            [708.3, 685.2],
+            [683.2, 642],
+            [372, 558.6],
+            [413.6, 445.5],
+            [430.2, 400.4],
+            [702.9, 400.4],
+            [764.2, 432.3],
+            [797.6, 528.9],
+            [856.1, 578.2],
+            [839.2, 640.4],
+            [708.3, 685.2]
         ],
         color: "rgba(45,45,45,1)",
         active: true
+    },
+    {
+        name: "IBTH FIR2",
+        type: "polyline",
+        coordinates: [
+            [683.2, 642],
+            [372, 558.6],
+            [413.6, 445.5],
+            [430.2, 400.4],
+            [702.9, 400.4],
+            [764.2, 432.3],
+            [797.6, 528.9],
+            [727.8, 641.9],
+            [683.2, 642]
+        ],
+        color: "rgba(45,45,45,1)",
+        active: false
+    },
+    {
+        name: "ISKP FIR2",
+        type: "polyline",
+        coordinates: [
+            [754, 813.8],
+            [749.2, 786.9],
+            [730.6, 724],
+            [708.3, 685.2],
+            [683.2, 642],
+            [727.8, 641.9],
+            [797.6, 528.9],
+            [856.1, 578.2],
+            [839.2, 640.4],
+            [887.3, 623.3],
+            [970.8, 631.7],
+            [966.8, 658.6],
+            [944.8, 681.8],
+            [949, 745.7],
+            [962.9, 757.5],
+            [754, 813.8]
+        ],
+        color: "rgba(45,45,45,1)",
+        active: false
     },
     {
         name: "Map",
@@ -771,7 +863,7 @@ const controlAreas = [
             [0, 0]
         ],
         color: "rgba(45,45,45,1)",
-        active: true
+        active: false
     },
 
     //APPs
@@ -983,11 +1075,33 @@ const controlAreas = [
         atc: "",
     },
     {
+        name: "IBTH CTR2",
+        type: "polygon",
+        firReference: "IBTH FIR2",
+        color: "rgb(0, 50, 90)",
+        fillColor: "rgba(45, 114, 235, 0.05)",
+        hightlightcolor: "rgba(0, 166, 255, 0.075)",
+        center: [500,550],
+        active: false,
+        atc: "",
+    },
+    {
         name: "ISKP CTR",
         type: "polygon",
         firReference: "ISKP FIR",
         color: "rgba(0, 90, 50, 1)",
         fillColor: "rgba(0, 90, 50, 0.05)",
+        center: [500,550],
+        active: false,
+        atc: "",
+    },
+    {
+        name: "ISKP CTR2",
+        type: "polygon",
+        firReference: "ISKP FIR2",
+        color: "rgb(0, 50, 90)",
+        fillColor: "rgba(45, 114, 235, 0.05)",
+        hightlightcolor: "rgba(0, 166, 255, 0.075)",
         center: [500,550],
         active: false,
         atc: "",
@@ -1303,7 +1417,7 @@ const controlAreas = [
         type: "Airport",
         originalscale: 1,
         scale: 1,
-        coordinates: [440.93, 820.24],
+        coordinates: [441.05, 822.40],
         towerfreq: "124.275",
         app: "IGAR APP",
         charts: [
@@ -1360,7 +1474,7 @@ const controlAreas = [
         originalscale: 2,
         scale: 2,
         coordinates: [493.87, 757.33],
-        towerfreq: "None",
+        towerfreq: "124.605",
         charts: [
             ["Official", "https://ptfs.xyz/charts/dark/IBLT%20Ground%20Chart.png"],
         ],
@@ -1375,7 +1489,7 @@ const controlAreas = [
         type: "Airport",
         originalscale: 2,
         scale: 2,
-        coordinates: [844.00, 408.00],
+        coordinates: [842.44, 404.50],
         towerfreq: "120.150",
         charts: [
             ["Official", "https://ptfs.xyz/charts/dark/ILKL%20Ground%20Chart.png"],
@@ -1455,7 +1569,7 @@ const controlAreas = [
         type: "Airport",
         originalscale: 2,
         scale: 2,
-        coordinates: [873.80, 714.13],
+        coordinates: [875.06, 712.72],
         towerfreq: "124.200",
         ctr: "ISKP CTR",
         charts: [
@@ -1764,6 +1878,12 @@ const CustomWaypoints = [
     { name: "PMPKN", type: "Waypoint", coordinates: [758.45, 828.41] },
 ];
 
+const airways = [
+    //Oceanic
+    { name: "NATA", type: "airway", points: ["ENDER", "32N13W", "35N12W", "TUDEP"], labelposition: [449.82, 487.73], color: "#FFFFFF"},
+    { name: "NATJ", type: "airway", points: ["ATPEV", "24N02E", "25N05E", "26N10E"], labelposition: [449.82, 487.73], color: "#FFFFFF"},
+]
+
 // Função para aplicar coordenadas da FIR para a CTR correspondente e sincronizar o valor de active
 function assignCTRCoordinates() {
     controlAreas.forEach(area => {
@@ -1931,5 +2051,11 @@ const specialUsers = {
         "Role": "24Scope",
         "DiscordNick": "zedruc",
         "TagColor": "#3b6cec"
+    },
+    // random people
+    "FlamingBallista21": {
+        "Role": "Saba King",
+        "DiscordNick": "flamingballista",
+        "TagColor": "#ffa500"
     },
 };
