@@ -180,7 +180,7 @@ header a {
     max-width: 800px; /* Limite de largura máxima */
     height: 400px; /* Altura do menu */
     position: fixed;
-    overflow-y: auto;
+    overflow-y: hidden;
     border-radius: 10px; /* Borda arredondada */
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); /* Sombra */
     z-index: 101;
@@ -225,6 +225,7 @@ header a {
     padding: 20px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
+    overflow-y: auto;
 }
 
 .Changelog-menu .content h2 {
@@ -256,15 +257,15 @@ header a {
     color: #ff6b6b; /* Cor do marcador */
 }
 
-.Changelog-menu::-webkit-scrollbar {
+.Changelog-menu .content::-webkit-scrollbar {
     width: 8px;
 }
 
-.Changelog-menu::-webkit-scrollbar-track {
+.Changelog-menu .content::-webkit-scrollbar-track {
     background: none;
 }
 
-.Changelog-menu::-webkit-scrollbar-thumb {
+.Changelog-menu .content::-webkit-scrollbar-thumb {
     background-color: #3b6cec;
     border-radius: 4px;
 }
@@ -1057,6 +1058,10 @@ canvas {
     font-size: 0.9em;
 }
 
+.controller-info-section.queue {
+    padding: 5px 10px 5px 10px;
+}
+
 .atis-info-section {
     background-color: rgba(32, 32, 36, 1);
     border-radius: 5px;
@@ -1090,12 +1095,6 @@ canvas {
     color: #bdbdbd;
 }
 
-.atis-tooltip {
-    position: relative;
-    display: inline-block;
-    cursor: pointer;
-}
-
 .atis-chart {
     font-size: 0.9em;
     color: white;
@@ -1104,10 +1103,12 @@ canvas {
 }
 
 .atis-icon {
-    background-color: #3b6cec;
-    color: #fff;
     border-radius: 50%;
-    padding: 2px 6px;
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-size: 0.8em;
 }
 
@@ -1115,26 +1116,34 @@ canvas {
     color: #3b6cec;
 }
 
+.atis-tooltip {
+    position: relative; /* Define o contexto de posicionamento para o tooltip */
+    display: inline-block;
+    cursor: pointer;
+}
+
 .atis-tooltip-text {
     visibility: hidden;
     width: 200px;
-    background-color: #131316;
+    background-color: #292930;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
     color: #fff;
     text-align: center;
     border-radius: 5px;
     padding: 5px;
-    position: absolute;
+    position: fixed; /* Posiciona em relação ao elemento pai */
     z-index: 10000;
-    bottom: -200%; /* Position above the icon */
-    left: 50%;
-    transform: translateX(-50%);
+    bottom: auto; /* Posiciona acima do botão */
+    transform: translateX(-50%); /* Ajusta para centralizar */
+    margin-bottom: 10px; /* Espaçamento entre o botão e o tooltip */
     opacity: 0;
-    transition: opacity 0.3s;
+    transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 .atis-tooltip:hover .atis-tooltip-text {
     visibility: visible;
     opacity: 1;
+    transform: translateX(-50%) translateY(-50px); /* Animação suave para cima */
 }
 
 .atis-text {

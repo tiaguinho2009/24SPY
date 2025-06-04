@@ -30,16 +30,12 @@
 
 For new users or anyone with questions on how to display online ATCs from ATC24 on the website, refer to the [Wiki](https://github.com/tiaguinho2009/24SPY/wiki) for guidance.
 
-## [DEV 0.2.3] - 06/05/2025
+## [DEV 0.2.3a] - 04/06/2025
 ### Added
-- New feature in the ATIS, now when some airport has the information in his ATIS about the chart pack it will be displayed in the ATIS Menu and Charts Menu.
-- More animated menus. (because why not)
-- Remade FIRs/TMAs.
+- Queue information now shows up in the Controllers menu!
 
 ### Corrected
-- Some Airport UI position bugs fixed.
-- Some Airports Position corrected.
+- UI Bugs Fixs.
 
 ### Comments
-- Thanks to Zedruc for providing the data.
-- Try to find the Saba King hehe.
+- Thanks to ATC24 Staff for providing the data!
