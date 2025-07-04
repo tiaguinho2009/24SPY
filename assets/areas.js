@@ -2077,6 +2077,6 @@ const specialUsers = {
     "Mario_yeeeet": {
         "Role": "Touch Grass",
         "DiscordNick": "urmemeboikevin",
-        "TagColor": "#ffccaa"
+        "TagColor": "#33ccbb"
     }
 };
