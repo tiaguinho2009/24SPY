@@ -2074,4 +2074,9 @@ const specialUsers = {
         "DiscordNick": "flamingballista",
         "TagColor": "#ffa500"
     },
+    "Mario_yeeeet": {
+        "Role": "Touch Grass",
+        "DiscordNick": "urmemeboikevin",
+        "TagColor": "#ffccaa"
+    }
 };
