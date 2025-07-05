@@ -2223,7 +2223,7 @@ function getUniqueUserId() {
 
 const uniqueUserId = getUniqueUserId();
 const defaultURL = 'https://ptfs.app/api/controllers';
-const API_URL = 'https://spy.123456321.xyz/api/controllers';
+const API_URL = 'https://spy.123456321.xyz/api/v1/controllers';
 
 async function fetchATCData(url) {
     try {
