@@ -1,3 +1,18 @@
+> ## ⚠️ **This repository will be archived soon.**
+> - The project is no longer open source, and the website will be migrated to a local environment (`localhost`).  
+>   We would like to express our sincere gratitude to everyone who contributed during its public development phase.
+> 
+> - While this repository will no longer be maintained, the development of 24SPY is far from over.  
+>   Transitioning away from GitHub provides us—the developers of 24SPY—with complete flexibility to implement new features and improvements without external constraints.  
+>   Among the planned enhancements is a highly requested feature: **aircraft tracking** within the 24SPY interface.
+> 
+> - More information regarding these major changes will be made available on our [Discord server](https://discord.gg/8cQAguPjkh).  
+>   We encourage all users to join the server for updates, discussions, and announcements.
+> 
+> - Thank you all for being part of this incredible journey.  
+>   - At this stage more then 2000 people have used 24SPY in is entire life and more then 200 people uses the website every day! And with this updates we expect the number to only increase with the new updates!
+>   - It has been a pleasure developing this project and making 24SPY the most powerful and reliable tool for pilots in ATC24/PTFS.
+
 # [24SPY](https://tiaguinho2009.github.io/24SPY/)
 
 **24SPY** is a developing platform designed to display real-time information about aircraft and ATC controllers currently online on the ATC24 server, similar to VATSIM Radar. This project serves both as a functional tool and a way to enhance my JavaScript, HTML, and CSS skills while contributing to the virtual aviation community.
